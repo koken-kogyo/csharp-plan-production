@@ -1,0 +1,20 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="10.0.1" />
+    <PackageVersion Include="Oracle.ManagedDataAccess.Core" Version="23.26.100" />
+    <PackageVersion Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageVersion Include="System.Formats.Asn1" Version="10.0.5" />
+    <PackageVersion Include="System.IO.Pipelines" Version="10.0.5" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageVersion Include="System.Text.Encodings.Web" Version="10.0.5" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.5" />
+    <PackageVersion Include="WinForms.DataVisualization" Version="1.10.0" />
+  </ItemGroup>
+</Project>
