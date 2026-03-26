@@ -33,10 +33,9 @@ namespace PlanProduction
             }
             // 作業グループマスタを読み込んでおく
             DBAccessor.ReadKM5010();
-            DataStore.KM5010AddColumns();
 
             // 初回起動の場合は設定画面からスタート
-            if (!File.Exists(@Common.CONFIG_FILE_LS))
+            if (!File.Exists(@Common.CONFIG_FILE_AS))
             {
                 MessageBox.Show("設定画面を起動します。\n\n初回設定を行ってください．"
                     , "[生産計画]", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -47,6 +46,10 @@ namespace PlanProduction
                 // アプリケーション設定ファイルの読込
                 Common.DeserializeAppSettings();
             }
+
+
+
+
 
 
 

@@ -160,11 +160,15 @@ namespace PlanProduction
             {
                 if (oraCnn is null) OpenOraSchema();
                 string sql= "SELECT "
-                    + "ODCD"
-                    + ", WKGRCD"
-                    + ", WKGRNM"
+                    + "a.ODCD"
+                    + ", a.WKGRCD"
+                    + ", a.WKGRNM"
+                    + ", m.ODRNM"
                     + " FROM "
-                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 a, "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 m "
+                    + "WHERE a.ODCD=m.ODCD "
+                    + "ORDER BY a.ODCD"
                     ;
                 using (OracleCommand myCmd = new OracleCommand(sql, oraCnn))
                 {
@@ -172,6 +176,24 @@ namespace PlanProduction
                     {
                         DataStore.dtKM5010kai = new DataTable();
                         myDa.Fill(DataStore.dtKM5010kai);
+                        // 列の追加
+                        DataStore.dtKM5010kai.Columns.Add("CHECKED", typeof(bool));
+                        DataStore.dtKM5010kai.Columns.Add("SORTORDER", typeof(string));
+                        DataStore.dtKM5010kai.Columns.Add("TANNAME", typeof(string));
+                        DataStore.dtKM5010kai.Columns.Add("AVA", typeof(string));
+                        // 主キーを設定して検索に使用
+                        DataStore.dtKM5010kai.PrimaryKey = new DataColumn[]
+                        {
+                            DataStore.dtKM5010kai.Columns["ODCD"],
+                            DataStore.dtKM5010kai.Columns["WKGRCD"]
+                        };
+                        // 追加した列に対して初期化を設定
+                        foreach (DataRow row in DataStore.dtKM5010kai.Rows)
+                        {
+                            row["CHECKED"] = false;
+                            row["TANNAME"] = string.Empty;
+                            row["AVA"] = string.Empty;
+                        }
                         ret = true;
                     }
                 }
@@ -180,6 +202,7 @@ namespace PlanProduction
             {
                 // エラー
                 string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
             }
             return ret;
         }

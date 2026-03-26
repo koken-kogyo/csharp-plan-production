@@ -33,18 +33,18 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
             dataGridView1 = new System.Windows.Forms.DataGridView();
-            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            buttonAddAchieve = new System.Windows.Forms.Button();
-            buttonAddPlan = new System.Windows.Forms.Button();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             buttonRefresh = new System.Windows.Forms.Button();
+            buttonAddPlan = new System.Windows.Forms.Button();
+            buttonAddAchieve = new System.Windows.Forms.Button();
+            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             SuspendLayout();
             // 
             // splitContainer1
@@ -76,47 +76,6 @@
             dataGridView1.Size = new System.Drawing.Size(498, 414);
             dataGridView1.TabIndex = 1;
             // 
-            // chart1
-            // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
-            chart1.Location = new System.Drawing.Point(10, 10);
-            chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart1.Series.Add(series1);
-            chart1.Size = new System.Drawing.Size(478, 100);
-            chart1.TabIndex = 0;
-            chart1.Text = "chart1";
-            // 
-            // buttonAddAchieve
-            // 
-            buttonAddAchieve.BackColor = System.Drawing.Color.MistyRose;
-            buttonAddAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonAddAchieve.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonAddAchieve.Location = new System.Drawing.Point(152, 3);
-            buttonAddAchieve.Name = "buttonAddAchieve";
-            buttonAddAchieve.Size = new System.Drawing.Size(143, 38);
-            buttonAddAchieve.TabIndex = 1;
-            buttonAddAchieve.Text = "実績へ追加";
-            buttonAddAchieve.UseVisualStyleBackColor = false;
-            // 
-            // buttonAddPlan
-            // 
-            buttonAddPlan.BackColor = System.Drawing.Color.LightBlue;
-            buttonAddPlan.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonAddPlan.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonAddPlan.Location = new System.Drawing.Point(3, 3);
-            buttonAddPlan.Name = "buttonAddPlan";
-            buttonAddPlan.Size = new System.Drawing.Size(143, 38);
-            buttonAddPlan.TabIndex = 0;
-            buttonAddPlan.Text = "計画へ追加";
-            buttonAddPlan.UseVisualStyleBackColor = false;
-            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 3;
@@ -146,6 +105,47 @@
             buttonRefresh.Text = "再読み込み";
             buttonRefresh.UseVisualStyleBackColor = false;
             // 
+            // buttonAddPlan
+            // 
+            buttonAddPlan.BackColor = System.Drawing.Color.LightBlue;
+            buttonAddPlan.Dock = System.Windows.Forms.DockStyle.Fill;
+            buttonAddPlan.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            buttonAddPlan.Location = new System.Drawing.Point(3, 3);
+            buttonAddPlan.Name = "buttonAddPlan";
+            buttonAddPlan.Size = new System.Drawing.Size(143, 38);
+            buttonAddPlan.TabIndex = 0;
+            buttonAddPlan.Text = "計画へ追加";
+            buttonAddPlan.UseVisualStyleBackColor = false;
+            // 
+            // buttonAddAchieve
+            // 
+            buttonAddAchieve.BackColor = System.Drawing.Color.MistyRose;
+            buttonAddAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
+            buttonAddAchieve.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            buttonAddAchieve.Location = new System.Drawing.Point(152, 3);
+            buttonAddAchieve.Name = "buttonAddAchieve";
+            buttonAddAchieve.Size = new System.Drawing.Size(143, 38);
+            buttonAddAchieve.TabIndex = 1;
+            buttonAddAchieve.Text = "実績へ追加";
+            buttonAddAchieve.UseVisualStyleBackColor = false;
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea1);
+            chart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            chart1.Legends.Add(legend1);
+            chart1.Location = new System.Drawing.Point(10, 10);
+            chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            chart1.Series.Add(series1);
+            chart1.Size = new System.Drawing.Size(478, 100);
+            chart1.TabIndex = 0;
+            chart1.Text = "chart1";
+            // 
             // FormOrderList
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -154,13 +154,15 @@
             Controls.Add(splitContainer1);
             Name = "FormOrderList";
             Text = "[生産計画] 手配一覧";
+            Load += FormOrderList_Load;
+            KeyDown += FormOrderList_KeyDown;
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             ResumeLayout(false);
         }
 

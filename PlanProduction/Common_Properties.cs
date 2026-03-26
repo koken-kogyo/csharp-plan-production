@@ -13,7 +13,7 @@ namespace PlanProduction
         public static readonly int DB_CONFIG_KK = 1;                        // DB 接続定義 (MySQL内製プログラム)
         public static readonly string CONFIG_FILE_DB = "ConfigDB.xml";      // データベース設定ファイル
         public static readonly string CONFIG_FILE_FS = "ConfigFS.xml";      // ファイル システム設定ファイル
-        public static readonly string CONFIG_FILE_LS = "AppSettings.json";  // アプリケーション設定ファイル
+        public static readonly string CONFIG_FILE_AS = "AppSettings.json";  // アプリケーション設定ファイル
 
 
         /// <summary>
@@ -40,7 +40,8 @@ namespace PlanProduction
         }
         public class AppConfig
         {
-            public List<OdCdSetting> OdCdSettings { get; set; }        // アプリケーション設定ファイル
+            public List<OdCdSetting> OdCdSettings { get; set; }         // アプリケーション設定ファイル
+            public string DefaultOdCd { get; set; }                     // アプリケーション設定ファイル
         }
 
         /// <summary>

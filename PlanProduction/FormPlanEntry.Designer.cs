@@ -32,6 +32,7 @@
             labelTitleDate = new System.Windows.Forms.Label();
             labelTitleOdCd = new System.Windows.Forms.Label();
             panel1 = new System.Windows.Forms.Panel();
+            textBox可動率 = new System.Windows.Forms.TextBox();
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -55,7 +56,6 @@
             checkBoxAchieve休憩稼働 = new System.Windows.Forms.CheckBox();
             checkBoxAchieveお昼稼働 = new System.Windows.Forms.CheckBox();
             labelAchieveTitle = new System.Windows.Forms.Label();
-            textBox可動率 = new System.Windows.Forms.TextBox();
             tableLayoutPanelTitle.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanelButtons.SuspendLayout();
@@ -121,6 +121,17 @@
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(154, 36);
             panel1.TabIndex = 2;
+            // 
+            // textBox可動率
+            // 
+            textBox可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBox可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBox可動率.Location = new System.Drawing.Point(69, 0);
+            textBox可動率.Name = "textBox可動率";
+            textBox可動率.Size = new System.Drawing.Size(45, 36);
+            textBox可動率.TabIndex = 8;
+            textBox可動率.Text = "100";
+            textBox可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label3
             // 
@@ -204,7 +215,7 @@
             buttonPlanCopy.Name = "buttonPlanCopy";
             buttonPlanCopy.Size = new System.Drawing.Size(194, 33);
             buttonPlanCopy.TabIndex = 1;
-            buttonPlanCopy.Text = "計画をコピーして実績へ";
+            buttonPlanCopy.Text = "実績へコピー";
             buttonPlanCopy.UseVisualStyleBackColor = false;
             // 
             // buttonPlanPrint
@@ -386,17 +397,6 @@
             labelAchieveTitle.TabIndex = 1;
             labelAchieveTitle.Text = "実績";
             labelAchieveTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // textBox可動率
-            // 
-            textBox可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBox可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBox可動率.Location = new System.Drawing.Point(69, 0);
-            textBox可動率.Name = "textBox可動率";
-            textBox可動率.Size = new System.Drawing.Size(45, 36);
-            textBox可動率.TabIndex = 8;
-            textBox可動率.Text = "100";
-            textBox可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // FormPlanEntry
             // 

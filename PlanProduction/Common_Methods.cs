@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Windows.Forms;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PlanProduction
 {
@@ -76,10 +77,13 @@ namespace PlanProduction
 
 
 
-        // 設定ファイル読み込み（実行ファイルと同じ階層）
+        // アプリケーション設定ファイルの読み込み（実行ファイルと同じ階層）
+        //
+        // ※DataStore.dtKM5010kaiが読み込まれている事が前提
+        //
         public static void DeserializeAppSettings()
         {
-            string fileName = Common.CONFIG_FILE_LS;
+            string fileName = Common.CONFIG_FILE_AS;
             
             string jsonString = File.ReadAllText(@fileName);
             // JSONデシリアライザー
@@ -87,44 +91,67 @@ namespace PlanProduction
             // 読み込んだデータを表示
             foreach (var odcd in config.OdCdSettings)
             {
-                Console.WriteLine($"ODCD: {odcd.OdCd}");
-                Console.WriteLine($"KTCD: {odcd.KtCd}");
-                Console.WriteLine($"SortOrder: {odcd.SortOrder}");
-                Console.WriteLine($"ODCD: {odcd.TanName}");
-                Console.WriteLine($"KTCD: {odcd.Ava}");
+                // データテーブルにチェック状態を設定
+                DataRow findRow = DataStore.dtKM5010kai.Rows.Find(new object[]
+                        { odcd.OdCd , odcd.KtCd });
+                if (findRow == null) continue;
+                findRow["CHECKED"] = true;
+                if (sortOrderMap.ContainsKey(odcd.SortOrder))
+                {
+                    findRow["SORTORDER"] = sortOrderMap[odcd.SortOrder];
+                }
+                else
+                {
+                    findRow["SORTORDER"] = sortOrderMap[1];
+                }
+                findRow["TANNAME"] = odcd.TanName;
+                findRow["AVA"] = odcd.Ava;
+                // データテーブルの起動時のオリジナルを保存
+                DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
             }
-            Console.WriteLine($"JSONファイルを読み込みました:\n{jsonString}");
+            DataStore.DefaultOdCd = config.DefaultOdCd;
+            DataStore.originalDefaultOdCd = config.DefaultOdCd;
         }
 
-        // 設定ファイル書き込み
-        public static void SerializeAppSettings(ref DataGridView dgv)
+        // アプリケーション設定ファイルへの書き込み
+        //
+        // DataStore の dtKM5010kaiのチェックレコードと DefaultOdCd を書き込む
+        //
+        public static void SerializeAppSettings()
         {
             List<Common.OdCdSetting> records = new List<Common.OdCdSetting>();
-            string fileName = Common.CONFIG_FILE_LS;
+            string fileName = Common.CONFIG_FILE_AS;
 
-            foreach (DataGridViewRow row in dgv.Rows)
+            foreach (DataRow row in DataStore.dtKM5010kai.Rows)
             {
-                bool isChecked = Convert.ToBoolean(row.Cells[0].Value);
+                bool isChecked = (string.IsNullOrEmpty(row["CHECKED"].ToString())) ? false : Convert.ToBoolean(row["CHECKED"]);
                 if (!isChecked) continue;
+
+                // 選択バリューからキーを検索
+                string val = row[5].ToString();
+                var key = sortOrderMap.FirstOrDefault(x => x.Value == val).Key;
+                if (key == 0) key = 1; // Default値
 
                 var config = new Common.OdCdSetting
                 {
-                    OdCd = row.Cells[1].Value?.ToString(),
-                    KtCd = row.Cells[2].Value?.ToString(),
-                    SortOrder = Convert.ToInt32(row.Cells[4].Value),
-                    TanName = row.Cells[5].Value?.ToString(),
-                    Ava = row.Cells[6].Value?.ToString()
+                    OdCd = row[0]?.ToString(),
+                    KtCd = row[1]?.ToString(),
+                    SortOrder = key,
+                    TanName = row[6]?.ToString(),
+                    Ava = row[7]?.ToString()
                 };
-
                 records.Add(config);
             }
-
             // JSON書き込み
-            var json = JsonSerializer.Serialize(records, new JsonSerializerOptions
+            var root = new AppConfig
+            {
+                OdCdSettings = records,
+                DefaultOdCd = DataStore.DefaultOdCd
+            };
+            var json = JsonSerializer.Serialize(root, new JsonSerializerOptions
             {
                 WriteIndented = true
             });
-
             File.WriteAllText(fileName, json);
         }
 
