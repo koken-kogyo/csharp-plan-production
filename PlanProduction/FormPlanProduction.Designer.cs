@@ -521,6 +521,7 @@
             Name = "FormPlanProduction";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "[生産計画]";
+            FormClosing += FormPlanProduction_FormClosing;
             Load += FormPlanProduction_Load;
             KeyDown += FormPlanProduction_KeyDown;
             splitContainerMain.Panel1.ResumeLayout(false);

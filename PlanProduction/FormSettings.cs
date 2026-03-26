@@ -9,6 +9,7 @@ namespace PlanProduction
 {
     public partial class FormSrttings : Form
     {
+        private Common.FormConfig settings;
         public FormSrttings()
         {
             InitializeComponent();
@@ -19,6 +20,20 @@ namespace PlanProduction
 
         private void FormSrttings_Load(object sender, EventArgs e)
         {
+            // フォームの状態を復元
+            settings = Common.FormSettingsLoad();
+            string key = this.Name;
+            if (settings.Forms.ContainsKey(key))
+            {
+                var s = settings.Forms[key];
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = new Point(s.X, s.Y);
+                this.Size = new Size(s.Width, s.Height);
+            }
+            else
+            {
+                settings.Forms[key] = new Common.FormSettings();
+            }
             dataGridView1.Rows.Clear();
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = DataStore.dtKM5010kai;
@@ -34,6 +49,17 @@ namespace PlanProduction
                 checkBoxSelected.Checked = true; //_CheckedChanged(sender, e);
 
             ReCreateComboBox();
+        }
+
+        private void FormSrttings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string key = this.Name;
+            var s = settings.Forms[key];
+            s.X = this.Location.X;
+            s.Y = this.Location.Y;
+            s.Width = this.Width;
+            s.Height = this.Height;
+            Common.FormSettingsSave(settings);
         }
 
         // コンボボックスの再作成
@@ -275,5 +301,6 @@ namespace PlanProduction
                     tb.ImeMode = ImeMode.Off;        // それ以外は英数字
             }
         }
+
     }
 }

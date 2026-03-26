@@ -358,6 +358,7 @@
             Name = "FormSrttings";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "[生産計画] 設定画面";
+            FormClosing += FormSrttings_FormClosing;
             FormClosed += FormSrttings_FormClosed;
             Load += FormSrttings_Load;
             KeyDown += FormSrttings_KeyDown;

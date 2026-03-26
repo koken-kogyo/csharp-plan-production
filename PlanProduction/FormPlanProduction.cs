@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Windows.Forms;
+using static PlanProduction.Common;
 
 namespace PlanProduction
 {
     public partial class FormPlanProduction : Form
     {
+        private FormConfig settings;
+
         // 現在表示中の手配先コードを格納する変数
         private string selectedOdCd;
 
@@ -24,6 +24,24 @@ namespace PlanProduction
 
         private void FormPlanProduction_Load(object sender, EventArgs e)
         {
+            // フォームの状態を復元
+            settings = Common.FormSettingsLoad();
+            string key = this.Name;
+            if (settings.Forms.ContainsKey(key))
+            {
+                var s = settings.Forms[key];
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = new Point(s.X, s.Y);
+                this.Size = new Size(s.Width, s.Height);
+                this.splitContainerMain.SplitterDistance = s.SplitterMainDistance;
+                this.splitContainer上下.SplitterDistance = s.SplitterSubVerticalDistance;
+                this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
+            }
+            else
+            {
+                settings.Forms[key] = new FormSettings();
+            }
+
             selectedOdCd = DataStore.DefaultOdCd;
             ReCreateODCDButtons();
 
@@ -36,6 +54,22 @@ namespace PlanProduction
 
 
 
+        }
+
+        // フォームの状態を保存
+        private void FormPlanProduction_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            settings = FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+            string key = this.Name;
+            var s = settings.Forms[key];
+            s.X = this.Location.X;
+            s.Y = this.Location.Y;
+            s.Width = this.Width;
+            s.Height = this.Height;
+            s.SplitterMainDistance = splitContainerMain.SplitterDistance;
+            s.SplitterSubVerticalDistance = splitContainer上下.SplitterDistance;
+            s.SplitterSubHorizontalDistance = splitContainer計画と実績.SplitterDistance;
+            Common.FormSettingsSave(settings);
         }
 
         // 左パネルにボタンを作成
@@ -144,6 +178,7 @@ namespace PlanProduction
         // アプリケーション設定が変更されているかを判定
         private bool DataTableEquals_MultiKey(DataTable dt1, DataTable dt2, string key1, string key2)
         {
+            if (dt1 is null) return false;
             if (dt1.Rows.Count != dt2.Rows.Count) return false; // 行数が違えば即NG
 
             // dt2 を検索しやすいように Dictionary 化
@@ -184,7 +219,6 @@ namespace PlanProduction
             DateTime d = e.Start;
             MessageBox.Show(d.ToShortDateString());
         }
-
 
     }// FormPlanProduction
 

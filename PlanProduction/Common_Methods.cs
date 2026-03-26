@@ -7,17 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Windows.Forms;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PlanProduction
 {
-
-
-
     public static partial class Common
     {
+
+
 
         /// <summary>
         /// データベース設定ファイルの逆シリアライズ
@@ -142,7 +138,6 @@ namespace PlanProduction
                 };
                 records.Add(config);
             }
-            // JSON書き込み
             var root = new AppConfig
             {
                 OdCdSettings = records,
@@ -154,6 +149,31 @@ namespace PlanProduction
             });
             File.WriteAllText(fileName, json);
         }
+
+
+
+        //
+        // 画面設定ファイルの読み込み
+        //
+        public static FormConfig FormSettingsLoad()
+        {
+            if (!File.Exists(Common.CONFIG_FILE_WS))
+                return new FormConfig();
+
+            string json = File.ReadAllText(Common.CONFIG_FILE_WS);
+            return JsonSerializer.Deserialize<FormConfig>(json) ?? new FormConfig();
+        }
+
+        //
+        // 画面設定ファイルへの書き込み
+        //
+        public static void FormSettingsSave(FormConfig settings)
+        {
+            string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(Common.CONFIG_FILE_WS, json);
+        }
+
+
 
         /// <summary>
         /// 列名が日付（例: "3/17", "3/18"）の列を縦持ち化し、

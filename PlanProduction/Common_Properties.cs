@@ -1,6 +1,4 @@
-﻿using Oracle.ManagedDataAccess.Client;
-using MySql.Data.MySqlClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace PlanProduction
 {
@@ -14,6 +12,7 @@ namespace PlanProduction
         public static readonly string CONFIG_FILE_DB = "ConfigDB.xml";      // データベース設定ファイル
         public static readonly string CONFIG_FILE_FS = "ConfigFS.xml";      // ファイル システム設定ファイル
         public static readonly string CONFIG_FILE_AS = "AppSettings.json";  // アプリケーション設定ファイル
+        public static readonly string CONFIG_FILE_WS = "FormSettings.json"; // 画面設定ファイル
 
 
         /// <summary>
@@ -23,7 +22,7 @@ namespace PlanProduction
         public static FSConfigData[] FsConfig { get; set; }             // ファイル システム設定データ
 
         /// <summary>
-        /// アプリケーション設定ファイル
+        /// アプリケーション設定情報
         /// </summary>
         public static Dictionary<int, string> sortOrderMap = new()
         {
@@ -38,10 +37,36 @@ namespace PlanProduction
             public string TanName { get; set; } = "";                   // 初期表示担当者名
             public string Ava { get; set; } = "70";                     // 可動率 Equipment availability rate
         }
+        /// <summary>
+        /// アプリケーション設定ファイル
+        /// </summary>
         public class AppConfig
         {
-            public List<OdCdSetting> OdCdSettings { get; set; }         // アプリケーション設定ファイル
-            public string DefaultOdCd { get; set; }                     // アプリケーション設定ファイル
+            public string DefaultOdCd { get; set; }                     // アプリケーション初期表示設定
+            public List<OdCdSetting> OdCdSettings { get; set; }         // アプリケーション設定
+        }
+
+
+        /// <summary>
+        /// 画面設定情報
+        /// </summary>
+        public class FormSettings
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int Height { get; set; }
+            public int Width { get; set; }
+            public int SplitterMainDistance { get; set; }
+            public int SplitterSubVerticalDistance { get; set; }
+            public int SplitterSubHorizontalDistance { get; set; }
+        }
+        /// <summary>
+        // 画面設定ファイル
+        /// </summary>
+        public class FormConfig
+        {
+            public Dictionary<string, FormSettings> Forms { get; set; }
+              = new Dictionary<string, FormSettings>();
         }
 
         /// <summary>
