@@ -1,11 +1,9 @@
 ﻿using DecryptPassword;
 using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.Reflection;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace PlanProduction
 {
@@ -50,9 +48,10 @@ namespace PlanProduction
                       + ")";  // Oracle Client を使用せず直接接続する
 
             // Oracle 接続文字列を組み立てる
-            string connectString = "User Id=" + user + "; "
-                                 + "Password=" + decPasswd + "; "
-                                 + "Data Source=" + ds;
+            string connectString = "User Id=" + user + ";"
+                                 + "Password=" + decPasswd + ";"
+                                 + "Data Source=" + ds + ";"
+                                 + "Pooling=true";
             try
             {
                 oraCnn = new OracleConnection(connectString);
@@ -76,7 +75,12 @@ namespace PlanProduction
         /// <param name="oraCnn">Oracle データベースへの接続クラス</param>
         public static void CloseOraSchema()
         {
-            oraCnn?.Close();
+            if (oraCnn?.State == System.Data.ConnectionState.Open)
+            {
+                oraCnn.Close();
+                oraCnn.Dispose();
+            }
+            oraCnn = null;
         }
         
         /// <summary>
@@ -194,6 +198,138 @@ namespace PlanProduction
                             row["TANNAME"] = string.Empty;
                             row["AVA"] = string.Empty;
                         }
+                        ret = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+
+        /// <summary>
+        /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
+        /// </summary>
+        /// <returns>DataTable</returns>
+        public static bool ReadD0410(ref DataTable dt, string condition)
+        {
+            bool ret = false;
+            string sql =　string.Empty;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                // trunc(sysdate)前後の7営業日を取得して FROM ～ TO を決める
+                DataTable fromtoDt = new DataTable();
+                sql = "with plusrec as ( "
+                        + "select YMD from s0820 where caltyp='00001' and wkkbn='1' "
+                        + "and ymd between trunc(sysdate) and sysdate + 30 order by YMD asc "
+                    + "), "
+                    + "minusrec as ( "
+                        + "select YMD from s0820 where caltyp='00001' and wkkbn='1' "
+                        + "and ymd between sysdate - 30 and trunc(sysdate) order by YMD desc "
+                    + ") "
+                    + "select to_char(min(YMD),'YYYY-MM-DD') as FROMDT "
+                    + ", to_char(max(YMD),'YYYY-MM-DD') as TODT from "
+                    + "( "
+                        + "select YMD from minusrec where rownum <= 8 "
+                        + "union  "
+                        + "select YMD from plusrec where rownum <= 8 "
+                    + ")";
+                using (OracleCommand myCmd = new OracleCommand(sql, oraCnn))
+                {
+                    using (OracleDataAdapter myDa = new OracleDataAdapter(myCmd))
+                    {
+                        myDa.Fill(fromtoDt);
+                    }
+                }
+                string from = fromtoDt.Rows[0]["FROMDT"].ToString();
+                string to = fromtoDt.Rows[0]["TODT"].ToString();
+
+                // Pivotテーブル用の列ヘッダーを取得
+                // 「行番号、YMD(YYYY-MM-DD)、MD(MM/DD)」
+                DataTable headerDt = new DataTable();
+                sql = "select ROW_NUMBER() OVER(ORDER BY EDDT) AS 行番号 "
+                    + ", to_char(eddt, 'yyyy-MM-dd') as YMD, to_char(eddt, 'mm/dd') as MD "
+                    + "from ( "
+                        + "select EDDT from "
+                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 "
+                        + $"where EDDT between '{from}' and '{to}' "
+                        + "and ODCD || KTCD in " + condition + " and ODRSTS in ('2', '3') "
+                        + "and ODRNO > to_char(sysdate - 30, 'YYMM') || '000000' "
+                    + "group by EDDT)";
+                using (OracleCommand myCmd = new OracleCommand(sql, oraCnn))
+                {
+                    using (OracleDataAdapter myDa = new OracleDataAdapter(myCmd))
+                    {
+                        myDa.Fill(headerDt);
+                    }
+                }
+
+
+                // Pivot IN 句の作成
+                // 例）DATE '2026-03-18' AS '3/18' 
+                var conditions = new List<string>();
+                foreach (DataRow row in headerDt.Rows)
+                {
+                    string cond = $"DATE '{row["YMD"].ToString()}' as \"{row["MD"].ToString()}\"";
+                    conditions.Add(cond);
+                }
+                string pivotList = string.Join(",", conditions);
+
+                // Case When 句の作成
+                // 例）when '3/18' is not null then 1
+                conditions = new List<string>();
+                foreach (DataRow row in headerDt.Rows)
+                {
+                    string cond = $"when \"{row["MD"].ToString()}\" is not null then {row["行番号"].ToString()}";
+                    conditions.Add(cond);
+                }
+                string casewhenList = string.Join(" ", conditions) + " ";
+
+                // 実際の取得
+                sql =
+                    "WITH pivot as ( "
+                        + "SELECT * "
+                        + "FROM ( "
+                            + "SELECT "
+                                + "a.HMCD, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
+                            + "FROM "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a, "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0500 m50, "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0510 m51 "
+                            + "WHERE  "
+                                + "m50.HMCD = a.HMCD "
+                                + "and m51.HMCD = a.HMCD "
+                                + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
+                                    + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
+                                + "and a.EDDT between sysdate - 30 and sysdate + 30 "
+                                + "and a.ODCD || a.KTCD in " + condition + " and a.ODRSTS in ('2', '3') "
+                                + "and a.ODRNO > to_char(sysdate - 30, 'YYMM') || '000000' "
+                        + ") src "
+                        + "PIVOT ( "
+                            + "SUM(ODRQTY) "
+                            + "FOR 手配日 IN ( "
+                                + pivotList
+                            + ") "
+                        + ") "
+                    + ") "
+                    + "select "
+                        + "case "
+                        + casewhenList
+                        + "else 9 end as 優先度 "
+                        + ", pivot.* "
+                    + "from pivot "
+                    + "ORDER BY 優先度, pivot.HMCD";
+                using (OracleCommand myCmd = new OracleCommand(sql, oraCnn))
+                {
+                    using (OracleDataAdapter myDa = new OracleDataAdapter(myCmd))
+                    {
+                        myDa.Fill(dt);
                         ret = true;
                     }
                 }

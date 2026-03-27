@@ -24,7 +24,7 @@ namespace PlanProduction
             }
             Common.DbConfig = Common.ReserializeDBConfigFile();
 
-            // EMデータベースへの接続確認
+            // EMデータベースへの接続確認（コネクションプール接続）
             if (!DBAccessor.OpenOraSchema())
             {
                 MessageBox.Show("データベースへの接続に失敗しました！\n定義ファイルを見直してください\nアプリケーションを中断します．"
@@ -33,6 +33,9 @@ namespace PlanProduction
             }
             // 作業グループマスタを読み込んでおく
             DBAccessor.ReadKM5010();
+
+            // 一旦Oracleコネクションを削除（コネクションプールなしで細かな制御をしたい場合に必要）
+            //DBAccessor.CloseOraSchema();
 
             // 初回起動の場合は設定画面からスタート
             if (!File.Exists(@Common.CONFIG_FILE_AS))

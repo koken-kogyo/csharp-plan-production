@@ -480,6 +480,7 @@
             // 
             // buttonExit
             // 
+            buttonExit.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonExit.BackColor = System.Drawing.Color.FromArgb(255, 192, 192);
             buttonExit.Font = new System.Drawing.Font("Meiryo UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             buttonExit.Location = new System.Drawing.Point(9, 527);

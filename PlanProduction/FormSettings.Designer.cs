@@ -89,6 +89,7 @@
             // 
             // buttonSaveClose
             // 
+            buttonSaveClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonSaveClose.BackColor = System.Drawing.SystemColors.Control;
             buttonSaveClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             buttonSaveClose.Location = new System.Drawing.Point(508, 14);
@@ -102,6 +103,7 @@
             // 
             // buttonCancelClose
             // 
+            buttonCancelClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonCancelClose.BackColor = System.Drawing.SystemColors.Control;
             buttonCancelClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             buttonCancelClose.Location = new System.Drawing.Point(744, 14);

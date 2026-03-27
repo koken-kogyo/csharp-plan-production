@@ -28,52 +28,59 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            splitContainerMain = new System.Windows.Forms.SplitContainer();
             dataGridView1 = new System.Windows.Forms.DataGridView();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             buttonRefresh = new System.Windows.Forms.Button();
             buttonAddPlan = new System.Windows.Forms.Button();
             buttonAddAchieve = new System.Windows.Forms.Button();
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
-            splitContainer1.Panel1.SuspendLayout();
-            splitContainer1.Panel2.SuspendLayout();
-            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerMain).BeginInit();
+            splitContainerMain.Panel1.SuspendLayout();
+            splitContainerMain.Panel2.SuspendLayout();
+            splitContainerMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             SuspendLayout();
             // 
-            // splitContainer1
+            // splitContainerMain
             // 
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainer1.Location = new System.Drawing.Point(0, 0);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainerMain.Location = new System.Drawing.Point(0, 0);
+            splitContainerMain.Margin = new System.Windows.Forms.Padding(4);
+            splitContainerMain.Name = "splitContainerMain";
+            splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel1
+            // splitContainerMain.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(dataGridView1);
-            splitContainer1.Panel1.Controls.Add(tableLayoutPanel1);
+            splitContainerMain.Panel1.Controls.Add(dataGridView1);
+            splitContainerMain.Panel1.Controls.Add(tableLayoutPanel1);
             // 
-            // splitContainer1.Panel2
+            // splitContainerMain.Panel2
             // 
-            splitContainer1.Panel2.Controls.Add(chart1);
-            splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(10);
-            splitContainer1.Size = new System.Drawing.Size(498, 582);
-            splitContainer1.SplitterDistance = 458;
-            splitContainer1.TabIndex = 0;
+            splitContainerMain.Panel2.Controls.Add(chart1);
+            splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(13, 14, 13, 14);
+            splitContainerMain.Size = new System.Drawing.Size(640, 815);
+            splitContainerMain.SplitterDistance = 641;
+            splitContainerMain.SplitterWidth = 6;
+            splitContainerMain.TabIndex = 0;
             // 
             // dataGridView1
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToResizeRows = false;
+            dataGridView1.ColumnHeadersHeight = 30;
+            dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridView1.Location = new System.Drawing.Point(0, 0);
+            dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new System.Drawing.Size(498, 414);
+            dataGridView1.RowTemplate.Height = 36;
+            dataGridView1.Size = new System.Drawing.Size(640, 579);
             dataGridView1.TabIndex = 1;
             // 
             // tableLayoutPanel1
@@ -86,11 +93,12 @@
             tableLayoutPanel1.Controls.Add(buttonAddPlan, 0, 0);
             tableLayoutPanel1.Controls.Add(buttonAddAchieve, 1, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            tableLayoutPanel1.Location = new System.Drawing.Point(0, 414);
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 579);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(498, 44);
+            tableLayoutPanel1.Size = new System.Drawing.Size(640, 62);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // buttonRefresh
@@ -98,9 +106,10 @@
             buttonRefresh.BackColor = System.Drawing.Color.LightGreen;
             buttonRefresh.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonRefresh.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonRefresh.Location = new System.Drawing.Point(301, 3);
+            buttonRefresh.Location = new System.Drawing.Point(388, 4);
+            buttonRefresh.Margin = new System.Windows.Forms.Padding(4);
             buttonRefresh.Name = "buttonRefresh";
-            buttonRefresh.Size = new System.Drawing.Size(194, 38);
+            buttonRefresh.Size = new System.Drawing.Size(248, 54);
             buttonRefresh.TabIndex = 2;
             buttonRefresh.Text = "再読み込み";
             buttonRefresh.UseVisualStyleBackColor = false;
@@ -110,9 +119,10 @@
             buttonAddPlan.BackColor = System.Drawing.Color.LightBlue;
             buttonAddPlan.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonAddPlan.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonAddPlan.Location = new System.Drawing.Point(3, 3);
+            buttonAddPlan.Location = new System.Drawing.Point(4, 4);
+            buttonAddPlan.Margin = new System.Windows.Forms.Padding(4);
             buttonAddPlan.Name = "buttonAddPlan";
-            buttonAddPlan.Size = new System.Drawing.Size(143, 38);
+            buttonAddPlan.Size = new System.Drawing.Size(184, 54);
             buttonAddPlan.TabIndex = 0;
             buttonAddPlan.Text = "計画へ追加";
             buttonAddPlan.UseVisualStyleBackColor = false;
@@ -122,44 +132,49 @@
             buttonAddAchieve.BackColor = System.Drawing.Color.MistyRose;
             buttonAddAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonAddAchieve.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonAddAchieve.Location = new System.Drawing.Point(152, 3);
+            buttonAddAchieve.Location = new System.Drawing.Point(196, 4);
+            buttonAddAchieve.Margin = new System.Windows.Forms.Padding(4);
             buttonAddAchieve.Name = "buttonAddAchieve";
-            buttonAddAchieve.Size = new System.Drawing.Size(143, 38);
+            buttonAddAchieve.Size = new System.Drawing.Size(184, 54);
             buttonAddAchieve.TabIndex = 1;
             buttonAddAchieve.Text = "実績へ追加";
             buttonAddAchieve.UseVisualStyleBackColor = false;
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea3);
             chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
-            chart1.Location = new System.Drawing.Point(10, 10);
+            legend3.Name = "Legend1";
+            chart1.Legends.Add(legend3);
+            chart1.Location = new System.Drawing.Point(13, 14);
+            chart1.Margin = new System.Windows.Forms.Padding(4);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart1.Series.Add(series1);
-            chart1.Size = new System.Drawing.Size(478, 100);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            chart1.Series.Add(series3);
+            chart1.Size = new System.Drawing.Size(614, 140);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
             // 
             // FormOrderList
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(498, 582);
-            Controls.Add(splitContainer1);
+            ClientSize = new System.Drawing.Size(640, 815);
+            Controls.Add(splitContainerMain);
+            Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            Margin = new System.Windows.Forms.Padding(4);
             Name = "FormOrderList";
             Text = "[生産計画] 手配一覧";
+            FormClosing += FormOrderList_FormClosing;
             Load += FormOrderList_Load;
             KeyDown += FormOrderList_KeyDown;
-            splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
-            splitContainer1.ResumeLayout(false);
+            splitContainerMain.Panel1.ResumeLayout(false);
+            splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerMain).EndInit();
+            splitContainerMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
@@ -168,7 +183,7 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

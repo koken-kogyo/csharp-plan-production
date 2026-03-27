@@ -37,10 +37,6 @@ namespace PlanProduction
                 this.splitContainer上下.SplitterDistance = s.SplitterSubVerticalDistance;
                 this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
             }
-            else
-            {
-                settings.Forms[key] = new FormSettings();
-            }
 
             selectedOdCd = DataStore.DefaultOdCd;
             ReCreateODCDButtons();
@@ -61,6 +57,7 @@ namespace PlanProduction
         {
             settings = FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
             string key = this.Name;
+            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
             var s = settings.Forms[key];
             s.X = this.Location.X;
             s.Y = this.Location.Y;
@@ -111,6 +108,7 @@ namespace PlanProduction
         {
             var btn = new Button();
 
+            btn.Name = odcd;
             btn.Text = odcd + "\n" + odrnm;
             btn.Height = 80;
             btn.Dock = DockStyle.Top;
@@ -125,7 +123,12 @@ namespace PlanProduction
 
             btn.Click += (s, e) =>
             {
-                MessageBox.Show($"{odcd} がクリックされました");
+                selectedOdCd = odcd;
+                foreach (Control ctrl in splitContainerMain.Panel1.Controls)
+                {
+                    if (ctrl is Button)
+                        ctrl.BackColor = (ctrl.Name == selectedOdCd) ? Color.LightBlue: Color.LightGray;
+                }
             };
             btn.MouseEnter += (s, e) =>
             {
@@ -210,7 +213,7 @@ namespace PlanProduction
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var frm = new FormOrderList();
+            var frm = new FormOrderList(true, selectedOdCd);
             frm.Show();
         }
 
