@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace PlanProduction
 
         // DataTable を保持するフィールドを作る
         private DataTable dt = new DataTable();
+        private DataTable dtKM5030 = new DataTable();
 
         public FormOrderList(bool readOnly, string selectedOdCd)
         {
@@ -33,6 +35,7 @@ namespace PlanProduction
             // イベント登録
             dataGridView1.DataBindingComplete += DataGridView1_DataBindingComplete;
             dataGridView1.RowPostPaint += dataGridView1_RowPostPaint;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             buttonRefresh.Click += ButtonRefresh_Click;
         }
 
@@ -47,25 +50,52 @@ namespace PlanProduction
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
                 this.Size = new Size(s.Width, s.Height);
-                this.splitContainerMain.SplitterDistance = s.SplitterMainDistance;
             }
 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
 
-            // 手配データ取得
+            // 抽出条件の作成
             var condition = ExtracConditions();
+            // 手配データ取得
             DBAccessor.ReadD0410(ref dt, condition);
+            // 標準作業時間マスタ取得
+            DBAccessor.ReadKM5030(ref dtKM5030, condition);
+            // CTをくっつける
+            MargeDataTable(ref dt, ref dtKM5030);
             dataGridView1.DataSource = dt;
-
-
-            // チャートデータの更新
-            UpdateChart();
-
         }
 
-        // オラクルの抽出条件を作成
+        // CTをくっつける
+        private void MargeDataTable(ref DataTable dt, ref DataTable km5030)
+        {
+            dt.Columns.Add("CT", typeof(double));
+            foreach (DataRow row in dt.Rows)
+            {
+                var findRow = km5030.AsEnumerable()
+                    .Where(r => 
+                        r.Field<string>("ODCD") == row["ODCD"].ToString() &&
+                        r.Field<string>("WKGRCD") == row["KTCD"].ToString() &&
+                        r.Field<string>("HMCD") == row["HMCD"].ToString()
+                    )
+                    .OrderByDescending(x => x.Field<string>("ODCD"))
+                    .ToList();
+                if (findRow == null)
+                {
+                    row["CT"] = 0;
+                }
+                else
+                {
+                    row["CT"] = findRow[0]["CT"];
+                }
+            }
+        }
+
+        /// <summary>
+        /// 手配ファイルからの抽出条件を作成
+        /// </summary>
+        /// <returns>ODCD+KTCD In 句（例）('0631ABETP01',,,'0631ABETP11')</returns>
         private string ExtracConditions()
         {
             var row = DataStore.dtKM5010kai.AsEnumerable()
@@ -80,14 +110,16 @@ namespace PlanProduction
         private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             // データ列の設定（幅、右揃え、ソート機能なし）
-            for (int col = 5; col < dataGridView1.Columns.Count; col++)
+            for (int col = 6; col < dataGridView1.Columns.Count; col++)
             {
                 //dataGridView1.Columns[col].Width = 50;
                 dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
                 dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
                 dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
             }
-            dataGridView1.Columns["KTCD"].Visible = false; // KTCDは非表示
+            dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
+            dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
+            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";     // CTは小数点以下1桁
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
         // 行番号を付ける（1 から始める）
@@ -120,7 +152,6 @@ namespace PlanProduction
             s.Y = this.Location.Y;
             s.Width = this.Width;
             s.Height = this.Height;
-            s.SplitterMainDistance = splitContainerMain.SplitterDistance;
             Common.FormSettingsSave(settings);
         }
 
@@ -133,76 +164,43 @@ namespace PlanProduction
             }
         }
 
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            double sumProduct = 0;
+
+            // 選択されたセルの行インデックスを取得（重複除去）
+            var selectedRows = dataGridView1.SelectedCells
+                .Cast<DataGridViewCell>()
+                .Select(c => c.RowIndex)
+                .Distinct();
+
+            foreach (int rowIndex in selectedRows)
+            {
+                var row = dataGridView1.Rows[rowIndex];
+
+                double price = Convert.ToDouble(row.Cells["CT"].Value);
+
+                for (int col = 6; col < dataGridView1.ColumnCount - 1; col++)
+                {
+                    if (row.Cells[col].Selected)
+                    {
+                        if (string.IsNullOrEmpty(row.Cells[col].Value.ToString())) continue;
+                        double qty = Convert.ToDouble(row.Cells[col].Value);
+                        sumProduct += qty * price;
+                    }
+                }
+            }
+
+            textBox作業時間.Text = (sumProduct / 3600).ToString("N2");
+        }
         // 再読み込み
         private void ButtonRefresh_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
-        // グラフの更新
-        private void UpdateChart()
-        {
-            try
-            {
-                //chart1.Series.Clear();
-                //chart1.ChartAreas.Clear();
-
-                // データ集計
-                //var summarized = SumQtyTimesCT_ByDate(ref dt, 可動率);
-
-                // Series 作成
-                //Series series = new Series("日付別合計")
-                //{
-                //    ChartType = SeriesChartType.Bar,    // 棒グラフ
-                //    XValueMember = "Date",              // 横軸
-                //    YValueMembers = "Total",            // 縦軸
-                //    IsValueShownAsLabel = true,         // 棒に値を表示
-                //    ToolTip = "#VALX : #VAL",           // ホバーでツールチップ
-                //};
-                //series.SmartLabelStyle.Enabled = false; // SmartLabel の自動回避を無効化
-
-                // Areas作成
-                //var area = new ChartArea("Ava");
-                //area.AxisY.Maximum = 10;                // 縦軸の最大値を固定（10時間）
-                //area.AxisX.IsReversed = true;           // X軸の上下反転
-                //area.AxisX.MajorGrid.Enabled = false;   // X軸のグリッド線を消す
-                //area.AxisX.MajorTickMark.Enabled = false;//日付の横の線を消す
-
-                //chart1.Series.Add(series);
-                //chart1.ChartAreas.Add(area);
-                //chart1.DataSource = summarized;
-                //chart1.DataBind();
-                // 最大値を超す場合を考慮
-                //foreach (var p in chart1.Series[0].Points)
-                //{
-                //    var v = p.YValues[0];
-                //    if (v < 8)
-                //    {
-                //        p["BarLabelStyle"] = "Outside"; // 短い棒は外に
-                //        p.LabelForeColor = Color.Black;
-                //    }
-                //    else if (v <= 11)
-                //    {
-                //        p["BarLabelStyle"] = "Center";  // 11時間以下は棒の中央
-                //        p.LabelForeColor = Color.White;
-                //    }
-                //    else
-                //    {
-                //        p["BarLabelStyle"] = "Bottom";  // その他は棒の最後に表示
-                //        p.LabelForeColor = Color.White;
-                //    }
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("グラフ表示中にエラー: " + ex.Message);
-            }
-        }
 
         private void BtnLoadChart_Click(object sender, EventArgs e)
         {
-            UpdateChart();
         }
 
     }

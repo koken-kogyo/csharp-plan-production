@@ -87,7 +87,7 @@ namespace PlanProduction
             // 読み込んだデータを表示
             foreach (var odcd in config.OdCdSettings)
             {
-                // データテーブルにチェック状態を設定
+                // データテーブルにチェック状態を設定（主キーで検索PrimaryKey）
                 DataRow findRow = DataStore.dtKM5010kai.Rows.Find(new object[]
                         { odcd.OdCd , odcd.KtCd });
                 if (findRow == null) continue;

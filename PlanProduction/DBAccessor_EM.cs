@@ -211,6 +211,37 @@ namespace PlanProduction
             return ret;
         }
 
+        /// <summary>
+        /// EM マスタ読み込み (KM5030 標準作業時間マスタ)
+        /// </summary>
+        /// <returns>権限あり</returns>
+        public static bool ReadKM5030(ref DataTable dt, string condition)
+        {
+            bool ret = false;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                string sql = "SELECT * FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
+                    + "WHERE ODCD||WKGRCD in " + condition
+                    + "ORDER BY HMCD";
+                using (OracleCommand myCmd = new OracleCommand(sql, oraCnn))
+                {
+                    using (OracleDataAdapter myDa = new OracleDataAdapter(myCmd))
+                    {
+                        myDa.Fill(dt);
+                        ret = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
 
         /// <summary>
         /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
@@ -297,7 +328,7 @@ namespace PlanProduction
                         + "SELECT * "
                         + "FROM ( "
                             + "SELECT "
-                                + "a.HMCD, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
+                                + "a.HMCD, a.ODCD, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
                             + "FROM "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a, "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0500 m50, "
