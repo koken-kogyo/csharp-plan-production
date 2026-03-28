@@ -1,4 +1,13 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * 
+ *     /// CA2211:非定数フィールドは表示されるべきではありません
+ *     https://learn.microsoft.com/ja-jp/dotnet/fundamentals/code-analysis/quality-rules/ca2211
+ *     
+ *     → このアプリケーションはスレッドセーフではないため慎重に制御してください
+ *     （ 自分訳：あるフォームで設定したここの変数を、他のフォームに反映されられない！）
+ *     → .editorconfig で CA2211 を無効にしてあります！
+ */
+using System.Collections.Generic;
 
 namespace PlanProduction
 {
@@ -65,8 +74,7 @@ namespace PlanProduction
         /// </summary>
         public class FormConfig
         {
-            public Dictionary<string, FormSettings> Forms { get; set; }
-              = new Dictionary<string, FormSettings>();
+            public Dictionary<string, FormSettings> Forms { get; set; } = [];
         }
 
         /// <summary>

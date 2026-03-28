@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace PlanProduction
 {
@@ -14,14 +16,32 @@ namespace PlanProduction
         };
         */
         // DataTable.Copy() を実行すると、主キー（PrimaryKey）もコピーされます。
-        public static DataTable originalKM5010kai;  
+        public static DataTable originalKM5010kai;
+
+        // 手配先マスタ
+        public static Dictionary<string, string> M0300Map;
 
         // アプリケーション設定ファイルのデフォルト手配先コード
         public static string DefaultOdCd;
         public static string originalDefaultOdCd;
 
-        //
-        public static DataTable dtD0410;
+        // アプリケーション設定
+        public static List<Common.OdCdSetting> OdCdSettings { get; set; }
+
+        /// <summary>
+        /// 抽出条件を作成
+        /// </summary>
+        /// <returns>ODCD+KTCD In 句（例）('0631ABETP01',,,'0631ABETP11')</returns>
+        public static string ExtracConditions(string odcd)
+        {
+            var row = dtKM5010kai.AsEnumerable()
+                .Where(r => r.Field<bool>("CHECKED") == true && r.Field<string>("ODCD") == odcd)
+                .Select(s => "'" + s.Field<string>("ODCD") + s.Field<string>("WKGRCD") + "'")
+                .ToList();
+            string s = "(" + string.Join(",", row) + ")";
+            return s;
+        }
+
 
     }
 }

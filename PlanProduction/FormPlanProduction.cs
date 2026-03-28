@@ -13,6 +13,7 @@ namespace PlanProduction
 
         // 現在表示中の手配先コードを格納する変数
         private string selectedOdCd;
+        private OdCdSetting OdCdSetting;
 
         public FormPlanProduction()
         {
@@ -39,6 +40,7 @@ namespace PlanProduction
             }
 
             selectedOdCd = DataStore.DefaultOdCd;
+            OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
             ReCreateODCDButtons();
 
             monthCalendar1.BoldedDates = new[]
@@ -124,6 +126,7 @@ namespace PlanProduction
             btn.Click += (s, e) =>
             {
                 selectedOdCd = odcd;
+                OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
                 foreach (Control ctrl in splitContainerMain.Panel1.Controls)
                 {
                     if (ctrl is Button)
@@ -213,7 +216,7 @@ namespace PlanProduction
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var frm = new FormOrderList(true, selectedOdCd);
+            var frm = new FormOrderList(true, OdCdSetting);
             frm.Show();
         }
 

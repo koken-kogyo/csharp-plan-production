@@ -31,8 +31,9 @@ namespace PlanProduction
                     , "エラー", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
-            // 作業グループマスタを読み込んでおく
+            // 作業グループマスタと手配先マスタを読み込んでおく
             DBAccessor.ReadKM5010();
+            DBAccessor.ReadM300();
 
             // 一旦Oracleコネクションを削除（コネクションプールなしで細かな制御をしたい場合に必要）
             //DBAccessor.CloseOraSchema();

@@ -23,9 +23,8 @@ namespace PlanProduction
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name;
-            if (settings.Forms.ContainsKey(key))
+            if (settings.Forms.TryGetValue(key, out Common.FormSettings s))
             {
-                var s = settings.Forms[key];
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
                 this.Size = new Size(s.Width, s.Height);
@@ -106,13 +105,13 @@ namespace PlanProduction
         {
             if (e.KeyCode == Keys.F9)
             {
-                buttonSaveClose_Click(sender, e);
+                ButtonSaveClose_Click(sender, e);
             }
             if (e.KeyCode == Keys.Escape)
             {
                 if (textBoxSearchOdCd.Text != string.Empty)
                 {
-                    buttonClear_Click(sender, e);
+                    ButtonClear_Click(sender, e);
                 }
                 else
                 {
@@ -131,7 +130,7 @@ namespace PlanProduction
         }
 
         // 手配先コード検索ボックス
-        private void textBoxSearchOdCd_TextChanged(object sender, EventArgs e)
+        private void TextBoxSearchOdCd_TextChanged(object sender, EventArgs e)
         {
             checkBoxSelected.Checked = false;
             string filter = (textBoxSearchOdCd.TextLength == 0) ? string.Empty :
@@ -141,13 +140,13 @@ namespace PlanProduction
         }
 
         // 検索条件クリア
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void ButtonClear_Click(object sender, EventArgs e)
         {
             textBoxSearchOdCd.Text = string.Empty;
         }
 
         // 保存して閉じる
-        private void buttonSaveClose_Click(object sender, EventArgs e)
+        private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
             string errmsg = string.Empty;
             dataGridView1.ClearSelection();
@@ -211,7 +210,7 @@ namespace PlanProduction
         }
 
         // 閉じるボタン
-        private void buttonCancelClose_Click(object sender, EventArgs e)
+        private void ButtonCancelClose_Click(object sender, EventArgs e)
         {
             DataStore.dtKM5010kai = DataStore.originalKM5010kai.Copy();
             DataStore.DefaultOdCd = DataStore.originalDefaultOdCd;
@@ -219,7 +218,7 @@ namespace PlanProduction
         }
 
         // 選択されたものだけ表示
-        private void checkBoxSelected_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxSelected_CheckedChanged(object sender, EventArgs e)
         {
             bool isChecked = checkBoxSelected.Checked;
             dataGridView1.ClearSelection();
@@ -232,7 +231,7 @@ namespace PlanProduction
         }
 
         // 表示されている行に対して全てをチェック
-        private void checkBoxAllCheck_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxAllCheck_CheckedChanged(object sender, EventArgs e)
         {
             bool isChecked = checkBoxAllCheck.Checked;
 
@@ -241,8 +240,7 @@ namespace PlanProduction
                 if (row.Visible)
                 {
                     // データテーブルにチェック状態を設定
-                    DataRow findRow = DataStore.dtKM5010kai.Rows.Find(new object[]
-                        { row.Cells["ColumnOdCd"].Value, row.Cells["ColumnKtCd"].Value });
+                    DataRow findRow = DataStore.dtKM5010kai.Rows.Find([row.Cells["ColumnOdCd"].Value, row.Cells["ColumnKtCd"].Value]);
                     if (findRow != null) findRow["CHECKED"] = true;
                     row.Cells[0].Value = isChecked;
                 }
@@ -253,7 +251,7 @@ namespace PlanProduction
         }
 
         // セルクリック時にドロップダウンを即開く
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 4) return;
 
@@ -269,7 +267,7 @@ namespace PlanProduction
         }
 
         // クリックした瞬間にイベント
-        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private void DataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentCell == null) return;
             if (dataGridView1.CurrentCell is DataGridViewCheckBoxCell)
@@ -279,18 +277,17 @@ namespace PlanProduction
         }
 
         // チェックされた瞬間にコンボボックスを再作成
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             if (dataGridView1.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
             {
-                bool isChecked = (bool)dataGridView1[e.ColumnIndex, e.RowIndex].Value;
                 ReCreateComboBox();
             }
         }
 
         // 「担当者名」を編集する際は日本語入力とする
-        private void dataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void DataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (e.Control is TextBox tb)
             {
@@ -301,6 +298,27 @@ namespace PlanProduction
                     tb.ImeMode = ImeMode.Off;        // それ以外は英数字
             }
         }
+
+        // 「CTマスタメンテ」呼出
+        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "ColumnButton") // ボタン列のクリックかどうかを判定
+            {
+                Common.OdCdSetting setting = new()
+                {
+                    OdCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnOdCd"].Value.ToString(),                    
+                    KtCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnKtCd"].Value.ToString(),
+                    SortOrder = 1,
+                    TanName = "",
+                    Ava = ""
+                };
+                FormCTMaster frm = new(setting);
+                frm.ShowDialog();
+            }
+        }
+
+
+
 
     }
 }

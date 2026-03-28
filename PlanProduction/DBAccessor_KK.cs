@@ -93,26 +93,22 @@ namespace PlanProduction
                     + "WHERE "
                     + "USERID = '" + Common.UserId + "' "
                     ;
-                using (MySqlCommand myCmd = new MySqlCommand(sql, kkCnn))
+                using MySqlCommand myCmd = new(sql, kkCnn);
+                using MySqlDataAdapter myDa = new(myCmd);
+                var myDt = new DataTable();
+                myDa.Fill(myDt);
+                foreach (DataRow dr in myDt.Rows)
                 {
-                    using (MySqlDataAdapter myDa = new MySqlDataAdapter(myCmd))
-                    {
-                        var myDt = new DataTable();
-                        myDa.Fill(myDt);
-                        foreach (DataRow dr in myDt.Rows)
-                        {
-                            Common.Active = dr[1].ToString();
-                            Common.AuthLv = dr[2].ToString();
-                            ret = true;
-                            break;
-                        }
-                    }
+                    Common.Active = dr[1].ToString();
+                    Common.AuthLv = dr[2].ToString();
+                    ret = true;
+                    break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // エラー
-                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                //string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
                 ret = false;
             }
             // 接続を閉じる

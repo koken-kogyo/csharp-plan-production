@@ -27,12 +27,10 @@ namespace PlanProduction
             string fileName = Common.CONFIG_FILE_DB;
 
             // XmlSerializerオブジェクトを作成
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(DBConfigData[]));
+            System.Xml.Serialization.XmlSerializer serializer = new(typeof(DBConfigData[]));
 
             // 読み込むファイルを開く
-            System.IO.StreamReader sr = new System.IO.StreamReader(
-                fileName, new System.Text.UTF8Encoding(false));
+            System.IO.StreamReader sr = new(fileName, new System.Text.UTF8Encoding(false));
 
             // XMLファイルから読み込み、逆シリアル化する
             DBConfigData[] loadAry = (DBConfigData[])serializer.Deserialize(sr);
@@ -55,12 +53,10 @@ namespace PlanProduction
             string fileName = Common.CONFIG_FILE_FS;
 
             // XmlSerializerオブジェクトを作成
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(FSConfigData[]));
+            System.Xml.Serialization.XmlSerializer serializer = new(typeof(FSConfigData[]));
 
             // 読み込むファイルを開く
-            System.IO.StreamReader sr = new System.IO.StreamReader(
-                fileName, new System.Text.UTF8Encoding(false));
+            System.IO.StreamReader sr = new(fileName, new System.Text.UTF8Encoding(false));
 
             // XMLファイルから読み込み、逆シリアル化する
             FSConfigData[] loadAry = (FSConfigData[])serializer.Deserialize(sr);
@@ -88,13 +84,12 @@ namespace PlanProduction
             foreach (var odcd in config.OdCdSettings)
             {
                 // データテーブルにチェック状態を設定（主キーで検索PrimaryKey）
-                DataRow findRow = DataStore.dtKM5010kai.Rows.Find(new object[]
-                        { odcd.OdCd , odcd.KtCd });
+                DataRow findRow = DataStore.dtKM5010kai.Rows.Find([odcd.OdCd , odcd.KtCd]);
                 if (findRow == null) continue;
                 findRow["CHECKED"] = true;
-                if (sortOrderMap.ContainsKey(odcd.SortOrder))
+                if (sortOrderMap.TryGetValue(odcd.SortOrder, out string value))
                 {
-                    findRow["SORTORDER"] = sortOrderMap[odcd.SortOrder];
+                    findRow["SORTORDER"] = value;
                 }
                 else
                 {
@@ -107,6 +102,7 @@ namespace PlanProduction
             }
             DataStore.DefaultOdCd = config.DefaultOdCd;
             DataStore.originalDefaultOdCd = config.DefaultOdCd;
+            DataStore.OdCdSettings = config.OdCdSettings;
         }
 
         // アプリケーション設定ファイルへの書き込み
@@ -115,12 +111,12 @@ namespace PlanProduction
         //
         public static void SerializeAppSettings()
         {
-            List<Common.OdCdSetting> records = new List<Common.OdCdSetting>();
+            List<Common.OdCdSetting> records = [];
             string fileName = Common.CONFIG_FILE_AS;
 
             foreach (DataRow row in DataStore.dtKM5010kai.Rows)
             {
-                bool isChecked = (string.IsNullOrEmpty(row["CHECKED"].ToString())) ? false : Convert.ToBoolean(row["CHECKED"]);
+                bool v = bool.TryParse(row["CHECKED"]?.ToString(), out bool isChecked);
                 if (!isChecked) continue;
 
                 // 選択バリューからキーを検索
@@ -143,10 +139,8 @@ namespace PlanProduction
                 OdCdSettings = records,
                 DefaultOdCd = DataStore.DefaultOdCd
             };
-            var json = JsonSerializer.Serialize(root, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+            string json = JsonSerializer.Serialize(root, options: JsonWriteOptions);
+            DataStore.OdCdSettings = records;
             File.WriteAllText(fileName, json);
         }
 
@@ -169,10 +163,19 @@ namespace PlanProduction
         //
         public static void FormSettingsSave(FormConfig settings)
         {
-            string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+            string json = JsonSerializer.Serialize(settings, options: JsonWriteOptions);
             File.WriteAllText(Common.CONFIG_FILE_WS, json);
         }
 
+        private static readonly JsonSerializerOptions JsonWriteOptions = new()
+        {
+            WriteIndented = true
+        };
+
+        private static readonly JsonSerializerOptions JsonReadOptions = new()
+        {
+            AllowTrailingCommas = true
+        };
 
 
         /// <summary>

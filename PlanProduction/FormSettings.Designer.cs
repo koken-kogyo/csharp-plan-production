@@ -69,9 +69,9 @@
             panel2.Controls.Add(comboBox1);
             panel2.Controls.Add(label4);
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panel2.Location = new System.Drawing.Point(0, 627);
+            panel2.Location = new System.Drawing.Point(0, 379);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(929, 81);
+            panel2.Size = new System.Drawing.Size(897, 81);
             panel2.TabIndex = 32;
             // 
             // checkBoxAllCheck
@@ -85,35 +85,35 @@
             checkBoxAllCheck.TabIndex = 36;
             checkBoxAllCheck.Text = "表示されている全てを選択";
             checkBoxAllCheck.UseVisualStyleBackColor = true;
-            checkBoxAllCheck.CheckedChanged += checkBoxAllCheck_CheckedChanged;
+            checkBoxAllCheck.CheckedChanged += CheckBoxAllCheck_CheckedChanged;
             // 
             // buttonSaveClose
             // 
             buttonSaveClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            buttonSaveClose.BackColor = System.Drawing.SystemColors.Control;
+            buttonSaveClose.BackColor = System.Drawing.Color.LightCoral;
             buttonSaveClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonSaveClose.Location = new System.Drawing.Point(508, 14);
+            buttonSaveClose.Location = new System.Drawing.Point(476, 14);
             buttonSaveClose.Margin = new System.Windows.Forms.Padding(4);
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(228, 54);
             buttonSaveClose.TabIndex = 33;
             buttonSaveClose.Text = "保存して閉じる (F9)";
             buttonSaveClose.UseVisualStyleBackColor = false;
-            buttonSaveClose.Click += buttonSaveClose_Click;
+            buttonSaveClose.Click += ButtonSaveClose_Click;
             // 
             // buttonCancelClose
             // 
             buttonCancelClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonCancelClose.BackColor = System.Drawing.SystemColors.Control;
             buttonCancelClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonCancelClose.Location = new System.Drawing.Point(744, 14);
+            buttonCancelClose.Location = new System.Drawing.Point(712, 14);
             buttonCancelClose.Margin = new System.Windows.Forms.Padding(4);
             buttonCancelClose.Name = "buttonCancelClose";
             buttonCancelClose.Size = new System.Drawing.Size(172, 54);
             buttonCancelClose.TabIndex = 32;
             buttonCancelClose.Text = "閉じる";
             buttonCancelClose.UseVisualStyleBackColor = false;
-            buttonCancelClose.Click += buttonCancelClose_Click;
+            buttonCancelClose.Click += ButtonCancelClose_Click;
             // 
             // comboBox1
             // 
@@ -150,7 +150,7 @@
             panel3.Dock = System.Windows.Forms.DockStyle.Top;
             panel3.Location = new System.Drawing.Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(929, 122);
+            panel3.Size = new System.Drawing.Size(897, 122);
             panel3.TabIndex = 33;
             // 
             // label5
@@ -173,7 +173,7 @@
             buttonClear.TabIndex = 36;
             buttonClear.Text = "条件クリア";
             buttonClear.UseVisualStyleBackColor = true;
-            buttonClear.Click += buttonClear_Click;
+            buttonClear.Click += ButtonClear_Click;
             // 
             // checkBoxSelected
             // 
@@ -186,7 +186,7 @@
             checkBoxSelected.TabIndex = 35;
             checkBoxSelected.Text = "設定済みの手配先コード";
             checkBoxSelected.UseVisualStyleBackColor = true;
-            checkBoxSelected.CheckedChanged += checkBoxSelected_CheckedChanged;
+            checkBoxSelected.CheckedChanged += CheckBoxSelected_CheckedChanged;
             // 
             // textBoxSearchOdCd
             // 
@@ -196,7 +196,7 @@
             textBoxSearchOdCd.Name = "textBoxSearchOdCd";
             textBoxSearchOdCd.Size = new System.Drawing.Size(124, 29);
             textBoxSearchOdCd.TabIndex = 34;
-            textBoxSearchOdCd.TextChanged += textBoxSearchOdCd_TextChanged;
+            textBoxSearchOdCd.TextChanged += TextBoxSearchOdCd_TextChanged;
             // 
             // label3
             // 
@@ -239,7 +239,7 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 122);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(929, 505);
+            panel1.Size = new System.Drawing.Size(897, 257);
             panel1.TabIndex = 34;
             // 
             // dataGridView1
@@ -265,12 +265,13 @@
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 36;
-            dataGridView1.Size = new System.Drawing.Size(929, 505);
+            dataGridView1.Size = new System.Drawing.Size(897, 257);
             dataGridView1.TabIndex = 24;
-            dataGridView1.CellClick += dataGridView1_CellClick;
-            dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
-            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
-            dataGridView1.EditingControlShowing += dataGridView1_EditingControlShowing;
+            dataGridView1.CellClick += DataGridView1_CellClick;
+            dataGridView1.CellContentClick += DataGridView1_CellContentClick;
+            dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
+            dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
+            dataGridView1.EditingControlShowing += DataGridView1_EditingControlShowing;
             // 
             // ColumnSelected
             // 
@@ -352,7 +353,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(929, 708);
+            ClientSize = new System.Drawing.Size(897, 460);
             Controls.Add(panel1);
             Controls.Add(panel3);
             Controls.Add(panel2);

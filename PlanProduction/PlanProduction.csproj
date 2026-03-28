@@ -27,4 +27,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Repos\csharp-plan-production\PlanProduction\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Repos\csharp-plan-production\PlanProduction\.editorconfig" />
+  </ItemGroup>
 </Project>
