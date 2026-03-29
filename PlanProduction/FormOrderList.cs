@@ -1,79 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PlanProduction
 {
     public partial class FormOrderList : Form
     {
-        private Common.FormConfig settings;
+        private FormConfig settings;
+
+        // フォーム間連携アクションコールバック
+        private readonly Action<string, List<SelectedItem>> callback;
 
         // 現在表示中の手配先コードを格納する変数
-        private readonly Common.OdCdSetting OdCdSetting;
+        private readonly OdCdSetting OdCdSetting;
         private double 可動率;
 
         // DataTable を保持するフィールドを作る
         private DataTable dt = new();
         private DataTable dtKM5030 = new();
 
-        public FormOrderList(bool readOnly, Common.OdCdSetting OdCdSetting)
+        // 複数列選択用のセルリスト
+        private readonly List<DataGridViewCell> selectedCells = [];
+
+
+        public FormOrderList(OdCdSetting OdCdSetting, Action<string, List<SelectedItem>> callback)
         {
             InitializeComponent();
 
             this.KeyPreview = true;                     // フォームでキーイベントを受け取る設定
+            this.OdCdSetting = OdCdSetting;             // 表示対象の手配先コードをこのフォームに保持
 
-            // 表示対象の手配先コードをこのフォームに保持
-            this.OdCdSetting = OdCdSetting;
-
-            // 使用可能ボタンの設定
-            if (readOnly)
+            if (callback == null)
             {
+
+                // 直接呼び出された場合は、計画と実績の追加ボタンは無効化
                 buttonAddPlan.Enabled = false;
                 buttonAddPlan.BackColor = Color.LightGray;
                 buttonAddAchieve.Enabled = false;
                 buttonAddAchieve.BackColor = Color.LightGray;
             }
-
-            // イベント登録
-            dataGridView1.DataBindingComplete += DataGridView1_DataBindingComplete;
-            dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
-            dataGridView1.SelectionChanged += DataGridView1_SelectionChanged;
-            buttonRefresh.Click += ButtonRefresh_Click;
+            else
+            {
+                this.callback = callback;               // コールバックを受け取る
+            }
         }
 
         private void FormOrderList_Load(object sender, EventArgs e)
         {
+            // コントロールにイベントを登録
+            dataGridView1.DataBindingComplete += DataGridView1_DataBindingComplete;
+            dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
+            dataGridView1.SelectionChanged += DataGridView1_SelectionChanged;
+            buttonRefresh.Click += ButtonRefresh_Click;
+            buttonRefresh.Click += ButtonRefresh_Click;
+
+            // コントロールの初期化
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.EnableHeadersVisualStyles = false;
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name;
-            if (settings.Forms.TryGetValue(key, out Common.FormSettings s))
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
                 this.Size = new Size(s.Width, s.Height);
             }
 
+            // コントロールに初期値をセット
             labelTitleOdCd.Text = $"【{OdCdSetting.OdCd}】 {DataStore.M0300Map[OdCdSetting.OdCd]}";
             textBox可動率.Text = (string.IsNullOrEmpty(OdCdSetting.Ava)) ? "70" : OdCdSetting.Ava;
             可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.EnableHeadersVisualStyles = false;
-            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-
-            // 抽出条件の作成
-            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);
-            // 手配データ取得
-            DBAccessor.ReadD0410Pivot(ref dt, condition);
-            // 標準作業時間マスタ取得
-            DBAccessor.ReadKM5030(ref dtKM5030, condition);
-            // CTをくっつける
+            // 表示するデータを取得
+            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);   // 抽出条件の作成            
+            DBAccessor.ReadD0410Pivot(ref dt, condition);                   // 手配データ取得
+            DBAccessor.ReadKM5030(ref dtKM5030, condition);                 // 標準作業時間マスタ取得
+            // 表示するデータテーブルを編集（CTをくっつける）
             MargeDataTable(ref dt, ref dtKM5030);
+
             dataGridView1.DataSource = dt;
         }
 
@@ -142,7 +152,7 @@ namespace PlanProduction
         {
             settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
             string key = this.Name;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new Common.FormSettings();
+            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
             var s = settings.Forms[key];
             s.X = this.Location.X;
             s.Y = this.Location.Y;
@@ -232,6 +242,86 @@ namespace PlanProduction
         private void TextBox可動率_MouseDown(object sender, MouseEventArgs e)
         {
             textBox可動率.SelectAll();
+        }
+
+        private void ButtonAddPlan_Click(object sender, EventArgs e)
+        {
+            // 「計画リスト」にDTO（データ転送オブジェクト）を渡す
+            var list = MakeSelectedItemList();
+            callback("Plan", list);
+        }
+        private void ButtonAddAchieve_Click(object sender, EventArgs e)
+        {
+            // 「実績リスト」にDTO（データ転送オブジェクト）を渡す
+            var list = MakeSelectedItemList();
+            callback("Achieve", list);
+        }
+
+        private List<SelectedItem> MakeSelectedItemList()
+        {
+            // 品番ごとの合計結果を保存する辞書
+            Dictionary<string, int> summary = [];
+            Dictionary<string, double> ct = [];
+
+            // 選択セルの並び替え
+            var query = from DataGridViewCell c in dataGridView1.SelectedCells
+                        orderby c.RowIndex, c.ColumnIndex
+                        select c;
+
+            foreach (DataGridViewCell c in query)
+            {
+                string hmcd = dataGridView1.Rows[c.RowIndex].Cells["HMCD"].Value.ToString();
+                int qty = 0;
+                if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;
+                if (summary.ContainsKey(hmcd))
+                {
+                    summary[hmcd] += qty;
+                }
+                else
+                {
+                    summary[hmcd] = qty;
+                }
+                if (!ct.ContainsKey(hmcd))
+                {
+                    ct[hmcd] = 0.0;
+                    if (double.TryParse(dataGridView1.Rows[c.RowIndex].Cells["CT"].Value.ToString(), out double d)) ct[hmcd] = d;
+                }
+            }
+            // DTO（データ転送オブジェクト）に変換
+            var list = summary.Select(kv => new SelectedItem
+            {
+                HmCd = kv.Key,
+                SumQty = kv.Value,
+                CT = ct[kv.Key]
+            }).ToList();
+            return list;
+        }
+
+        private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+            if (e.ColumnIndex < 0) return;
+            int col = e.ColumnIndex;
+
+            bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
+
+            // Ctrl が押されていなければ選択クリア
+            if (!isCtrl)
+            {
+                selectedCells.Clear();
+                dataGridView1.ClearSelection();
+            }
+
+            // この列のすべてのセルを追加（新規行も含む）
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                DataGridViewCell cell = row.Cells[col];
+
+                if (!selectedCells.Contains(cell))
+                    selectedCells.Add(cell);
+
+                cell.Selected = true;
+            }
         }
     }
 }

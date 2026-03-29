@@ -76,7 +76,7 @@
             // buttonClose
             // 
             buttonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            buttonClose.BackColor = System.Drawing.SystemColors.Control;
+            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             buttonClose.Location = new System.Drawing.Point(8, 452);
             buttonClose.Margin = new System.Windows.Forms.Padding(4);
@@ -132,7 +132,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new System.Drawing.Size(496, 463);
             dataGridView1.TabIndex = 2;
-            dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
             // 
             // labelMasterTitle
             // 

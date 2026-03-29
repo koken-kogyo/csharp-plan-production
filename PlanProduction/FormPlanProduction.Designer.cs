@@ -58,12 +58,10 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel1 = new System.Windows.Forms.Panel();
             monthCalendar1 = new System.Windows.Forms.MonthCalendar();
-            button2 = new System.Windows.Forms.Button();
-            button1 = new System.Windows.Forms.Button();
+            buttonOrderList = new System.Windows.Forms.Button();
+            buttonPlanEntry = new System.Windows.Forms.Button();
             buttonSettings = new System.Windows.Forms.Button();
             buttonExit = new System.Windows.Forms.Button();
-            buttonDelete = new System.Windows.Forms.Button();
-            buttonUndo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)splitContainerMain).BeginInit();
             splitContainerMain.Panel1.SuspendLayout();
             splitContainerMain.Panel2.SuspendLayout();
@@ -110,7 +108,7 @@
             button3.Location = new System.Drawing.Point(10, 32);
             button3.Name = "button3";
             button3.Size = new System.Drawing.Size(189, 36);
-            button3.TabIndex = 0;
+            button3.TabIndex = 1;
             button3.Text = "実行時に削除される";
             button3.UseVisualStyleBackColor = true;
             // 
@@ -423,12 +421,10 @@
             // panel1
             // 
             panel1.Controls.Add(monthCalendar1);
-            panel1.Controls.Add(button2);
-            panel1.Controls.Add(button1);
+            panel1.Controls.Add(buttonOrderList);
+            panel1.Controls.Add(buttonPlanEntry);
             panel1.Controls.Add(buttonSettings);
             panel1.Controls.Add(buttonExit);
-            panel1.Controls.Add(buttonDelete);
-            panel1.Controls.Add(buttonUndo);
             panel1.Dock = System.Windows.Forms.DockStyle.Right;
             panel1.Location = new System.Drawing.Point(792, 0);
             panel1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
@@ -443,29 +439,29 @@
             monthCalendar1.Location = new System.Drawing.Point(9, 45);
             monthCalendar1.Name = "monthCalendar1";
             monthCalendar1.TabIndex = 14;
-            monthCalendar1.DateSelected += monthCalendar1_DateSelected;
+            monthCalendar1.DateSelected += MonthCalendar1_DateSelected;
             // 
-            // button2
+            // buttonOrderList
             // 
-            button2.Location = new System.Drawing.Point(9, 297);
-            button2.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(199, 41);
-            button2.TabIndex = 13;
-            button2.Text = "手配一覧 (OrderList)";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            buttonOrderList.Location = new System.Drawing.Point(9, 222);
+            buttonOrderList.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            buttonOrderList.Name = "buttonOrderList";
+            buttonOrderList.Size = new System.Drawing.Size(199, 52);
+            buttonOrderList.TabIndex = 13;
+            buttonOrderList.Text = "手配一覧";
+            buttonOrderList.UseVisualStyleBackColor = false;
+            buttonOrderList.Click += ButtonOrderList_Click;
             // 
-            // button1
+            // buttonPlanEntry
             // 
-            button1.Location = new System.Drawing.Point(9, 350);
-            button1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(199, 41);
-            button1.TabIndex = 12;
-            button1.Text = "計画入力";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            buttonPlanEntry.Location = new System.Drawing.Point(9, 286);
+            buttonPlanEntry.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            buttonPlanEntry.Name = "buttonPlanEntry";
+            buttonPlanEntry.Size = new System.Drawing.Size(199, 52);
+            buttonPlanEntry.TabIndex = 12;
+            buttonPlanEntry.Text = "計画入力";
+            buttonPlanEntry.UseVisualStyleBackColor = false;
+            buttonPlanEntry.Click += ButtonPlanEntry_Click;
             // 
             // buttonSettings
             // 
@@ -476,7 +472,7 @@
             buttonSettings.TabIndex = 11;
             buttonSettings.Text = "設定変更";
             buttonSettings.UseVisualStyleBackColor = true;
-            buttonSettings.Click += buttonSettings_Click;
+            buttonSettings.Click += ButtonSettings_Click;
             // 
             // buttonExit
             // 
@@ -490,26 +486,6 @@
             buttonExit.Text = "終了";
             buttonExit.UseVisualStyleBackColor = false;
             buttonExit.Click += ButtonExit_Click;
-            // 
-            // buttonDelete
-            // 
-            buttonDelete.Location = new System.Drawing.Point(9, 403);
-            buttonDelete.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new System.Drawing.Size(199, 41);
-            buttonDelete.TabIndex = 4;
-            buttonDelete.Text = "行削除 (&D)";
-            buttonDelete.UseVisualStyleBackColor = true;
-            // 
-            // buttonUndo
-            // 
-            buttonUndo.Location = new System.Drawing.Point(9, 456);
-            buttonUndo.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            buttonUndo.Name = "buttonUndo";
-            buttonUndo.Size = new System.Drawing.Size(199, 41);
-            buttonUndo.TabIndex = 3;
-            buttonUndo.Text = "元に戻す (Ctrl+Z)";
-            buttonUndo.UseVisualStyleBackColor = true;
             // 
             // FormPlanProduction
             // 
@@ -554,12 +530,10 @@
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.MonthCalendar monthCalendar1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonOrderList;
+        private System.Windows.Forms.Button buttonPlanEntry;
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.Button buttonExit;
-        private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.SplitContainer splitContainer上下;
         private System.Windows.Forms.SplitContainer splitContainer計画と実績;
         private System.Windows.Forms.Panel panelPlanResult;
@@ -575,7 +549,6 @@
         private System.Windows.Forms.CheckBox checkBoxPlanピカピカ;
         private System.Windows.Forms.CheckBox checkBoxPlan休憩稼働;
         private System.Windows.Forms.CheckBox checkBoxPlanお昼稼働;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox可動率;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
@@ -584,6 +557,7 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.Button button3;
     }
 }
 

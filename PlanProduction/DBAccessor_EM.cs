@@ -169,7 +169,7 @@ namespace PlanProduction
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 a, "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 m "
                     + "WHERE a.ODCD=m.ODCD "
-                    + "ORDER BY a.ODCD"
+                    + "ORDER BY a.ODCD, a.WKGRNM"
                     ;
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
@@ -180,6 +180,7 @@ namespace PlanProduction
                 DataStore.dtKM5010kai.Columns.Add("SORTORDER", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("TANNAME", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("AVA", typeof(string));
+                DataStore.dtKM5010kai.Columns.Add("STARTTIME", typeof(string));
                 // 主キーを設定して検索に使用
                 DataStore.dtKM5010kai.PrimaryKey =
                 [
@@ -192,6 +193,7 @@ namespace PlanProduction
                     row["CHECKED"] = false;
                     row["TANNAME"] = string.Empty;
                     row["AVA"] = string.Empty;
+                    row["STARTTIME"] = string.Empty;
                 }
                 ret = true;
             }

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             panel2 = new System.Windows.Forms.Panel();
             checkBoxAllCheck = new System.Windows.Forms.CheckBox();
             buttonSaveClose = new System.Windows.Forms.Button();
@@ -54,6 +54,7 @@
             ColumnListOrder = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ColumnTanName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Column可動率 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Column開始時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ColumnButton = new System.Windows.Forms.DataGridViewButtonColumn();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -71,7 +72,7 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel2.Location = new System.Drawing.Point(0, 379);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(897, 81);
+            panel2.Size = new System.Drawing.Size(952, 81);
             panel2.TabIndex = 32;
             // 
             // checkBoxAllCheck
@@ -82,7 +83,7 @@
             checkBoxAllCheck.Margin = new System.Windows.Forms.Padding(4);
             checkBoxAllCheck.Name = "checkBoxAllCheck";
             checkBoxAllCheck.Size = new System.Drawing.Size(195, 25);
-            checkBoxAllCheck.TabIndex = 36;
+            checkBoxAllCheck.TabIndex = 4;
             checkBoxAllCheck.Text = "表示されている全てを選択";
             checkBoxAllCheck.UseVisualStyleBackColor = true;
             checkBoxAllCheck.CheckedChanged += CheckBoxAllCheck_CheckedChanged;
@@ -92,11 +93,11 @@
             buttonSaveClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonSaveClose.BackColor = System.Drawing.Color.LightCoral;
             buttonSaveClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonSaveClose.Location = new System.Drawing.Point(476, 14);
+            buttonSaveClose.Location = new System.Drawing.Point(531, 14);
             buttonSaveClose.Margin = new System.Windows.Forms.Padding(4);
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(228, 54);
-            buttonSaveClose.TabIndex = 33;
+            buttonSaveClose.TabIndex = 6;
             buttonSaveClose.Text = "保存して閉じる (F9)";
             buttonSaveClose.UseVisualStyleBackColor = false;
             buttonSaveClose.Click += ButtonSaveClose_Click;
@@ -104,13 +105,13 @@
             // buttonCancelClose
             // 
             buttonCancelClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            buttonCancelClose.BackColor = System.Drawing.SystemColors.Control;
+            buttonCancelClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonCancelClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonCancelClose.Location = new System.Drawing.Point(712, 14);
+            buttonCancelClose.Location = new System.Drawing.Point(767, 14);
             buttonCancelClose.Margin = new System.Windows.Forms.Padding(4);
             buttonCancelClose.Name = "buttonCancelClose";
             buttonCancelClose.Size = new System.Drawing.Size(172, 54);
-            buttonCancelClose.TabIndex = 32;
+            buttonCancelClose.TabIndex = 7;
             buttonCancelClose.Text = "閉じる";
             buttonCancelClose.UseVisualStyleBackColor = false;
             buttonCancelClose.Click += ButtonCancelClose_Click;
@@ -125,7 +126,7 @@
             comboBox1.Margin = new System.Windows.Forms.Padding(4);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new System.Drawing.Size(211, 29);
-            comboBox1.TabIndex = 31;
+            comboBox1.TabIndex = 5;
             // 
             // label4
             // 
@@ -150,7 +151,7 @@
             panel3.Dock = System.Windows.Forms.DockStyle.Top;
             panel3.Location = new System.Drawing.Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(897, 122);
+            panel3.Size = new System.Drawing.Size(952, 122);
             panel3.TabIndex = 33;
             // 
             // label5
@@ -170,7 +171,7 @@
             buttonClear.Margin = new System.Windows.Forms.Padding(4);
             buttonClear.Name = "buttonClear";
             buttonClear.Size = new System.Drawing.Size(84, 22);
-            buttonClear.TabIndex = 36;
+            buttonClear.TabIndex = 2;
             buttonClear.Text = "条件クリア";
             buttonClear.UseVisualStyleBackColor = true;
             buttonClear.Click += ButtonClear_Click;
@@ -183,7 +184,7 @@
             checkBoxSelected.Margin = new System.Windows.Forms.Padding(4);
             checkBoxSelected.Name = "checkBoxSelected";
             checkBoxSelected.Size = new System.Drawing.Size(143, 19);
-            checkBoxSelected.TabIndex = 35;
+            checkBoxSelected.TabIndex = 0;
             checkBoxSelected.Text = "設定済みの手配先コード";
             checkBoxSelected.UseVisualStyleBackColor = true;
             checkBoxSelected.CheckedChanged += CheckBoxSelected_CheckedChanged;
@@ -195,7 +196,7 @@
             textBoxSearchOdCd.Margin = new System.Windows.Forms.Padding(4);
             textBoxSearchOdCd.Name = "textBoxSearchOdCd";
             textBoxSearchOdCd.Size = new System.Drawing.Size(124, 29);
-            textBoxSearchOdCd.TabIndex = 34;
+            textBoxSearchOdCd.TabIndex = 1;
             textBoxSearchOdCd.TextChanged += TextBoxSearchOdCd_TextChanged;
             // 
             // label3
@@ -205,7 +206,7 @@
             label3.Location = new System.Drawing.Point(441, 99);
             label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(337, 21);
+            label3.Size = new System.Drawing.Size(421, 21);
             label3.TabIndex = 33;
             label3.Text = "ローカル設定ファイル [ AppSettings.json ]";
             label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -239,24 +240,24 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 122);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(897, 257);
+            panel1.Size = new System.Drawing.Size(952, 257);
             panel1.TabIndex = 34;
             // 
             // dataGridView1
             // 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dataGridView1.ColumnHeadersHeight = 30;
             dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { ColumnSelected, ColumnOdCd, ColumnKtCd, ColumnWkGrNm, ColumnListOrder, ColumnTanName, Column可動率, ColumnButton });
+            dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { ColumnSelected, ColumnOdCd, ColumnKtCd, ColumnWkGrNm, ColumnListOrder, ColumnTanName, Column可動率, Column開始時刻, ColumnButton });
             dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -265,8 +266,8 @@
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 36;
-            dataGridView1.Size = new System.Drawing.Size(897, 257);
-            dataGridView1.TabIndex = 24;
+            dataGridView1.Size = new System.Drawing.Size(952, 257);
+            dataGridView1.TabIndex = 3;
             dataGridView1.CellClick += DataGridView1_CellClick;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
@@ -309,8 +310,8 @@
             // ColumnListOrder
             // 
             ColumnListOrder.DataPropertyName = "SORTORDER";
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(3);
-            ColumnListOrder.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(3);
+            ColumnListOrder.DefaultCellStyle = dataGridViewCellStyle5;
             ColumnListOrder.HeaderText = "手配リスト順番";
             ColumnListOrder.Items.AddRange(new object[] { "品番優先", "手配日優先" });
             ColumnListOrder.MinimumWidth = 6;
@@ -336,11 +337,18 @@
             Column可動率.ToolTipText = "同一手配先コードが複数の場合は先頭の値が適用されます";
             Column可動率.Width = 85;
             // 
+            // Column開始時刻
+            // 
+            Column開始時刻.DataPropertyName = "STARTTIME";
+            Column開始時刻.HeaderText = "開始時刻";
+            Column開始時刻.Name = "Column開始時刻";
+            Column開始時刻.Width = 85;
+            // 
             // ColumnButton
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(3);
-            ColumnButton.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(3);
+            ColumnButton.DefaultCellStyle = dataGridViewCellStyle6;
             ColumnButton.HeaderText = "CT編集";
             ColumnButton.MinimumWidth = 6;
             ColumnButton.Name = "ColumnButton";
@@ -353,7 +361,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(897, 460);
+            ClientSize = new System.Drawing.Size(952, 460);
             Controls.Add(panel1);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -399,6 +407,7 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn ColumnListOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTanName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column可動率;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column開始時刻;
         private System.Windows.Forms.DataGridViewButtonColumn ColumnButton;
     }
 }

@@ -75,7 +75,7 @@
             // 
             // buttonClose
             // 
-            buttonClose.BackColor = System.Drawing.SystemColors.Control;
+            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             buttonClose.Location = new System.Drawing.Point(538, 4);
@@ -83,6 +83,7 @@
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new System.Drawing.Size(172, 54);
             buttonClose.TabIndex = 3;
+            buttonClose.TabStop = false;
             buttonClose.Text = "閉じる";
             buttonClose.UseVisualStyleBackColor = false;
             buttonClose.Click += ButtonClose_Click;
@@ -97,6 +98,7 @@
             buttonRefresh.Name = "buttonRefresh";
             buttonRefresh.Size = new System.Drawing.Size(170, 54);
             buttonRefresh.TabIndex = 2;
+            buttonRefresh.TabStop = false;
             buttonRefresh.Text = "再読み込み";
             buttonRefresh.UseVisualStyleBackColor = false;
             // 
@@ -110,8 +112,10 @@
             buttonAddPlan.Name = "buttonAddPlan";
             buttonAddPlan.Size = new System.Drawing.Size(170, 54);
             buttonAddPlan.TabIndex = 0;
+            buttonAddPlan.TabStop = false;
             buttonAddPlan.Text = "計画へ追加";
             buttonAddPlan.UseVisualStyleBackColor = false;
+            buttonAddPlan.Click += ButtonAddPlan_Click;
             // 
             // buttonAddAchieve
             // 
@@ -123,8 +127,10 @@
             buttonAddAchieve.Name = "buttonAddAchieve";
             buttonAddAchieve.Size = new System.Drawing.Size(170, 54);
             buttonAddAchieve.TabIndex = 1;
+            buttonAddAchieve.TabStop = false;
             buttonAddAchieve.Text = "実績へ追加";
             buttonAddAchieve.UseVisualStyleBackColor = false;
+            buttonAddAchieve.Click += ButtonAddAchieve_Click;
             // 
             // panel1
             // 
@@ -279,6 +285,7 @@
             dataGridView1.RowTemplate.Height = 36;
             dataGridView1.Size = new System.Drawing.Size(714, 245);
             dataGridView1.TabIndex = 4;
+            dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
             // 
             // FormOrderList
             // 

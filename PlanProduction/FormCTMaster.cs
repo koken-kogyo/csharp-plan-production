@@ -14,21 +14,26 @@ namespace PlanProduction
 {
     public partial class FormCTMaster : Form
     {
-        private Common.FormConfig settings;
-        private readonly Common.OdCdSetting OdCdSetting;
+        private FormConfig settings;
+        private readonly OdCdSetting OdCdSetting;
         private DataTable dt = new();           // KM5030
         private DataTable dtMaster = new();     // D0410
 
         // --- 変更された行を記録するセット ---
         private readonly HashSet<int> changedRows = [];
 
-        public FormCTMaster(Common.OdCdSetting OdCdSetting)
+        public FormCTMaster(OdCdSetting OdCdSetting)
         {
             InitializeComponent();
 
             this.KeyPreview = true;                     // フォームでキーイベントを受け取る設定
 
             this.OdCdSetting = OdCdSetting;
+
+            // イベント登録
+            dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
+            dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete;
+            dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
         }
 
         private void FormCTMasterMainte_Load(object sender, EventArgs e)
@@ -36,7 +41,7 @@ namespace PlanProduction
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name;
-            if (settings.Forms.TryGetValue(key, out Common.FormSettings s))
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
@@ -59,6 +64,20 @@ namespace PlanProduction
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             dataGridView1.DataSource = dt;
+
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.EnableHeadersVisualStyles = false;
+            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+            dataGridView2.DataSource = dtMaster;
+            if (dtMaster.Rows.Count > 0)
+            {
+                dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                foreach (DataGridViewColumn col in dataGridView2.Columns) col.ReadOnly = true;
+            }
+            toolStripStatusLabel1.Text = string.Empty;
+        }
+        private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
             if (dt.Rows.Count > 0)
             {
                 dataGridView1.Columns["VALDTF"].Visible = false;
@@ -72,25 +91,16 @@ namespace PlanProduction
                 foreach (DataGridViewColumn col in dataGridView1.Columns) col.ReadOnly = true;
                 var ct = dataGridView1.Columns["CT"];
                 ct.ReadOnly = false;                                                        // 変更可能
-                ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
+                ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;  // データの右寄せ
                 ct.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
                 ct.SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
                 ct.DefaultCellStyle.Format = "N1";                                          // 小数点以下1桁
                 dataGridView1.Columns["NOTE"].ReadOnly = false;                             // 変更可能
 
-                dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
             }
-            dataGridView2.AllowUserToAddRows = false;
-            dataGridView2.EnableHeadersVisualStyles = false;
-            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            dataGridView2.DataSource = dtMaster;
-            if (dtMaster.Rows.Count > 0)
-            {
-                dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                foreach (DataGridViewColumn col in dataGridView2.Columns) col.ReadOnly = true;
-            }
-            toolStripStatusLabel1.Text = string.Empty;
         }
+
+
         // 行番号を付ける
         private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
@@ -195,15 +205,25 @@ namespace PlanProduction
                 newrow["ODCD"] = OdCdSetting.OdCd;
                 newrow["WKGRCD"] = OdCdSetting.KtCd;
                 newrow["HMCD"] = cel.Value;
-                newrow["VALDTF"] = DateTime.Now;
-                newrow["WKSEQ"] = 10;
+                newrow["VALDTF"] = DateTime.Today;
+                newrow["WKSEQ"] = Common.DEFAULT_WKSEQ;
                 newrow["CT"] = 0;
+                newrow["INSTDT"] = DateTime.Now;
+                newrow["UPDTDT"] = DateTime.Now;
                 dt.Rows.Add(newrow);
                 // 未登録品番一覧から削除
                 DataRow[] rows = dtMaster.Select($"HMCD='{cel.Value}'");
                 if (rows.Length > 0) rows[0].Delete();
                 insertCnt++;
             }
+
+            // 追加した行の最後のセルにフォーカス
+            dataGridView1.CurrentCell = dataGridView1.Rows[^1].Cells["CT"];
+            dataGridView1.Rows[^1].Cells["CT"].Selected = true;
+            // そのセルを編集状態にする
+            dataGridView1.BeginEdit(true);
+            // 列幅自動調整
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             toolStripStatusLabel1.Text = $"{insertCnt} 件を追加しました（まだ保存はされていません）";
         }
 
@@ -211,7 +231,7 @@ namespace PlanProduction
         {
             settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
             string key = this.Name;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new Common.FormSettings();
+            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
             var s = settings.Forms[key];
             s.X = this.Location.X;
             s.Y = this.Location.Y;
@@ -220,5 +240,6 @@ namespace PlanProduction
             s.SplitterMainDistance = this.splitContainer1.SplitterDistance;
             Common.FormSettingsSave(settings);
         }
+
     }
 }

@@ -28,9 +28,8 @@ namespace PlanProduction
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name;
-            if (settings.Forms.ContainsKey(key))
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
-                var s = settings.Forms[key];
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
                 this.Size = new Size(s.Width, s.Height);
@@ -43,12 +42,12 @@ namespace PlanProduction
             OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
             ReCreateODCDButtons();
 
-            monthCalendar1.BoldedDates = new[]
-            {
+            monthCalendar1.BoldedDates =
+            [
                 new DateTime(2026, 3, 10),
                 new DateTime(2026, 3, 15),
                 new DateTime(2026, 3, 20)
-            };
+            ];
 
 
 
@@ -94,35 +93,33 @@ namespace PlanProduction
             // 既存のボタンを削除
             splitContainerMain.Panel1.Controls.Clear();
             // ボタンの作成
-            int buttonCount = grouped.Count();
+            int buttonCount = grouped.Count;
             for (int i = 0; i < buttonCount; i++)
             {
                 var btn = CreateTileButton(grouped[i].ODCD, grouped[i].ODRNM);
                 splitContainerMain.Panel1.Controls.Add(btn);
                 // スペーサーを挟む
-                var spacer = new Panel();
-                spacer.Height = 10;
-                spacer.Dock = DockStyle.Top;
+                var spacer = new Panel
+                {
+                    Height = 10,
+                    Dock = DockStyle.Top
+                };
                 splitContainerMain.Panel1.Controls.Add(spacer);
             }
         }
         private Button CreateTileButton(string odcd, string odrnm)
         {
-            var btn = new Button();
-
-            btn.Name = odcd;
-            btn.Text = odcd + "\n" + odrnm;
-            btn.Height = 80;
-            btn.Dock = DockStyle.Top;
-
-            //            btn.Font = new Font("Meiryo", 12, FontStyle.Bold);
-            btn.BackColor = (odcd == selectedOdCd) ? Color.LightGreen : Color.LightGray;
-            btn.ForeColor = Color.Black;
-
+            var btn = new Button
+            {
+                Name = odcd,
+                Text = odcd + "\n" + odrnm,
+                Height = 80,
+                Dock = DockStyle.Top,
+                BackColor = (odcd == selectedOdCd) ? Color.LightGreen : Color.LightGray,
+                ForeColor = Color.Black
+            };
             btn.FlatAppearance.BorderSize = 0;
-
             btn.Margin = new Padding(5);
-
             btn.Click += (s, e) =>
             {
                 selectedOdCd = odcd;
@@ -130,7 +127,7 @@ namespace PlanProduction
                 foreach (Control ctrl in splitContainerMain.Panel1.Controls)
                 {
                     if (ctrl is Button)
-                        ctrl.BackColor = (ctrl.Name == selectedOdCd) ? Color.LightBlue: Color.LightGray;
+                        ctrl.BackColor = (ctrl.Name == selectedOdCd) ? Color.LightBlue : Color.LightGray;
                 }
             };
             btn.MouseEnter += (s, e) =>
@@ -162,17 +159,19 @@ namespace PlanProduction
         }
 
         // 「設定画面」をモーダルで呼び出す
-        private void buttonSettings_Click(object sender, EventArgs e)
+        private void ButtonSettings_Click(object sender, EventArgs e)
         {
-            FormSrttings fm = new FormSrttings();
+            FormSrttings fm = new();
             fm.ShowDialog();
             // アプリケーション設定が変更されているかを判定
             if (!DataTableEquals_MultiKey(DataStore.originalKM5010kai, DataStore.dtKM5010kai, "ODCD", "WKGRCD"))
             {
+                OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
                 DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
                 ReCreateODCDButtons();
             }
-            // アプリケーション設定が変更されているかを判定
+            // アプリケーション設定が変更されているかを
+            // 判定
             if (DataStore.originalDefaultOdCd != DataStore.DefaultOdCd)
             {
                 selectedOdCd = DataStore.DefaultOdCd;
@@ -182,7 +181,7 @@ namespace PlanProduction
         }
 
         // アプリケーション設定が変更されているかを判定
-        private bool DataTableEquals_MultiKey(DataTable dt1, DataTable dt2, string key1, string key2)
+        private static bool DataTableEquals_MultiKey(DataTable dt1, DataTable dt2, string key1, string key2)
         {
             if (dt1 is null) return false;
             if (dt1.Rows.Count != dt2.Rows.Count) return false; // 行数が違えば即NG
@@ -208,19 +207,22 @@ namespace PlanProduction
             return true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        // 「手配一覧」だけをモードレスで呼び出す
+        private void ButtonOrderList_Click(object sender, EventArgs e)
         {
-            var frm = new FormPlanEntry("6031A", "鈴木", "70");
+            var frm = new FormOrderList(OdCdSetting, null);
             frm.Show();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        // 「計画入力」と「手配一覧（計画入力からのコールバック付きで呼び出される）」をモードレスで呼び出す
+        private void ButtonPlanEntry_Click(object sender, EventArgs e)
         {
-            var frm = new FormOrderList(true, OdCdSetting);
+            var frm = new FormPlanEntry(OdCdSetting);
             frm.Show();
         }
 
-        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
+        // （未作成）
+        private void MonthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
             DateTime d = e.Start;
             MessageBox.Show(d.ToShortDateString());

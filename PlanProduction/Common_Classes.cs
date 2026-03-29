@@ -35,6 +35,60 @@ namespace PlanProduction
         public bool CreateSubDir { get; set; }  // サブ ディレクトリ生成 (出力専用) ("": 未設定, false: いいえ, true: はい)
     }
 
+    /// <summary>
+    /// アプリケーション設定クラス
+    /// </summary>
+
+    public class OdCdSetting
+    {
+        public string OdCd { get; set; } = "";                      // 手配先コード
+        public string KtCd { get; set; } = "";                      // 工程コード
+        public int SortOrder { get; set; } = 1;                     // ソート順（1:品番順、2:手配日の古い順）Dic<sortOrderMap>
+        public string TanName { get; set; } = "";                   // 初期表示担当者名
+        public string Ava { get; set; } = "70";                     // 可動率 Equipment availability rate
+        public string StartTime { get; set; } = "08:15";            // 開始時刻
+    }
+    /// <summary>
+    /// アプリケーション設定ファイル
+    /// </summary>
+    public class AppConfig
+    {
+        public string DefaultOdCd { get; set; }                     // アプリケーション初期表示設定
+        public List<OdCdSetting> OdCdSettings { get; set; }         // アプリケーション設定
+    }
+
+
+    /// <summary>
+    /// 画面情報設定クラス
+    /// </summary>
+    public class FormSettings
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int SplitterMainDistance { get; set; }
+        public int SplitterSubVerticalDistance { get; set; }
+        public int SplitterSubHorizontalDistance { get; set; }
+    }
+    /// <summary>
+    // 画面情報設定ファイル
+    /// </summary>
+    public class FormConfig
+    {
+        public Dictionary<string, FormSettings> Forms { get; set; } = [];
+    }
+
+    /// <summary>
+    /// フォーム間データ連携クラス
+    /// </summary>
+    public class SelectedItem
+    {
+        public string HmCd { get; set; }
+        public int SumQty { get; set; }
+        public double CT { get; set; }
+    }
+
     // 元に戻すアクション種類
     public enum UndoType
     {

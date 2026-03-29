@@ -97,6 +97,7 @@ namespace PlanProduction
                 }
                 findRow["TANNAME"] = odcd.TanName;
                 findRow["AVA"] = odcd.Ava;
+                findRow["STARTTIME"] = odcd.StartTime;
                 // データテーブルの起動時のオリジナルを保存
                 DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
             }
@@ -111,7 +112,7 @@ namespace PlanProduction
         //
         public static void SerializeAppSettings()
         {
-            List<Common.OdCdSetting> records = [];
+            List<OdCdSetting> records = [];
             string fileName = Common.CONFIG_FILE_AS;
 
             foreach (DataRow row in DataStore.dtKM5010kai.Rows)
@@ -124,13 +125,14 @@ namespace PlanProduction
                 var key = sortOrderMap.FirstOrDefault(x => x.Value == val).Key;
                 if (key == 0) key = 1; // Default値
 
-                var config = new Common.OdCdSetting
+                var config = new OdCdSetting
                 {
                     OdCd = row[0]?.ToString(),
                     KtCd = row[1]?.ToString(),
                     SortOrder = key,
                     TanName = row[6]?.ToString(),
-                    Ava = row[7]?.ToString()
+                    Ava = row[7]?.ToString(),
+                    StartTime = row[8]?.ToString()
                 };
                 records.Add(config);
             }

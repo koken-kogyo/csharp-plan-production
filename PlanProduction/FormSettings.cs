@@ -9,7 +9,7 @@ namespace PlanProduction
 {
     public partial class FormSrttings : Form
     {
-        private Common.FormConfig settings;
+        private FormConfig settings;
         public FormSrttings()
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace PlanProduction
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name;
-            if (settings.Forms.TryGetValue(key, out Common.FormSettings s))
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = new Point(s.X, s.Y);
@@ -31,21 +31,20 @@ namespace PlanProduction
             }
             else
             {
-                settings.Forms[key] = new Common.FormSettings();
+                settings.Forms[key] = new FormSettings();
             }
             dataGridView1.Rows.Clear();
             dataGridView1.AutoGenerateColumns = false;
-            dataGridView1.DataSource = DataStore.dtKM5010kai;
             dataGridView1.Font = new Font("Yu Gothic UI", 12);
             dataGridView1.Columns[1].ReadOnly = true; // 1列目
             dataGridView1.Columns[2].ReadOnly = true; // 2列目
             dataGridView1.Columns[3].ReadOnly = true; // 3列目
-            dataGridView1.ClearSelection();
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+            dataGridView1.DataSource = DataStore.dtKM5010kai;
 
             if (!string.IsNullOrEmpty(DataStore.DefaultOdCd))
-                checkBoxSelected.Checked = true; //_CheckedChanged(sender, e);
+                checkBoxSelected.Checked = true;
 
             ReCreateComboBox();
         }
@@ -123,7 +122,7 @@ namespace PlanProduction
             }
         }
 
-        // 設定ファイルなしの状態で画面を閉じた場合はアプリケーションを終了する
+        // 設定ファイルなしの状態で画面を閉じた場合はアプリケーションを終了する（初回起動時）
         private void FormSrttings_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (!File.Exists(@Common.CONFIG_FILE_AS)) Application.Exit();
@@ -176,10 +175,15 @@ namespace PlanProduction
                         row.Cells["Column可動率"].Selected = true;
                         errmsg = "数値(1～100)を入力して下さい．";
                     }
+                    if (!TimeSpan.TryParse(row.Cells["Column開始時刻"].Value.ToString(), out _))
+                    {
+                        row.Cells["Column開始時刻"].Selected = true;
+                        errmsg = "時刻を入力してください．";
+                    }
                 }
                 else
                 {
-                    // チェック状態から外された場合はデータテーブルの値をクリアしておく
+                    // データテーブルに残っている値を初期化
                     if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString()))
                     {
                         row.Cells["ColumnListOrder"].Value = "";
@@ -191,6 +195,10 @@ namespace PlanProduction
                     if (!string.IsNullOrEmpty(row.Cells["Column可動率"].Value.ToString()))
                     {
                         row.Cells["Column可動率"].Value = "";
+                    }
+                    if (!string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
+                    {
+                        row.Cells["Column開始時刻"].Value = "";
                     }
                 }
                 if (errmsg != string.Empty)
@@ -304,21 +312,15 @@ namespace PlanProduction
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "ColumnButton") // ボタン列のクリックかどうかを判定
             {
-                Common.OdCdSetting setting = new()
+                OdCdSetting setting = new()
                 {
-                    OdCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnOdCd"].Value.ToString(),                    
-                    KtCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnKtCd"].Value.ToString(),
-                    SortOrder = 1,
-                    TanName = "",
-                    Ava = ""
+                    OdCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnOdCd"].Value.ToString(),
+                    KtCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnKtCd"].Value.ToString()
                 };
                 FormCTMaster frm = new(setting);
                 frm.ShowDialog();
             }
         }
-
-
-
 
     }
 }

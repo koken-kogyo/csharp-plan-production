@@ -26,7 +26,7 @@ namespace PlanProduction
         public static string originalDefaultOdCd;
 
         // アプリケーション設定
-        public static List<Common.OdCdSetting> OdCdSettings { get; set; }
+        public static List<OdCdSetting> OdCdSettings { get; set; }
 
         /// <summary>
         /// 抽出条件を作成
