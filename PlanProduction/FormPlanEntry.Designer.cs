@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             tableLayoutPanelButtons = new System.Windows.Forms.TableLayoutPanel();
             buttonClose = new System.Windows.Forms.Button();
             buttonSaveClose = new System.Windows.Forms.Button();
@@ -50,11 +50,12 @@
             labelPlanTitle = new System.Windows.Forms.Label();
             labelTitleOdCd = new System.Windows.Forms.Label();
             panelPlanOptions = new System.Windows.Forms.Panel();
+            checkBoxHiddenAchieve = new System.Windows.Forms.CheckBox();
+            textBoxPlanEndTime = new System.Windows.Forms.TextBox();
+            textBoxPlanStartTime = new System.Windows.Forms.TextBox();
             label10 = new System.Windows.Forms.Label();
             label9 = new System.Windows.Forms.Label();
-            textBoxPlanEndTime = new System.Windows.Forms.TextBox();
             label8 = new System.Windows.Forms.Label();
-            textBoxPlanStartTime = new System.Windows.Forms.TextBox();
             textBoxPlanKdo = new System.Windows.Forms.TextBox();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -152,7 +153,7 @@
             // 
             // buttonAchieveClear
             // 
-            buttonAchieveClear.BackColor = System.Drawing.Color.MistyRose;
+            buttonAchieveClear.BackColor = System.Drawing.SystemColors.Control;
             buttonAchieveClear.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonAchieveClear.Location = new System.Drawing.Point(582, 4);
             buttonAchieveClear.Margin = new System.Windows.Forms.Padding(4);
@@ -165,7 +166,7 @@
             // 
             // buttonPlanCopy
             // 
-            buttonPlanCopy.BackColor = System.Drawing.Color.MistyRose;
+            buttonPlanCopy.BackColor = System.Drawing.SystemColors.Control;
             buttonPlanCopy.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonPlanCopy.Location = new System.Drawing.Point(391, 4);
             buttonPlanCopy.Margin = new System.Windows.Forms.Padding(4);
@@ -177,7 +178,7 @@
             // 
             // buttonPlanClear
             // 
-            buttonPlanClear.BackColor = System.Drawing.Color.LightBlue;
+            buttonPlanClear.BackColor = System.Drawing.SystemColors.Control;
             buttonPlanClear.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonPlanClear.Location = new System.Drawing.Point(200, 4);
             buttonPlanClear.Margin = new System.Windows.Forms.Padding(4);
@@ -229,13 +230,13 @@
             // 
             // dataGridViewPlan
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewPlan.ColumnHeadersHeight = 30;
             dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Plan品番, PlanCT, Plan本数, Plan開始時刻, Plan終了時刻, Plan休憩時間, Plan作業者, Plan備考 });
@@ -326,6 +327,7 @@
             // 
             // panelPlanOptions
             // 
+            panelPlanOptions.Controls.Add(checkBoxHiddenAchieve);
             panelPlanOptions.Controls.Add(textBoxPlanEndTime);
             panelPlanOptions.Controls.Add(textBoxPlanStartTime);
             panelPlanOptions.Controls.Add(label10);
@@ -355,6 +357,50 @@
             panelPlanOptions.Size = new System.Drawing.Size(559, 94);
             panelPlanOptions.TabIndex = 2;
             // 
+            // checkBoxHiddenAchieve
+            // 
+            checkBoxHiddenAchieve.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            checkBoxHiddenAchieve.AutoSize = true;
+            checkBoxHiddenAchieve.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            checkBoxHiddenAchieve.ForeColor = System.Drawing.SystemColors.ControlDark;
+            checkBoxHiddenAchieve.Location = new System.Drawing.Point(457, 8);
+            checkBoxHiddenAchieve.Name = "checkBoxHiddenAchieve";
+            checkBoxHiddenAchieve.Size = new System.Drawing.Size(81, 19);
+            checkBoxHiddenAchieve.TabIndex = 26;
+            checkBoxHiddenAchieve.Text = "実績を隠す";
+            checkBoxHiddenAchieve.UseVisualStyleBackColor = true;
+            checkBoxHiddenAchieve.Visible = false;
+            checkBoxHiddenAchieve.CheckedChanged += checkBoxHiddenAchieve_CheckedChanged;
+            // 
+            // textBoxPlanEndTime
+            // 
+            textBoxPlanEndTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxPlanEndTime.Enabled = false;
+            textBoxPlanEndTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxPlanEndTime.Location = new System.Drawing.Point(438, 30);
+            textBoxPlanEndTime.Margin = new System.Windows.Forms.Padding(4);
+            textBoxPlanEndTime.Name = "textBoxPlanEndTime";
+            textBoxPlanEndTime.Size = new System.Drawing.Size(61, 36);
+            textBoxPlanEndTime.TabIndex = 23;
+            textBoxPlanEndTime.Text = "17:10";
+            textBoxPlanEndTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxPlanStartTime
+            // 
+            textBoxPlanStartTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxPlanStartTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxPlanStartTime.Location = new System.Drawing.Point(360, 30);
+            textBoxPlanStartTime.Margin = new System.Windows.Forms.Padding(4);
+            textBoxPlanStartTime.Name = "textBoxPlanStartTime";
+            textBoxPlanStartTime.Size = new System.Drawing.Size(61, 36);
+            textBoxPlanStartTime.TabIndex = 21;
+            textBoxPlanStartTime.Text = "08:15";
+            textBoxPlanStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            textBoxPlanStartTime.Enter += TextBoxPlanStartTime_Enter;
+            textBoxPlanStartTime.KeyDown += TextBoxPlanStartTime_KeyDown;
+            textBoxPlanStartTime.KeyPress += TextBoxPlanStartTime_KeyPress;
+            textBoxPlanStartTime.MouseDown += TextBoxPlanStartTime_MouseDown;
+            // 
             // label10
             // 
             label10.AutoSize = true;
@@ -379,19 +425,6 @@
             label9.Text = "終了時刻";
             label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxPlanEndTime
-            // 
-            textBoxPlanEndTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBoxPlanEndTime.Enabled = false;
-            textBoxPlanEndTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBoxPlanEndTime.Location = new System.Drawing.Point(438, 30);
-            textBoxPlanEndTime.Margin = new System.Windows.Forms.Padding(4);
-            textBoxPlanEndTime.Name = "textBoxPlanEndTime";
-            textBoxPlanEndTime.Size = new System.Drawing.Size(61, 36);
-            textBoxPlanEndTime.TabIndex = 23;
-            textBoxPlanEndTime.Text = "17:10";
-            textBoxPlanEndTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // label8
             // 
             label8.AutoSize = true;
@@ -403,22 +436,6 @@
             label8.TabIndex = 22;
             label8.Text = "開始時刻";
             label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // textBoxPlanStartTime
-            // 
-            textBoxPlanStartTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBoxPlanStartTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBoxPlanStartTime.Location = new System.Drawing.Point(360, 30);
-            textBoxPlanStartTime.Margin = new System.Windows.Forms.Padding(4);
-            textBoxPlanStartTime.Name = "textBoxPlanStartTime";
-            textBoxPlanStartTime.Size = new System.Drawing.Size(61, 36);
-            textBoxPlanStartTime.TabIndex = 21;
-            textBoxPlanStartTime.Text = "08:15";
-            textBoxPlanStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            textBoxPlanStartTime.Enter += TextBoxPlanStartTime_Enter;
-            textBoxPlanStartTime.KeyDown += TextBoxPlanStartTime_KeyDown;
-            textBoxPlanStartTime.KeyPress += TextBoxPlanStartTime_KeyPress;
-            textBoxPlanStartTime.MouseDown += TextBoxPlanStartTime_MouseDown;
             // 
             // textBoxPlanKdo
             // 
@@ -593,6 +610,7 @@
             checkBoxPlan早昼.TabIndex = 3;
             checkBoxPlan早昼.Text = "早昼 (11:30～12:15)";
             checkBoxPlan早昼.UseVisualStyleBackColor = true;
+            checkBoxPlan早昼.CheckedChanged += CheckBoxPlanChecked;
             // 
             // checkBoxPlanピカピカ
             // 
@@ -605,6 +623,7 @@
             checkBoxPlanピカピカ.TabIndex = 2;
             checkBoxPlanピカピカ.Text = "ピカピカ大作戦";
             checkBoxPlanピカピカ.UseVisualStyleBackColor = true;
+            checkBoxPlanピカピカ.CheckedChanged += CheckBoxPlanChecked;
             // 
             // checkBoxPlan休憩稼働
             // 
@@ -617,6 +636,7 @@
             checkBoxPlan休憩稼働.TabIndex = 1;
             checkBoxPlan休憩稼働.Text = "休憩時間稼働";
             checkBoxPlan休憩稼働.UseVisualStyleBackColor = true;
+            checkBoxPlan休憩稼働.CheckedChanged += CheckBoxPlanChecked;
             // 
             // checkBoxPlanお昼稼働
             // 
@@ -629,16 +649,17 @@
             checkBoxPlanお昼稼働.TabIndex = 0;
             checkBoxPlanお昼稼働.Text = "お昼休み稼働";
             checkBoxPlanお昼稼働.UseVisualStyleBackColor = true;
+            checkBoxPlanお昼稼働.CheckedChanged += CheckBoxPlanChecked;
             // 
             // dataGridViewAchieve
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dataGridViewAchieve.ColumnHeadersHeight = 30;
             dataGridViewAchieve.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewAchieve.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Achieve品番, AchieveCT, Achieve本数, Achieve開始時刻, Achieve終了時刻, Achieve休憩時間, Achieve作業者, Achieve備考 });
@@ -875,5 +896,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBoxPlanEndTime;
+        private System.Windows.Forms.CheckBox checkBoxHiddenAchieve;
     }
 }

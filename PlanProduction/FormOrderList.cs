@@ -86,6 +86,50 @@ namespace PlanProduction
 
             dataGridView1.DataSource = dt;
         }
+        // ロード後の初期表示
+        private void FormOrderList_Shown(object sender, EventArgs e)
+        {
+            // チェックの状態を復元
+            string key = this.Name;
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
+            {
+                if (s.Flg1 == 0)
+                {
+                    dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
+                    dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
+                }
+                if (s.Flg1 == 1) checkBoxPKey.Checked = true;
+                if (s.Flg2 == 0) dataGridView1.Columns["HMRNM"].Visible = false;
+                if (s.Flg2 == 1) checkBoxHMRNM.Checked = true;
+                if (s.Flg3 == 0) dataGridView1.Columns["WKNOTE"].Visible = false;
+                if (s.Flg3 == 1) checkBoxWKNOTE.Checked = true;
+            }
+        }
+        // フォームの状態を保存
+        private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+            string key = this.Name;
+            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
+            var s = settings.Forms[key];
+            s.X = this.Location.X;
+            s.Y = this.Location.Y;
+            s.Width = this.Width;
+            s.Height = this.Height;
+            s.Flg1 = (checkBoxPKey.Checked) ? 1 : 0;
+            s.Flg2 = (checkBoxHMRNM.Checked) ? 1 : 0;
+            s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
+            Common.FormSettingsSave(settings);
+        }
+        // キーボードショートカット
+        private void FormOrderList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
+        }
+
 
         // CTをくっつける
         private static void MargeDataTable(ref DataTable dt, ref DataTable km5030)
@@ -123,8 +167,6 @@ namespace PlanProduction
                 dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
                 dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
             }
-            dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
-            dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
             dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";     // CTは小数点以下1桁
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
@@ -147,29 +189,6 @@ namespace PlanProduction
                 Color.Black,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
         }
-        // フォームの状態を保存
-        private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
-            string key = this.Name;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
-            var s = settings.Forms[key];
-            s.X = this.Location.X;
-            s.Y = this.Location.Y;
-            s.Width = this.Width;
-            s.Height = this.Height;
-            Common.FormSettingsSave(settings);
-        }
-
-        // キーボードショートカット
-        private void FormOrderList_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                Close();
-            }
-        }
-
         private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             double sumProduct = 0;
@@ -202,12 +221,27 @@ namespace PlanProduction
         // 再読み込み
         private void ButtonRefresh_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("まだ作れていません", "未実装");
         }
 
-        private void CheckBoxVisible_CheckedChanged(object sender, EventArgs e)
+        // 「主キー」の表示／非表示
+        private void CheckBoxPKey_CheckedChanged(object sender, EventArgs e)
         {
-            dataGridView1.Columns["ODCD"].Visible = checkBoxVisible.Checked;
-            dataGridView1.Columns["KTCD"].Visible = checkBoxVisible.Checked;
+            if (dataGridView1.Rows.Count <= 0) return;
+            dataGridView1.Columns["ODCD"].Visible = checkBoxPKey.Checked;
+            dataGridView1.Columns["KTCD"].Visible = checkBoxPKey.Checked;
+        }
+        // 「品目略称」の表示／非表示
+        private void CheckBoxHMRNM_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0) return;
+            dataGridView1.Columns["HMRNM"].Visible = checkBoxHMRNM.Checked;
+        }
+        // 「作業内容」の表示／非表示
+        private void CheckBoxWKNOTE_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0) return;
+            dataGridView1.Columns["WKNOTE"].Visible = checkBoxWKNOTE.Checked;
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -323,5 +357,6 @@ namespace PlanProduction
                 cell.Selected = true;
             }
         }
+
     }
 }

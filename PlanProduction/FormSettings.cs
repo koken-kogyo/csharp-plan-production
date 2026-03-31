@@ -42,13 +42,18 @@ namespace PlanProduction
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             dataGridView1.DataSource = DataStore.dtKM5010kai;
-
-            if (!string.IsNullOrEmpty(DataStore.DefaultOdCd))
-                checkBoxSelected.Checked = true;
-
             ReCreateComboBox();
         }
-
+        // 初回起動表示
+        private void FormSrttings_Shown(object sender, EventArgs e)
+        {
+            dataGridView1.CurrentCell = null;
+            dataGridView1.ClearSelection();
+            if (!string.IsNullOrEmpty(DataStore.DefaultOdCd))
+                checkBoxSelected.Checked = true;
+            textBoxSearchOdCd.Focus();
+        }
+        // 画面閉じる前
         private void FormSrttings_FormClosing(object sender, FormClosingEventArgs e)
         {
             string key = this.Name;
@@ -58,6 +63,26 @@ namespace PlanProduction
             s.Width = this.Width;
             s.Height = this.Height;
             Common.FormSettingsSave(settings);
+        }
+        // ショートカットキー
+        private void FormSrttings_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F9)
+            {
+                ButtonSaveClose_Click(sender, e);
+            }
+            if (e.KeyCode == Keys.Escape)
+            {
+                if (textBoxSearchOdCd.Text != string.Empty)
+                {
+                    ButtonClear_Click(sender, e);
+                }
+                else
+                {
+                    ButtonCancelClose_Click(sender, e);
+                    e.Handled = true;
+                }
+            }
         }
 
         // コンボボックスの再作成
@@ -99,35 +124,6 @@ namespace PlanProduction
             }
         }
 
-        // ショートカットキー
-        private void FormSrttings_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F9)
-            {
-                ButtonSaveClose_Click(sender, e);
-            }
-            if (e.KeyCode == Keys.Escape)
-            {
-                if (textBoxSearchOdCd.Text != string.Empty)
-                {
-                    ButtonClear_Click(sender, e);
-                }
-                else
-                {
-                    DataStore.dtKM5010kai = DataStore.originalKM5010kai.Copy();
-                    DataStore.DefaultOdCd = DataStore.originalDefaultOdCd;
-                    Close();
-                    e.Handled = true;
-                }
-            }
-        }
-
-        // 設定ファイルなしの状態で画面を閉じた場合はアプリケーションを終了する（初回起動時）
-        private void FormSrttings_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (!File.Exists(@Common.CONFIG_FILE_AS)) Application.Exit();
-        }
-
         // 手配先コード検索ボックス
         private void TextBoxSearchOdCd_TextChanged(object sender, EventArgs e)
         {
@@ -144,11 +140,38 @@ namespace PlanProduction
             textBoxSearchOdCd.Text = string.Empty;
         }
 
+        // 初期値で埋める
+        private void ButtonInitialValue_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0) return;
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (Convert.ToBoolean(row.Cells[0].Value))
+                {
+                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString())) 
+                        row.Cells["ColumnListOrder"].Value = Common.sortOrderMap[2];
+                    if (string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
+                        row.Cells["ColumnTanName"].Value = "鈴木";
+                    if (string.IsNullOrEmpty(row.Cells["Column可動率"].Value.ToString()))
+                        row.Cells["Column可動率"].Value = "80";
+                    if (string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
+                        row.Cells["Column開始時刻"].Value = "08:15";
+                }
+            }
+        }
+
         // 保存して閉じる
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
             string errmsg = string.Empty;
             dataGridView1.ClearSelection();
+            if (comboBox1.SelectedIndex < 0)
+            {
+                MessageBox.Show("手配コードを選択して下さい．", "入力チェック",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                comboBox1.Focus();
+                return;
+            }
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if (Convert.ToBoolean(row.Cells[0].Value))
@@ -220,7 +243,7 @@ namespace PlanProduction
         // 閉じるボタン
         private void ButtonCancelClose_Click(object sender, EventArgs e)
         {
-            DataStore.dtKM5010kai = DataStore.originalKM5010kai.Copy();
+            DataStore.dtKM5010kai = DataStore.originalKM5010kai?.Copy();
             DataStore.DefaultOdCd = DataStore.originalDefaultOdCd;
             Close();
         }

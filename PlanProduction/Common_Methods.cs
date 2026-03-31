@@ -98,12 +98,12 @@ namespace PlanProduction
                 findRow["TANNAME"] = odcd.TanName;
                 findRow["AVA"] = odcd.Ava;
                 findRow["STARTTIME"] = odcd.StartTime;
-                // データテーブルの起動時のオリジナルを保存
-                DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
             }
+            // データストアに退避保存
             DataStore.DefaultOdCd = config.DefaultOdCd;
-            DataStore.originalDefaultOdCd = config.DefaultOdCd;
             DataStore.OdCdSettings = config.OdCdSettings;
+            DataStore.originalDefaultOdCd = config.DefaultOdCd;
+            DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
         }
 
         // アプリケーション設定ファイルへの書き込み

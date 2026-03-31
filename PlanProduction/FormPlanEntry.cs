@@ -30,6 +30,7 @@ namespace PlanProduction
             // 手配一覧を開く
             formOrderList = new FormOrderList(OdCdSetting, OnSelectedList);  // ← コールバック渡す
             formOrderList.Show();                       // モードレス
+            formOrderList.BringToFront();
 
             // 表示対象の手配先コードをこのフォームに保持
             this.OdCdSetting = OdCdSetting;
@@ -84,7 +85,7 @@ namespace PlanProduction
             dataGridViewPlan.EnableHeadersVisualStyles = false;
             dataGridViewPlan.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             var ctP = dataGridViewPlan.Columns["PlanCT"];
-            ctP.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー右寄せ
+            ctP.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー中央寄せ
             ctP.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // セル右寄せ
             ctP.DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
             var qtyP = dataGridViewPlan.Columns["Plan本数"];
@@ -95,7 +96,9 @@ namespace PlanProduction
             {
                 var col = dataGridViewPlan.Columns[colName];
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
-                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;     // セル中央寄せ
+                col.DefaultCellStyle.Alignment = (colName != "Plan休憩時間") ?
+                    DataGridViewContentAlignment.MiddleCenter :
+                    DataGridViewContentAlignment.MiddleRight;
                 col.HeaderCell.Style.Font = new Font(
                     dataGridViewPlan.ColumnHeadersDefaultCellStyle.Font.FontFamily, 7.0f);      // 小さいサイズ
             }
@@ -107,7 +110,7 @@ namespace PlanProduction
             dataGridViewAchieve.EnableHeadersVisualStyles = false;
             dataGridViewAchieve.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             var ctA = dataGridViewAchieve.Columns["AchieveCT"];
-            ctA.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー右寄せ
+            ctA.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー中央寄せ
             ctA.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // セル右寄せ
             ctA.DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
             var qtyA = dataGridViewAchieve.Columns["Achieve本数"];
@@ -294,8 +297,16 @@ namespace PlanProduction
             }
         }
 
+        // 各種チェックボックスから再計算
+        private void CheckBoxPlanChecked(object sender, EventArgs e)
+        {
+            CalculatePlan();
+        }
 
-
+        /// <summary>
+        /// このアプリケーションの重要なメソッド
+        /// 計画入力または変更後に時刻を計算
+        /// </summary>
         private void CalculatePlan()
         {
             // 計画開始時刻と計画CTから計画終了時刻を計算して、DataGridView に反映するロジックをここに実装
@@ -319,6 +330,7 @@ namespace PlanProduction
                     row.Cells["Plan終了時刻"].Value = startTimeStr; // 無効な開始時刻の場合
                     continue;
                 }
+                
                 // 計画CTを取得
                 string ctStr = row.Cells["PlanCT"].Value?.ToString();
                 if (!double.TryParse(ctStr, out double ct))
@@ -326,14 +338,29 @@ namespace PlanProduction
                     row.Cells["Plan終了時刻"].Value = startTimeStr; // 無効なCTの場合
                     continue;
                 }
-                // 計画終了時刻を計算
+                
+                // 一旦計画終了時刻を計算
                 double 本数 = (row.Cells["Plan本数"].Value != null) ? Convert.ToDouble(row.Cells["Plan本数"].Value) : 0.0;
                 double adjustedCt = ct * 本数 * 可動率; // 可動率を考慮してCTを調整
                 DateTime endTime = startTime.AddSeconds(adjustedCt);
-                // 計画終了時刻をセルにセット
-                row.Cells["Plan終了時刻"].Value = endTime.ToString("HH:mm");
+
+                // 休憩時間を算出
+                double 休憩 = 休憩時間算出(startTime, endTime,
+                    checkBoxPlanお昼稼働.Checked, checkBoxPlan休憩稼働.Checked, 
+                    checkBoxPlanピカピカ.Checked, checkBoxPlan早昼.Checked);
+                //（算出した休憩時間を加算した終了時刻で2回目のチェックを通す）
+                double 休憩2 = 休憩時間算出(startTime, endTime.AddSeconds(休憩),
+                    checkBoxPlanお昼稼働.Checked, checkBoxPlan休憩稼働.Checked,
+                    checkBoxPlanピカピカ.Checked, checkBoxPlan早昼.Checked);
+                row.Cells["Plan休憩時間"].Value = 休憩2;
+
+                // 休憩時間を加味した計画終了時刻をセルにセット（秒は切り上げ）
+                if (endTime.AddSeconds(休憩2).Second > 0) 休憩2 += 60;
+                row.Cells["Plan終了時刻"].Value = endTime.AddSeconds(休憩2).ToString("HH:mm");
+
                 // 作業者をセット
                 row.Cells["Plan作業者"].Value = OdCdSetting.TanName;
+
                 // サマリー
                 合計本数 += 本数;
                 CT稼働時間 += ct * 本数;
@@ -347,5 +374,51 @@ namespace PlanProduction
                 textBoxPlanStartTime.Text;
         }
 
+        /// <summary>
+        /// 休憩時間を算出
+        /// </summary>
+        /// <param name="stdt"></param>
+        /// <param name="eddt"></param>
+        /// <returns>休憩時間(秒)</returns>
+        private double 休憩時間算出(DateTime stdt, DateTime eddt,
+            bool 昼稼働, bool 休憩稼働, bool ピカピカ, bool 早昼)
+        {
+            // 時刻部分だけを取り出す
+            TimeSpan startTime = stdt.TimeOfDay;
+            TimeSpan endTime = eddt.TimeOfDay;
+
+            // 対象のルールを加算していく変数
+            double sum = 0;
+
+            // 休憩ルール一覧
+            var rules = new List<(TimeSpan start, TimeSpan end, double minutes, bool enabled)>
+            {
+                (new TimeSpan(10,10,0), new TimeSpan(10,20,0), 10, 休憩稼働),
+                (new TimeSpan(11,30,0), new TimeSpan(12,15,0), (昼稼働) ? 0 : 45, !早昼),
+                (new TimeSpan(12,15,0), new TimeSpan(13,00,0), (昼稼働) ? 0 : 45, 早昼),
+                (new TimeSpan(13,00,0), new TimeSpan(13,15,0), 15, !ピカピカ),
+                (new TimeSpan(13,00,0), new TimeSpan(13,15,0), 15, !ピカピカ),
+                (new TimeSpan(15,00,0), new TimeSpan(15,10,0), 10, 休憩稼働),
+                (new TimeSpan(17,10,0), new TimeSpan(17,15,0), 5,  休憩稼働),
+                (new TimeSpan(19,15,0), new TimeSpan(19,20,0), 5,  休憩稼働),
+            };
+
+            foreach (var r in rules)
+            {
+                if (r.enabled) continue; // チェックされていたらルール無視
+
+                if (startTime < r.start && r.start < endTime)
+                    sum += r.minutes * 60;
+            }
+
+            return sum;
+        }
+
+        // 「実績入力画面」を表示／非表示
+        private void checkBoxHiddenAchieve_CheckedChanged(object sender, EventArgs e)
+        {
+            return; // 今開発している時ではない
+            //splitContainerMain.Panel2Collapsed = checkBoxHiddenAchieve.Checked;
+        }
     }
 }

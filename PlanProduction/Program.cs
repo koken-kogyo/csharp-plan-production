@@ -44,19 +44,18 @@ namespace PlanProduction
                 MessageBox.Show("設定画面を起動します。\n\n初回設定を行ってください．"
                     , "[生産計画]", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Application.Run(new FormSrttings());
+                // 初回起動のがキャンセルされたら終了
+                if (!File.Exists(@Common.CONFIG_FILE_AS))
+                {
+                    Application.Exit();
+                    return;
+                }
             }
             else
             {
                 // アプリケーション設定ファイルの読込
                 Common.DeserializeAppSettings();
             }
-
-
-
-
-
-
-
 
             // メイン画面起動
             Application.Run(new FormPlanProduction());

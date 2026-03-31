@@ -61,6 +61,9 @@ namespace PlanProduction
     /// <summary>
     /// 画面情報設定クラス
     /// </summary>
+    /// <values>
+    /// フラグ１～５(int型)、0:false、1:true 
+    /// </values>
     public class FormSettings
     {
         public int X { get; set; }
@@ -70,6 +73,11 @@ namespace PlanProduction
         public int SplitterMainDistance { get; set; }
         public int SplitterSubVerticalDistance { get; set; }
         public int SplitterSubHorizontalDistance { get; set; }
+        public int Flg1 { get; set; }
+        public int Flg2 { get; set; }
+        public int Flg3 { get; set; }
+        public int Flg4 { get; set; }
+        public int Flg5 { get; set; }
     }
     /// <summary>
     // 画面情報設定ファイル
