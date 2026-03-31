@@ -91,8 +91,9 @@
             // 
             // splitContainerMain.Panel1
             // 
+            splitContainerMain.Panel1.AutoScroll = true;
             splitContainerMain.Panel1.Controls.Add(button3);
-            splitContainerMain.Panel1.Padding = new System.Windows.Forms.Padding(10, 32, 2, 10);
+            splitContainerMain.Panel1.Padding = new System.Windows.Forms.Padding(10, 30, 2, 30);
             // 
             // splitContainerMain.Panel2
             // 
@@ -105,7 +106,7 @@
             // button3
             // 
             button3.Dock = System.Windows.Forms.DockStyle.Top;
-            button3.Location = new System.Drawing.Point(10, 32);
+            button3.Location = new System.Drawing.Point(10, 30);
             button3.Name = "button3";
             button3.Size = new System.Drawing.Size(189, 36);
             button3.TabIndex = 1;
@@ -443,18 +444,18 @@
             // 
             // buttonOrderList
             // 
-            buttonOrderList.Location = new System.Drawing.Point(9, 222);
+            buttonOrderList.Location = new System.Drawing.Point(10, 286);
             buttonOrderList.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             buttonOrderList.Name = "buttonOrderList";
             buttonOrderList.Size = new System.Drawing.Size(199, 52);
             buttonOrderList.TabIndex = 13;
-            buttonOrderList.Text = "手配一覧";
+            buttonOrderList.Text = "手配一覧の参照";
             buttonOrderList.UseVisualStyleBackColor = false;
             buttonOrderList.Click += ButtonOrderList_Click;
             // 
             // buttonPlanEntry
             // 
-            buttonPlanEntry.Location = new System.Drawing.Point(9, 286);
+            buttonPlanEntry.Location = new System.Drawing.Point(10, 222);
             buttonPlanEntry.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             buttonPlanEntry.Name = "buttonPlanEntry";
             buttonPlanEntry.Size = new System.Drawing.Size(199, 52);

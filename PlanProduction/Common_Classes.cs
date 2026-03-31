@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace PlanProduction
 {
@@ -103,12 +104,14 @@ namespace PlanProduction
         RowMove,
         CellSwap,
         CellEdit,
-        RowDelete
+        RowDelete,
+        RowInsert
     }
 
     // 元に戻すアクション
     public class UndoAction
     {
+        public DataGridView dgv;
         public UndoType Type;
 
         // 行移動用
@@ -129,8 +132,10 @@ namespace PlanProduction
 
         // 行削除用
         public int DeletedRowIndex;
-        public string DeletedRowHeader;
         public object[] DeletedRowValues;
+
+        // 行挿入用
+        public int InsertRowIndex;
     }
 
 

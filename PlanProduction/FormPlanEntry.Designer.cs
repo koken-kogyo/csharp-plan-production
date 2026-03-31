@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             tableLayoutPanelButtons = new System.Windows.Forms.TableLayoutPanel();
-            buttonClose = new System.Windows.Forms.Button();
+            buttonUndo = new System.Windows.Forms.Button();
             buttonSaveClose = new System.Windows.Forms.Button();
+            buttonClose = new System.Windows.Forms.Button();
             buttonAchieveClear = new System.Windows.Forms.Button();
             buttonPlanCopy = new System.Windows.Forms.Button();
             buttonPlanClear = new System.Windows.Forms.Button();
@@ -102,15 +103,17 @@
             // 
             // tableLayoutPanelButtons
             // 
-            tableLayoutPanelButtons.ColumnCount = 6;
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.666666F));
-            tableLayoutPanelButtons.Controls.Add(buttonClose, 5, 0);
-            tableLayoutPanelButtons.Controls.Add(buttonSaveClose, 4, 0);
+            tableLayoutPanelButtons.ColumnCount = 7;
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198864F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198835F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198835F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198835F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198835F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.6198835F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.2807026F));
+            tableLayoutPanelButtons.Controls.Add(buttonUndo, 4, 0);
+            tableLayoutPanelButtons.Controls.Add(buttonSaveClose, 5, 0);
+            tableLayoutPanelButtons.Controls.Add(buttonClose, 6, 0);
             tableLayoutPanelButtons.Controls.Add(buttonAchieveClear, 3, 0);
             tableLayoutPanelButtons.Controls.Add(buttonPlanCopy, 2, 0);
             tableLayoutPanelButtons.Controls.Add(buttonPlanClear, 1, 0);
@@ -122,43 +125,57 @@
             tableLayoutPanelButtons.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             tableLayoutPanelButtons.RowCount = 1;
             tableLayoutPanelButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanelButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             tableLayoutPanelButtons.Size = new System.Drawing.Size(1159, 55);
             tableLayoutPanelButtons.TabIndex = 1;
             // 
-            // buttonClose
+            // buttonUndo
             // 
-            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonClose.Location = new System.Drawing.Point(964, 4);
-            buttonClose.Margin = new System.Windows.Forms.Padding(4);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new System.Drawing.Size(186, 47);
-            buttonClose.TabIndex = 5;
-            buttonClose.Text = "閉じる";
-            buttonClose.UseVisualStyleBackColor = false;
-            buttonClose.Click += ButtonClose_Click;
+            buttonUndo.BackColor = System.Drawing.SystemColors.Control;
+            buttonUndo.Dock = System.Windows.Forms.DockStyle.Fill;
+            buttonUndo.Location = new System.Drawing.Point(677, 4);
+            buttonUndo.Margin = new System.Windows.Forms.Padding(4);
+            buttonUndo.Name = "buttonUndo";
+            buttonUndo.Size = new System.Drawing.Size(159, 47);
+            buttonUndo.TabIndex = 14;
+            buttonUndo.Text = "戻す(Ctrl+Z)";
+            buttonUndo.UseVisualStyleBackColor = false;
+            buttonUndo.Click += ButtonUndo_Click;
             // 
             // buttonSaveClose
             // 
             buttonSaveClose.BackColor = System.Drawing.Color.LightCoral;
             buttonSaveClose.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonSaveClose.Location = new System.Drawing.Point(773, 4);
+            buttonSaveClose.Location = new System.Drawing.Point(844, 4);
             buttonSaveClose.Margin = new System.Windows.Forms.Padding(4);
             buttonSaveClose.Name = "buttonSaveClose";
-            buttonSaveClose.Size = new System.Drawing.Size(183, 47);
-            buttonSaveClose.TabIndex = 4;
+            buttonSaveClose.Size = new System.Drawing.Size(159, 47);
+            buttonSaveClose.TabIndex = 9;
             buttonSaveClose.Text = "保存して閉じる";
             buttonSaveClose.UseVisualStyleBackColor = false;
             buttonSaveClose.Click += ButtonSaveClose_Click;
+            // 
+            // buttonClose
+            // 
+            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
+            buttonClose.Location = new System.Drawing.Point(1011, 4);
+            buttonClose.Margin = new System.Windows.Forms.Padding(4);
+            buttonClose.Name = "buttonClose";
+            buttonClose.Size = new System.Drawing.Size(139, 47);
+            buttonClose.TabIndex = 8;
+            buttonClose.Text = "閉じる";
+            buttonClose.UseVisualStyleBackColor = false;
+            buttonClose.Click += ButtonClose_Click;
             // 
             // buttonAchieveClear
             // 
             buttonAchieveClear.BackColor = System.Drawing.SystemColors.Control;
             buttonAchieveClear.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonAchieveClear.Location = new System.Drawing.Point(582, 4);
+            buttonAchieveClear.Location = new System.Drawing.Point(510, 4);
             buttonAchieveClear.Margin = new System.Windows.Forms.Padding(4);
             buttonAchieveClear.Name = "buttonAchieveClear";
-            buttonAchieveClear.Size = new System.Drawing.Size(183, 47);
+            buttonAchieveClear.Size = new System.Drawing.Size(159, 47);
             buttonAchieveClear.TabIndex = 3;
             buttonAchieveClear.Text = "実績クリア";
             buttonAchieveClear.UseVisualStyleBackColor = false;
@@ -168,22 +185,23 @@
             // 
             buttonPlanCopy.BackColor = System.Drawing.SystemColors.Control;
             buttonPlanCopy.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonPlanCopy.Location = new System.Drawing.Point(391, 4);
+            buttonPlanCopy.Location = new System.Drawing.Point(343, 4);
             buttonPlanCopy.Margin = new System.Windows.Forms.Padding(4);
             buttonPlanCopy.Name = "buttonPlanCopy";
-            buttonPlanCopy.Size = new System.Drawing.Size(183, 47);
+            buttonPlanCopy.Size = new System.Drawing.Size(159, 47);
             buttonPlanCopy.TabIndex = 2;
             buttonPlanCopy.Text = "実績へコピー";
             buttonPlanCopy.UseVisualStyleBackColor = false;
+            buttonPlanCopy.Click += ButtonPlanCopy_Click;
             // 
             // buttonPlanClear
             // 
             buttonPlanClear.BackColor = System.Drawing.SystemColors.Control;
             buttonPlanClear.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonPlanClear.Location = new System.Drawing.Point(200, 4);
+            buttonPlanClear.Location = new System.Drawing.Point(176, 4);
             buttonPlanClear.Margin = new System.Windows.Forms.Padding(4);
             buttonPlanClear.Name = "buttonPlanClear";
-            buttonPlanClear.Size = new System.Drawing.Size(183, 47);
+            buttonPlanClear.Size = new System.Drawing.Size(159, 47);
             buttonPlanClear.TabIndex = 1;
             buttonPlanClear.Text = "計画クリア";
             buttonPlanClear.UseVisualStyleBackColor = false;
@@ -196,10 +214,11 @@
             buttonPlanPrint.Location = new System.Drawing.Point(9, 4);
             buttonPlanPrint.Margin = new System.Windows.Forms.Padding(4);
             buttonPlanPrint.Name = "buttonPlanPrint";
-            buttonPlanPrint.Size = new System.Drawing.Size(183, 47);
+            buttonPlanPrint.Size = new System.Drawing.Size(159, 47);
             buttonPlanPrint.TabIndex = 0;
             buttonPlanPrint.Text = "計画を印刷";
             buttonPlanPrint.UseVisualStyleBackColor = false;
+            buttonPlanPrint.Click += ButtonPlanPrint_Click;
             // 
             // splitContainerMain
             // 
@@ -230,13 +249,13 @@
             // 
             // dataGridViewPlan
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridViewPlan.ColumnHeadersHeight = 30;
             dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Plan品番, PlanCT, Plan本数, Plan開始時刻, Plan終了時刻, Plan休憩時間, Plan作業者, Plan備考 });
@@ -370,7 +389,7 @@
             checkBoxHiddenAchieve.Text = "実績を隠す";
             checkBoxHiddenAchieve.UseVisualStyleBackColor = true;
             checkBoxHiddenAchieve.Visible = false;
-            checkBoxHiddenAchieve.CheckedChanged += checkBoxHiddenAchieve_CheckedChanged;
+            checkBoxHiddenAchieve.CheckedChanged += CheckBoxHiddenAchieve_CheckedChanged;
             // 
             // textBoxPlanEndTime
             // 
@@ -653,13 +672,13 @@
             // 
             // dataGridViewAchieve
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dataGridViewAchieve.ColumnHeadersHeight = 30;
             dataGridViewAchieve.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewAchieve.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Achieve品番, AchieveCT, Achieve本数, Achieve開始時刻, Achieve終了時刻, Achieve休憩時間, Achieve作業者, Achieve備考 });
@@ -889,13 +908,14 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textBoxPlanStartTime;
         private System.Windows.Forms.Button buttonPlanClear;
-        private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.Button buttonSaveClose;
         private System.Windows.Forms.Button buttonAchieveClear;
         private System.Windows.Forms.Button buttonPlanCopy;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBoxPlanEndTime;
         private System.Windows.Forms.CheckBox checkBoxHiddenAchieve;
+        private System.Windows.Forms.Button buttonSaveClose;
+        private System.Windows.Forms.Button buttonClose;
+        private System.Windows.Forms.Button buttonUndo;
     }
 }

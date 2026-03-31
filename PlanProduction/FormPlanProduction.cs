@@ -94,9 +94,10 @@ namespace PlanProduction
             splitContainerMain.Panel1.Controls.Clear();
             // ボタンの作成
             int buttonCount = grouped.Count;
+            int buttonHeight = (this.Height > buttonCount * 80) ? 80 : 40;
             for (int i = 0; i < buttonCount; i++)
             {
-                var btn = CreateTileButton(grouped[i].ODCD, grouped[i].ODRNM);
+                var btn = CreateTileButton(grouped[i].ODCD, grouped[i].ODRNM, buttonHeight);
                 splitContainerMain.Panel1.Controls.Add(btn);
                 // スペーサーを挟む
                 var spacer = new Panel
@@ -107,13 +108,14 @@ namespace PlanProduction
                 splitContainerMain.Panel1.Controls.Add(spacer);
             }
         }
-        private Button CreateTileButton(string odcd, string odrnm)
+        // 左パネルにボタンを作成（実態）
+        private Button CreateTileButton(string odcd, string odrnm, int buttonHeight)
         {
             var btn = new Button
             {
                 Name = odcd,
                 Text = odcd + "\n" + odrnm,
-                Height = 80,
+                Height = buttonHeight,
                 Dock = DockStyle.Top,
                 BackColor = (odcd == selectedOdCd) ? Color.LightGreen : Color.LightGray,
                 ForeColor = Color.Black

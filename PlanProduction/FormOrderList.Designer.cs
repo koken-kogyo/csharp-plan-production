@@ -43,7 +43,7 @@
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
-            panel作業時間 = new System.Windows.Forms.Panel();
+            panel計画稼働時間 = new System.Windows.Forms.Panel();
             textBox作業時間 = new System.Windows.Forms.TextBox();
             label4 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            panel作業時間.SuspendLayout();
+            panel計画稼働時間.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -141,7 +141,7 @@
             panel1.Controls.Add(labelTitleOdCd);
             panel1.Controls.Add(checkBoxPKey);
             panel1.Controls.Add(panel2);
-            panel1.Controls.Add(panel作業時間);
+            panel1.Controls.Add(panel計画稼働時間);
             panel1.Dock = System.Windows.Forms.DockStyle.Top;
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
@@ -154,7 +154,7 @@
             checkBoxWKNOTE.AutoSize = true;
             checkBoxWKNOTE.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxWKNOTE.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxWKNOTE.Location = new System.Drawing.Point(473, 39);
+            checkBoxWKNOTE.Location = new System.Drawing.Point(520, 39);
             checkBoxWKNOTE.Name = "checkBoxWKNOTE";
             checkBoxWKNOTE.Size = new System.Drawing.Size(74, 19);
             checkBoxWKNOTE.TabIndex = 2;
@@ -168,7 +168,7 @@
             checkBoxHMRNM.AutoSize = true;
             checkBoxHMRNM.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxHMRNM.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxHMRNM.Location = new System.Drawing.Point(394, 39);
+            checkBoxHMRNM.Location = new System.Drawing.Point(442, 39);
             checkBoxHMRNM.Name = "checkBoxHMRNM";
             checkBoxHMRNM.Size = new System.Drawing.Size(73, 19);
             checkBoxHMRNM.TabIndex = 1;
@@ -193,7 +193,7 @@
             checkBoxPKey.AutoSize = true;
             checkBoxPKey.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxPKey.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxPKey.Location = new System.Drawing.Point(332, 39);
+            checkBoxPKey.Location = new System.Drawing.Point(382, 39);
             checkBoxPKey.Name = "checkBoxPKey";
             checkBoxPKey.Size = new System.Drawing.Size(55, 19);
             checkBoxPKey.TabIndex = 0;
@@ -208,18 +208,18 @@
             panel2.Controls.Add(label2);
             panel2.Controls.Add(label1);
             panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            panel2.Location = new System.Drawing.Point(553, 0);
+            panel2.Location = new System.Drawing.Point(596, 0);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(154, 61);
+            panel2.Size = new System.Drawing.Size(117, 61);
             panel2.TabIndex = 6;
             // 
             // textBox可動率
             // 
             textBox可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             textBox可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBox可動率.Location = new System.Drawing.Point(69, 14);
+            textBox可動率.Location = new System.Drawing.Point(52, 14);
             textBox可動率.Name = "textBox可動率";
-            textBox可動率.Size = new System.Drawing.Size(45, 36);
+            textBox可動率.Size = new System.Drawing.Size(41, 36);
             textBox可動率.TabIndex = 3;
             textBox可動率.Text = "100";
             textBox可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -231,7 +231,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            label3.Location = new System.Drawing.Point(16, 30);
+            label3.Location = new System.Drawing.Point(7, 30);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(43, 15);
             label3.TabIndex = 7;
@@ -242,7 +242,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            label2.Location = new System.Drawing.Point(122, 27);
+            label2.Location = new System.Drawing.Point(95, 27);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(19, 15);
             label2.TabIndex = 6;
@@ -253,32 +253,32 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Yu Gothic UI", 6F, System.Drawing.FontStyle.Bold);
-            label1.Location = new System.Drawing.Point(16, 18);
+            label1.Location = new System.Drawing.Point(7, 18);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(41, 11);
             label1.TabIndex = 5;
             label1.Text = "べきどうりつ";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel作業時間
+            // panel計画稼働時間
             // 
-            panel作業時間.Controls.Add(textBox作業時間);
-            panel作業時間.Controls.Add(label4);
-            panel作業時間.Controls.Add(label5);
-            panel作業時間.Dock = System.Windows.Forms.DockStyle.Right;
-            panel作業時間.Location = new System.Drawing.Point(707, 0);
-            panel作業時間.Name = "panel作業時間";
-            panel作業時間.Size = new System.Drawing.Size(193, 61);
-            panel作業時間.TabIndex = 4;
+            panel計画稼働時間.Controls.Add(textBox作業時間);
+            panel計画稼働時間.Controls.Add(label4);
+            panel計画稼働時間.Controls.Add(label5);
+            panel計画稼働時間.Dock = System.Windows.Forms.DockStyle.Right;
+            panel計画稼働時間.Location = new System.Drawing.Point(713, 0);
+            panel計画稼働時間.Name = "panel計画稼働時間";
+            panel計画稼働時間.Size = new System.Drawing.Size(187, 61);
+            panel計画稼働時間.TabIndex = 4;
             // 
             // textBox作業時間
             // 
             textBox作業時間.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             textBox作業時間.Enabled = false;
             textBox作業時間.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBox作業時間.Location = new System.Drawing.Point(72, 12);
+            textBox作業時間.Location = new System.Drawing.Point(84, 12);
             textBox作業時間.Name = "textBox作業時間";
-            textBox作業時間.Size = new System.Drawing.Size(72, 36);
+            textBox作業時間.Size = new System.Drawing.Size(64, 36);
             textBox作業時間.TabIndex = 4;
             textBox作業時間.Text = "10.25";
             textBox作業時間.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -287,11 +287,11 @@
             // 
             label4.AutoSize = true;
             label4.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            label4.Location = new System.Drawing.Point(11, 26);
+            label4.Location = new System.Drawing.Point(3, 26);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(55, 15);
+            label4.Size = new System.Drawing.Size(79, 15);
             label4.TabIndex = 7;
-            label4.Text = "作業時間";
+            label4.Text = "計画稼働時間";
             label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label5
@@ -341,8 +341,8 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            panel作業時間.ResumeLayout(false);
-            panel作業時間.PerformLayout();
+            panel計画稼働時間.ResumeLayout(false);
+            panel計画稼働時間.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -355,7 +355,7 @@
         private System.Windows.Forms.Button buttonAddAchieve;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelTitleOdCd;
-        private System.Windows.Forms.Panel panel作業時間;
+        private System.Windows.Forms.Panel panel計画稼働時間;
         private System.Windows.Forms.TextBox textBox作業時間;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;

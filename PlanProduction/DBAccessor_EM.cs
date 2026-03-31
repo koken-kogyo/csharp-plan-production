@@ -422,7 +422,7 @@ namespace PlanProduction
                                     + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
                                 + "and a.EDDT between sysdate - 30 and sysdate + 30 "
                                 + "and a.ODCD || a.KTCD in " + condition + " and a.ODRSTS in ('2', '3') "
-                                + "and a.ODRNO > to_char(sysdate - 30, 'YYMM') || '000000' "
+                                + "and a.ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                         + ") src "
                         + "PIVOT ( "
                             + "SUM(ODRQTY) "
