@@ -39,7 +39,6 @@ namespace PlanProduction
     /// <summary>
     /// アプリケーション設定クラス
     /// </summary>
-
     public class OdCdSetting
     {
         public string OdCd { get; set; } = "";                      // 手配先コード
@@ -48,6 +47,8 @@ namespace PlanProduction
         public string TanName { get; set; } = "";                   // 初期表示担当者名
         public string Ava { get; set; } = "70";                     // 可動率 Equipment availability rate
         public string StartTime { get; set; } = "08:15";            // 開始時刻
+        public string ExcelName { get; set; } = @"雛形_Default.xlsx";
+        public string FullPath { get; set; } = @"\\filesv\製造部\☆製造部計画表\雛形\雛形_Default.xlsx";
     }
     /// <summary>
     /// アプリケーション設定ファイル

@@ -56,6 +56,8 @@
             ColumnTanName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Column可動率 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Column開始時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ColumnExcel = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ColumnFullPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ColumnButton = new System.Windows.Forms.DataGridViewButtonColumn();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -73,7 +75,7 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel2.Location = new System.Drawing.Point(0, 379);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(952, 81);
+            panel2.Size = new System.Drawing.Size(1048, 81);
             panel2.TabIndex = 32;
             // 
             // checkBoxAllCheck
@@ -94,7 +96,7 @@
             buttonSaveClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonSaveClose.BackColor = System.Drawing.Color.LightCoral;
             buttonSaveClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonSaveClose.Location = new System.Drawing.Point(603, 14);
+            buttonSaveClose.Location = new System.Drawing.Point(699, 14);
             buttonSaveClose.Margin = new System.Windows.Forms.Padding(4);
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(194, 54);
@@ -108,7 +110,7 @@
             buttonCancelClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonCancelClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonCancelClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonCancelClose.Location = new System.Drawing.Point(805, 14);
+            buttonCancelClose.Location = new System.Drawing.Point(901, 14);
             buttonCancelClose.Margin = new System.Windows.Forms.Padding(4);
             buttonCancelClose.Name = "buttonCancelClose";
             buttonCancelClose.Size = new System.Drawing.Size(134, 54);
@@ -153,7 +155,7 @@
             panel3.Dock = System.Windows.Forms.DockStyle.Top;
             panel3.Location = new System.Drawing.Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(952, 122);
+            panel3.Size = new System.Drawing.Size(1048, 122);
             panel3.TabIndex = 33;
             // 
             // buttonInitialValue
@@ -220,7 +222,7 @@
             label3.Location = new System.Drawing.Point(441, 99);
             label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(421, 21);
+            label3.Size = new System.Drawing.Size(521, 21);
             label3.TabIndex = 33;
             label3.Text = "ローカル設定ファイル [ AppSettings.json ]";
             label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -254,7 +256,7 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 122);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(952, 257);
+            panel1.Size = new System.Drawing.Size(1048, 257);
             panel1.TabIndex = 34;
             // 
             // dataGridView1
@@ -271,7 +273,7 @@
             dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeight = 30;
             dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { ColumnSelected, ColumnOdCd, ColumnKtCd, ColumnWkGrNm, ColumnListOrder, ColumnTanName, Column可動率, Column開始時刻, ColumnButton });
+            dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { ColumnSelected, ColumnOdCd, ColumnKtCd, ColumnWkGrNm, ColumnListOrder, ColumnTanName, Column可動率, Column開始時刻, ColumnExcel, ColumnFullPath, ColumnButton });
             dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -280,7 +282,7 @@
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 36;
-            dataGridView1.Size = new System.Drawing.Size(952, 257);
+            dataGridView1.Size = new System.Drawing.Size(1048, 257);
             dataGridView1.TabIndex = 3;
             dataGridView1.CellClick += DataGridView1_CellClick;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
@@ -358,6 +360,19 @@
             Column開始時刻.Name = "Column開始時刻";
             Column開始時刻.Width = 85;
             // 
+            // ColumnExcel
+            // 
+            ColumnExcel.DataPropertyName = "EXCELNAME";
+            ColumnExcel.HeaderText = "雛形";
+            ColumnExcel.Name = "ColumnExcel";
+            // 
+            // ColumnFullPath
+            // 
+            ColumnFullPath.DataPropertyName = "FULLPATH";
+            ColumnFullPath.HeaderText = "FullPath";
+            ColumnFullPath.Name = "ColumnFullPath";
+            ColumnFullPath.Visible = false;
+            // 
             // ColumnButton
             // 
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -375,7 +390,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(952, 460);
+            ClientSize = new System.Drawing.Size(1048, 460);
             Controls.Add(panel1);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -414,6 +429,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBoxAllCheck;
+        private System.Windows.Forms.Button buttonInitialValue;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOdCd;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnKtCd;
@@ -422,7 +438,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTanName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column可動率;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column開始時刻;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnExcel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFullPath;
         private System.Windows.Forms.DataGridViewButtonColumn ColumnButton;
-        private System.Windows.Forms.Button buttonInitialValue;
     }
 }

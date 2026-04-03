@@ -506,7 +506,9 @@ namespace PlanProduction
         // 「計画印刷」
         private void ButtonPlanPrint_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("まだ作り込めていません");
+            string savePath = Common.SaveExcelToDesktop(ref dataGridViewPlan, OdCdSetting.FullPath);
+            Common.ExportByHeaderMatch(ref dataGridViewPlan, savePath);
+            //MessageBox.Show("まだ作り込めていません");
         }
         // 「計画クリア」
         private void ButtonPlanClear_Click(object sender, EventArgs e)
@@ -514,7 +516,7 @@ namespace PlanProduction
             dataGridViewPlan.Rows.Clear();
 
             // UndoStachからdataGridViewPlanに関するアクションを削除
-            Stack<UndoAction> newStack = new Stack<UndoAction>();
+            Stack<UndoAction> newStack = new();
             while (undoStack.Count > 0)
             {
                 var action = undoStack.Pop();
@@ -535,7 +537,7 @@ namespace PlanProduction
             dataGridViewAchieve.Rows.Clear();
 
             // UndoStachからdataGridViewPlanに関するアクションを削除
-            Stack<UndoAction> newStack = new Stack<UndoAction>();
+            Stack<UndoAction> newStack = new();
             while (undoStack.Count > 0)
             {
                 var action = undoStack.Pop();

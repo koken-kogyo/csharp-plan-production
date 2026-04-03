@@ -39,6 +39,7 @@ namespace PlanProduction
             dataGridView1.Columns[1].ReadOnly = true; // 1列目
             dataGridView1.Columns[2].ReadOnly = true; // 2列目
             dataGridView1.Columns[3].ReadOnly = true; // 3列目
+            dataGridView1.Columns["ColumnExcel"].ReadOnly = true;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             dataGridView1.DataSource = DataStore.dtKM5010kai;
@@ -148,6 +149,8 @@ namespace PlanProduction
             {
                 if (Convert.ToBoolean(row.Cells[0].Value))
                 {
+                    string exeDir = Application.StartupPath;
+
                     if (string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString())) 
                         row.Cells["ColumnListOrder"].Value = Common.sortOrderMap[2];
                     if (string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
@@ -156,6 +159,10 @@ namespace PlanProduction
                         row.Cells["Column可動率"].Value = "80";
                     if (string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
                         row.Cells["Column開始時刻"].Value = "08:15";
+                    if (string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
+                        row.Cells["ColumnExcel"].Value = "雛形_Default.xlsx";
+                    if (string.IsNullOrEmpty(row.Cells["ColumnFullPath"].Value?.ToString()))
+                        row.Cells["ColumnFullPath"].Value = exeDir + @"\雛形_Default.xlsx";
                 }
             }
         }
@@ -203,6 +210,10 @@ namespace PlanProduction
                         row.Cells["Column開始時刻"].Selected = true;
                         errmsg = "時刻を入力してください．";
                     }
+                    if (string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
+                    {
+                        errmsg = "雛形ファイルを選択してください．";
+                    }
                 }
                 else
                 {
@@ -222,6 +233,10 @@ namespace PlanProduction
                     if (!string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
                     {
                         row.Cells["Column開始時刻"].Value = "";
+                    }
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
+                    {
+                        row.Cells["ColumnExcel"].Value = "";
                     }
                 }
                 if (errmsg != string.Empty)
@@ -295,6 +310,30 @@ namespace PlanProduction
                     combo.DroppedDown = true;
                 }
             }
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "ColumnExcel")
+            {
+                using (var dlg = new OpenFileDialog())
+                {
+                    dlg.Filter = "Excel ファイル (*.xlsx)|*.xlsx";
+                    dlg.Title = "Excel ファイルを選択してください";
+                    dlg.InitialDirectory = Application.StartupPath;
+                    dlg.RestoreDirectory = true;
+
+                    // 上の階層へ移動するボタンを無効化
+                    dlg.AddExtension = true;
+                    dlg.CheckFileExists = true;
+                    dlg.CheckPathExists = true;
+
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        string fullPath = dlg.FileName;
+                        string fileName = Path.GetFileName(fullPath);
+                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = fileName;
+                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex + 1].Value =fullPath;
+                    }
+                }
+            }
+
         }
 
         // クリックした瞬間にイベント
@@ -335,6 +374,7 @@ namespace PlanProduction
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "ColumnButton") // ボタン列のクリックかどうかを判定
             {
+                if (e.RowIndex < 0) return;
                 OdCdSetting setting = new()
                 {
                     OdCd = dataGridView1.Rows[e.RowIndex].Cells["ColumnOdCd"].Value.ToString(),
