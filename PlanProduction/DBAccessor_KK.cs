@@ -3,12 +3,9 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Text;
+using System.Reflection.Metadata.Ecma335;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PlanProduction
 {
@@ -47,8 +44,6 @@ namespace PlanProduction
                 // MySQL への接続
                 kkCnn = new MySqlConnection(connectionString);
                 kkCnn.Open();	// 接続
-                Trace.WriteLine("MySQL に接続しました。");
-                Trace.WriteLine(kkCnn.ServerVersion);
                 ret = true;
             }
             catch
@@ -115,6 +110,136 @@ namespace PlanProduction
             DBAccessor.CloseMySqlSchema();
             return ret;
         }
+
+        public static bool SaveDataGridView(ref DataGridView dgv, SaveOptions opt)
+        {
+            if (!IsConnectMySqlSchema()) return false;
+
+            // トランザクション開始
+            MySqlTransaction txn = kkCnn.BeginTransaction();
+            try
+            {
+
+                // 登録
+                string sql = @"
+                    INSERT INTO KD8020
+                        (ODCD, PLANDT, TYPE, STARTTIME, ENDTIME, HIRUKADO, KYUKEIKADO, PIKAPIKA, HAYAHIRU, NOTE, 
+                         TTLQTY, CTHOUR, OPEHOUR, AVA)
+                    VALUES
+                        (@手配先コード, @計画日, @計画種別, @開始時刻, @終了時刻, @昼稼働, @休憩稼働, @ピカピカ, @早昼, @所感, 
+                         @合計本数, @CT合計時間, @合計稼働時間, @可動率)
+                    ON DUPLICATE KEY UPDATE
+                        ODCD = VALUES(ODCD),
+                        PLANDT = VALUES(PLANDT),
+                        TYPE = VALUES(TYPE),
+                        STARTTIME = VALUES(STARTTIME),
+                        ENDTIME = VALUES(ENDTIME),
+                        HIRUKADO = VALUES(HIRUKADO),
+                        KYUKEIKADO = VALUES(KYUKEIKADO),
+                        PIKAPIKA = VALUES(PIKAPIKA),
+                        HAYAHIRU = VALUES(HAYAHIRU),
+                        NOTE = VALUES(NOTE),
+                        TTLQTY = VALUES(TTLQTY),
+                        CTHOUR = VALUES(CTHOUR),
+                        OPEHOUR = VALUES(OPEHOUR),
+                        AVA = VALUES(AVA);
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    // 時刻の変換
+                    DateTime startDateTime = opt.PlanDate.Date + TimeSpan.Parse(opt.開始時刻);
+                    DateTime endDateTime = opt.PlanDate.Date + TimeSpan.Parse(opt.終了時刻);
+                    if (endDateTime < startDateTime)
+                    {
+                        endDateTime = endDateTime.AddDays(1); // 終了日時が開始日時より前の場合は翌日にする
+                    }
+
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@手配先コード", opt.Odcd);
+                    cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
+                    cmd.Parameters.AddWithValue("@計画種別", opt.Type);
+                    cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
+                    cmd.Parameters.AddWithValue("@終了時刻", endDateTime);
+
+                    cmd.Parameters.AddWithValue("@昼稼働", (opt.昼稼働) ? "1" : "0");
+                    cmd.Parameters.AddWithValue("@休憩稼働", (opt.休憩稼働) ? "1" : "0");
+                    cmd.Parameters.AddWithValue("@ピカピカ", (opt.ピカピカ) ? "1" : "0");
+                    cmd.Parameters.AddWithValue("@早昼", (opt.早昼) ? "1" : "0");
+
+                    cmd.Parameters.AddWithValue("@所感", opt.所感);
+                    cmd.Parameters.AddWithValue("@合計本数", opt.合計本数);
+                    cmd.Parameters.AddWithValue("@CT合計時間", opt.CT合計時間);
+                    cmd.Parameters.AddWithValue("@合計稼働時間", opt.合計稼働時間);
+                    cmd.Parameters.AddWithValue("@可動率", opt.可動率);
+
+                    int insupdCount = cmd.ExecuteNonQuery();
+                }
+
+                // 明細を一旦削除
+                sql = $"DELETE FROM KD8030 WHERE ODCD='{opt.Odcd}' and PLANDT='{opt.PlanDate.Date}' and TYPE='{opt.Type}'";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    int deleteCount = cmd.ExecuteNonQuery();
+                }
+
+                // 明細の登録
+                sql = @"
+                    INSERT INTO KD8030
+                        (ODCD, PLANDT, TYPE, NO, HMCD, CT, QTY, STARTTIME, ENDTIME, BREAKTIME, AVA, TANNM, NOTE)
+                    VALUES
+                        (@手配先コード, @計画日, @計画種別, @行番号, @品番, @CT, @本数, @開始時刻, @終了時刻, @休憩時間, @可動率, @作業者, @備考);
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    foreach (DataGridViewRow row in dgv.Rows)
+                    {
+                        // 新規行（※の行）はスキップ
+                        if (row.IsNewRow) continue;
+
+                        cmd.Parameters.Clear();
+
+                        // 行ヘッダーの No を取得
+                        int no = row.HeaderCell.Value == null
+                            ? row.Index + 1
+                            : int.Parse(row.HeaderCell.Value.ToString());
+
+                        // 時刻の変換
+                        DateTime startDateTime = opt.PlanDate.Date + TimeSpan.Parse(row.Cells[3].Value.ToString());
+                        DateTime endDateTime = opt.PlanDate.Date + TimeSpan.Parse(row.Cells[4].Value.ToString());
+                        if (endDateTime < startDateTime)
+                        {
+                            endDateTime = endDateTime.AddDays(1); // 終了日時が開始日時より前の場合は翌日にする
+                        }
+
+                        cmd.Parameters.AddWithValue("@手配先コード", opt.Odcd);
+                        cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
+                        cmd.Parameters.AddWithValue("@計画種別", opt.Type);
+                        cmd.Parameters.AddWithValue("@行番号", no);
+                        cmd.Parameters.AddWithValue("@品番", row.Cells[0].Value);
+                        cmd.Parameters.AddWithValue("@CT", row.Cells[1].Value);
+                        cmd.Parameters.AddWithValue("@本数", row.Cells[2].Value);
+                        cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
+                        cmd.Parameters.AddWithValue("@終了時刻", endDateTime);
+                        cmd.Parameters.AddWithValue("@休憩時間", row.Cells[5].Value);
+                        cmd.Parameters.AddWithValue("@可動率", row.Cells[6].Value);
+                        cmd.Parameters.AddWithValue("@作業者", row.Cells[7].Value);
+                        cmd.Parameters.AddWithValue("@備考", row.Cells[8].Value);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                txn.Commit();
+                CloseMySqlSchema();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                txn.Rollback();
+                MessageBox.Show("データの保存に失敗しました。\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
 
 
 

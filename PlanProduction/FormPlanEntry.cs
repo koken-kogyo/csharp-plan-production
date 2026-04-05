@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Numerics;
 using System.Windows.Forms;
 
 namespace PlanProduction
 {
     public partial class FormPlanEntry : Form
     {
-        // フォーム起動時の値
-        private FormConfig settings;
-
-        // モードレスなのでインスタンスを保持する
-        private readonly FormOrderList formOrderList;
-
         // 現在表示中の手配先コードを格納する変数
         private readonly OdCdSetting OdCdSetting;
+        private readonly DateTime PlanDate;
         private double 可動率;
 
-        // DataTable を保持するフィールドを作る
-        private readonly DataTable dt = new();
+        // フォームのサイズ等セッティング
+        private FormConfig settings;
+
+        // 手配一覧をモードレスで起動させるのでインスタンスを保持する
+        private readonly FormOrderList formOrderList;
+
+        // 状態フラグ
+        private bool isPlanChanged = false;
+        private bool isAchieveChanged = false;
 
         // UnDoアクション
         Stack<UndoAction> undoStack = new();                    // 元に戻すスタック
@@ -30,19 +33,20 @@ namespace PlanProduction
         private bool isCancelAddEvent = false;
 
         // コンストラクタ
-        public FormPlanEntry(OdCdSetting OdCdSetting)
+        public FormPlanEntry(DateTime plandate, OdCdSetting odcdsetting)
         {
             InitializeComponent();
 
             this.KeyPreview = true;
 
+            // 表示対象の手配先コードと計画日付をこのフォームに保持
+            this.OdCdSetting = odcdsetting;
+            this.PlanDate = plandate;
+
             // 手配一覧を開く
             formOrderList = new FormOrderList(OdCdSetting, OnSelectedList);         // ← ★ コールバックを渡す
             formOrderList.Show();                                                   // モードレス
             formOrderList.BringToFront();
-
-            // 表示対象の手配先コードをこのフォームに保持
-            this.OdCdSetting = OdCdSetting;
 
             // イベント登録
             dataGridViewPlan.CellValueChanged += DataGridViewPlan_CellValueChanged; // 列2と列3が変更されたら終了時刻再計算
@@ -77,7 +81,15 @@ namespace PlanProduction
             {
                 dgv.Rows.Add(item.HmCd, item.CT, item.SumQty);
             }
-            if (mode == "Plan") CalculatePlan(); // 「計画リスト」に追加された場合のみ終了時刻を再計算
+            if (mode == "Plan")
+            {
+                CalculatePlan(); // 「計画リスト」に追加された場合のみ終了時刻を再計算
+                isPlanChanged = true;
+            }
+            else
+            {
+                isAchieveChanged = true;
+            }
         }
 
         // 「初期化処理」（表示される直前に一度だけ）
@@ -96,26 +108,30 @@ namespace PlanProduction
 
             // 初期表示
             labelTitleOdCd.Text = $"【{OdCdSetting.OdCd}】 {DataStore.M0300Map[OdCdSetting.OdCd]}";
+            labelTitleDate.Text = $"【{PlanDate:M/d}】 計画と実績";
             textBoxPlan可動率.Text = (string.IsNullOrEmpty(OdCdSetting.Ava)) ? "70" : OdCdSetting.Ava;
             可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
             textBoxPlanStartTime.Text = (string.IsNullOrEmpty(OdCdSetting.StartTime)) ? "08:15" : OdCdSetting.StartTime;
             textBoxPlanQty.Text = "0";
             textBoxPlanCT.Text = "0.0";
-            textBoxPlanKdo.Text = "0.0";
-            //checkBoxPlanピカピカ.Checked 金曜日なら
+            textBoxPlanOpe.Text = "0.0";
+            if (PlanDate.DayOfWeek == DayOfWeek.Friday) checkBoxPlanピカピカ.Checked = true;
 
             // 計画リストの初期設定
             dataGridViewPlan.EnableHeadersVisualStyles = false;
             dataGridViewPlan.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            var ctP = dataGridViewPlan.Columns["PlanCT"];
-            ctP.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー中央寄せ
-            ctP.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // セル右寄せ
-            ctP.DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
-            var qtyP = dataGridViewPlan.Columns["Plan本数"];
-            qtyP.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;        // ヘッダー右寄せ
-            qtyP.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;         // セル右寄せ
-            string[] colNamesPlan = ["Plan開始時刻", "Plan終了時刻", "Plan休憩時間"];
-            foreach (string colName in colNamesPlan)
+
+            string[] colNames1Plan = ["PlanCT", "Plan本数", "Plan可動率"];
+            foreach (string colName in colNames1Plan)
+            {
+                var col = dataGridViewPlan.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;      // セル右寄せ
+            }
+            dataGridViewPlan.Columns["PlanCT"].DefaultCellStyle.Format = "N1";                  // CTは小数点以下1桁
+
+            string[] colNames2Plan = ["Plan開始時刻", "Plan終了時刻", "Plan休憩時間"];
+            foreach (string colName in colNames2Plan)
             {
                 var col = dataGridViewPlan.Columns[colName];
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
@@ -132,21 +148,24 @@ namespace PlanProduction
             // 実績リストの初期設定
             dataGridViewAchieve.EnableHeadersVisualStyles = false;
             dataGridViewAchieve.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            var ctA = dataGridViewAchieve.Columns["AchieveCT"];
-            ctA.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;         // ヘッダー中央寄せ
-            ctA.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // セル右寄せ
-            ctA.DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
-            var qtyA = dataGridViewAchieve.Columns["Achieve本数"];
-            qtyA.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;        // ヘッダー右寄せ
-            qtyA.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;         // セル右寄せ
-            string[] colNamesAchieve = ["Achieve開始時刻", "Achieve終了時刻", "Achieve休憩時間"];
-            foreach (string colName in colNamesAchieve)
+
+            string[] colNames1Achieve = ["AchieveCT", "Achieve本数", "Achieve可動率"];
+            foreach (string colName in colNames1Achieve)
             {
                 var col = dataGridViewAchieve.Columns[colName];
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
-                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;     // セル中央寄せ
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;      // セル右寄せ
+            }
+            dataGridViewAchieve.Columns["AchieveCT"].DefaultCellStyle.Format = "N1";            // CTは小数点以下1桁
+
+            string[] colNames2Achieve = ["Achieve開始時刻", "Achieve終了時刻", "Achieve休憩時間"];
+            foreach (string colName in colNames2Achieve)
+            {
+                var col = dataGridViewAchieve.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
                 col.HeaderCell.Style.Font = new Font(
-                    dataGridViewAchieve.ColumnHeadersDefaultCellStyle.Font.FontFamily, 7.0f);   // 小さいサイズ
+                    dataGridViewAchieve.ColumnHeadersDefaultCellStyle.Font.FontFamily, 7.0f);   // ヘッダー小さいサイズ
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;     // セル中央寄せ
             }
             dataGridViewAchieve.RowTemplate.Height = 30;
             dataGridViewAchieve.Rows[dataGridViewAchieve.NewRowIndex].Height = 30;
@@ -286,6 +305,7 @@ namespace PlanProduction
                 // 行ヘッダー（データ範囲外） → 「行削除」
                 // ----------------------------------------
                 ButtonDelete_Click(sender, e);
+                isPlanChanged = true;
             }
             else if (isRowHeaderDrag)
             {
@@ -317,6 +337,7 @@ namespace PlanProduction
 
                 dgv.ClearSelection();
                 dgv.Rows[targetRow].Selected = true;
+                isPlanChanged = true;
             }
             else
             {
@@ -394,11 +415,16 @@ namespace PlanProduction
             };
 
             undoStack.Push(action);
+            isPlanChanged = true;
         }
         // 「列2:CT」または「列3:本数」の変更時、終了時刻再計算
         private void DataGridViewPlan_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 1 || e.ColumnIndex == 2) CalculatePlan();
+            if (e.ColumnIndex == 1 || e.ColumnIndex == 2)
+            {
+                CalculatePlan();
+                isPlanChanged = true;
+            }
         }
         // 「行追加」
         private void DataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -420,13 +446,17 @@ namespace PlanProduction
             };
 
             undoStack.Push(action);
+            isPlanChanged = true;
         }
         // 「元に戻す」ボタン
         private void ButtonUndo_Click(object sender, EventArgs e)
         {
             if (undoStack == null) return;
-            if (undoStack.Count == 0) return;
-
+            if (undoStack.Count == 0)
+            {
+                isPlanChanged = false;
+                return;
+            }
             var action = undoStack.Pop();
 
             try
@@ -498,6 +528,7 @@ namespace PlanProduction
 
             // 実際に削除
             dgv.Rows.RemoveAt(rowIndex);
+            isPlanChanged = true;
         }
 
 
@@ -506,9 +537,12 @@ namespace PlanProduction
         // 「計画印刷」
         private void ButtonPlanPrint_Click(object sender, EventArgs e)
         {
-            string savePath = Common.SaveExcelToDesktop(ref dataGridViewPlan, OdCdSetting.FullPath);
-            Common.ExportByHeaderMatch(ref dataGridViewPlan, savePath);
-            //MessageBox.Show("まだ作り込めていません");
+            if (dataGridViewPlan.Rows.Count <= 1)
+            {
+                MessageBox.Show("計画リストを作成して下さい．", "計画印刷", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            Common.PrintPlan(ref dataGridViewPlan, OdCdSetting.FullPath);
         }
         // 「計画クリア」
         private void ButtonPlanClear_Click(object sender, EventArgs e)
@@ -529,7 +563,13 @@ namespace PlanProduction
         // 「実績へコピー」
         private void ButtonPlanCopy_Click(object sender, EventArgs e)
         {
+
+
+
             MessageBox.Show("まだ作り込めていません");
+
+
+
         }
         // 「実績クリア」
         private void ButtonAchieveClear_Click(object sender, EventArgs e)
@@ -550,7 +590,38 @@ namespace PlanProduction
         // 「保存して閉じる」
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("まだ作り込めていません");
+            // 計画登録更新
+            if (isPlanChanged && dataGridViewPlan.Rows.Count > 1)
+            {
+                int totalQty = int.TryParse(textBoxPlanQty.Text, out int v) ? v : 0;
+                double totalCT = double.TryParse(textBoxPlanCT.Text, out double w) ? w : 0.0;
+                double totalOpe = double.TryParse(textBoxPlanOpe.Text, out double x) ? x : 0.0;
+                double ava = double.TryParse(textBoxPlan可動率.Text, out double y) ? y : 0.0;
+                var opt = new SaveOptions
+                {
+                    Odcd = OdCdSetting.OdCd,
+                    PlanDate = PlanDate,
+                    Type = "P",
+                    開始時刻 = textBoxPlanStartTime.Text,
+                    終了時刻 = textBoxPlanEndTime.Text,
+                    昼稼働 = checkBoxPlanお昼稼働.Checked,
+                    休憩稼働 = checkBoxPlan休憩稼働.Checked,
+                    ピカピカ = checkBoxPlanピカピカ.Checked,
+                    早昼 = checkBoxPlan早昼.Checked,
+                    所感 = "",
+                    合計本数 = totalQty,
+                    CT合計時間 = totalCT,
+                    合計稼働時間 = totalOpe,
+                    可動率 = ava
+                };
+                bool ret = DBAccessor.SaveDataGridView(ref dataGridViewPlan, opt);
+                if (ret) MessageBox.Show("保存しました");
+            }
+            // 実績登録更新
+            if (isAchieveChanged && dataGridViewAchieve.Rows.Count > 1)
+            {
+                //DBAccessor.SaveDataGridView(ref dataGridViewAchieve, opt);
+            }
         }
         // 「閉じる」ボタン
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -726,7 +797,7 @@ namespace PlanProduction
             }
             textBoxPlanQty.Text = 合計本数.ToString("#,0");
             textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N1");
-            textBoxPlanKdo.Text = (計画稼働時間 / 3600).ToString("N1");
+            textBoxPlanOpe.Text = (計画稼働時間 / 3600).ToString("N1");
             textBoxPlanEndTime.Text = (dataGridViewPlan.Rows.Count > 1) ?
                 dataGridViewPlan.Rows[^2].Cells["Plan終了時刻"].Value?.ToString() :
                 textBoxPlanStartTime.Text;

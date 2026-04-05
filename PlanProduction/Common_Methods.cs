@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
+using System.Diagnostics;                       // Process.Start
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;           // Marshal.ReleaseComObject
 using System.Text.Json;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -23,8 +24,6 @@ namespace PlanProduction
         /// <returns>データベース設定データ配列</returns>
         public static DBConfigData[] ReserializeDBConfigFile()
         {
-            Debug.WriteLine("[MethodName] " + MethodBase.GetCurrentMethod().Name);
-
             // 設定ファイル名
             string fileName = Common.CONFIG_FILE_DB;
 
@@ -258,44 +257,25 @@ namespace PlanProduction
             return 0.0;
         }
 
-        /// <summary>
-        /// 雛形ファイルを開いてデスクトップに名前を付けて保存
-        /// </summary>
-        /// <param name="fullPath"></param>
-        public static string SaveExcelToDesktop(ref DataGridView dgv, string fullPath)
+
+
+
+        // 文字列を検索し行番号を返却
+        private static int GetRowNo(ref Excel.Worksheet sheet, string findstring, int column)
         {
-            // Excelアプリ起動
-            var app = new Excel.Application();
-            Excel.Workbook book = null;
-
-            try
-            {
-                // 既存ファイルを開く
-                book = app.Workbooks.Open(fullPath);
-
-                // 保存ファイル名の作成
-                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string baseName = Path.GetFileNameWithoutExtension(fullPath);// 元ファイル名（拡張子なし）
-                baseName = baseName.Replace("雛形_", "");
-                string ext = Path.GetExtension(fullPath);// 拡張子
-                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string saveName = $"{baseName}_{timestamp}{ext}";
-                string savePath = Path.Combine(desktop, saveName);
-
-                // 別名で保存
-                book.SaveAs(savePath);
-
-                return savePath;
-
-            }
-            finally
-            {
-                book?.Close();
-                app.Quit();
-            }
+            Excel.Range foundCell = sheet.Columns[column].Find(
+                What: findstring.Replace("'", ""),
+                LookIn: Excel.XlFindLookIn.xlValues,
+                LookAt: Excel.XlLookAt.xlPart,      // 部分一致
+                SearchOrder: Excel.XlSearchOrder.xlByRows,
+                MatchCase: false                    // 大文字小文字を区別しない
+            );
+            return foundCell == null 
+                ? throw new Exception($"文字列[{findstring}]が列{column}で見つかりませんでした.") 
+                : foundCell.Row;
         }
 
-        public static string GetExcelColumnName(int columnNumber)
+        private static string GetExcelColumnName(int columnNumber)
         {
             string columnName = "";
             while (columnNumber > 0)
@@ -306,69 +286,194 @@ namespace PlanProduction
             }
             return columnName;
         }
-
-        public static Dictionary<string, string> GetExcelColumnMap(Excel.Worksheet sheet)
+        // dgv行ヘッダーのマッピングを作成
+        private static Dictionary<string, int> GetDgvColumnMap(ref DataGridView dgv, ref Excel.Worksheet sheet, int baserow)
         {
-            var map = new Dictionary<string, string>();
+            Dictionary<string, int> map = [];
 
-            Excel.Range used = sheet.UsedRange;
-            int lastRow = used.Rows.Count;
-            int lastCol = used.Columns.Count;
+            int lastColumnIndex = sheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
 
-            // ★ 3行目以降を検索
-            for (int row = 3; row <= lastRow; row++)
+            foreach (DataGridViewColumn column in dgv.Columns)
             {
-                for (int col = 1; col <= lastCol; col++)
+                string header = column.HeaderText;
+                for (int col = 1; col <= lastColumnIndex; col++)
                 {
-                    Excel.Range cell = (Excel.Range)sheet.Cells[row, col];
-                    string header = cell.Value?.ToString();
-
-                    if (!string.IsNullOrEmpty(header))
+                    object value = sheet.Cells[baserow, col].Value;
+                    if (value != null && value.ToString().Contains(header))
                     {
-                        string excelColName = GetExcelColumnName(col);
+                        map[header] = col;
+                        break;
+                    }
+                }
+            }
+            return map;
+        }
+        // excelの行ヘッダーマッピングを作成
+        private static List<int> GetFormulaColumnList(ref Excel.Worksheet sheet, int baserow)
+        {
+            List<int> ary = [];
 
-                        // 同じヘッダー名が複数あっても最初のものを採用
-                        if (!map.ContainsKey(header))
+            int lastColumnIndex = sheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
+
+            for (int col = 1; col <= lastColumnIndex; col++)
+            {
+                if (sheet.Cells[baserow + 1, col]?.HasFormula)
+                {
+                    ary.Add(col);
+                }
+            }
+            return ary;
+        }
+        // 保存ファイル名の作成
+        private static string MakeSaveExcelFullPath(string fullPath)
+        {
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string baseName = Path.GetFileNameWithoutExtension(fullPath); // 元ファイル名（拡張子なし）
+            baseName = baseName.Replace("雛形_", "");
+            string ext = Path.GetExtension(fullPath); // 拡張子
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string saveName = $"{baseName}_{timestamp}{ext}";
+            return Path.Combine(desktop, saveName);
+        }
+        /// <summary>
+        /// 計画を印刷
+        /// 　雛形ファイルを開いて、計画を貼り付け
+        /// 　デスクトップに名前を付けて保存し終了
+        /// </summary>
+        /// <param name="fullPath"></param>
+        public static void PrintPlan(ref DataGridView dgv, string fullPath)
+        {
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+            string savePath = string.Empty;
+            try
+            {
+                excelApp = new()
+                {
+                    Visible = true
+                };
+
+                // 雛形ファイルを開く
+                workbook = excelApp.Workbooks.Open(fullPath);
+                worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+
+                // タイトルの行番号とタイトルの最終列番号を取得
+                int baserow = GetRowNo(ref worksheet, "No", 1);
+                int endCol = worksheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
+                int startRow = baserow + 1;
+
+                // dgv行ヘッダーとExcelのマッピングを作成
+                var dgvMap = GetDgvColumnMap(ref dgv, ref worksheet, baserow);
+                var excelFormulas = GetFormulaColumnList(ref worksheet, baserow);
+
+                // Excel「No.」の最終行を取得（※文字列「最終行（マクロで使用消さないで）」が入っている事が前提）
+                int endFrameRow = startRow;
+                object cellValue = null;
+                do
+                {
+                    endFrameRow++;
+                    cellValue = worksheet.Cells[endFrameRow, 1].Value;
+                    if (endFrameRow > 1000) // セーフティー
+                        throw new Exception("Excelの最終行が見つかりませんでした。雛形ファイルの「No.」列に「最終行（マクロで使用消さないで）」という文字列が入っているか確認してください。");
+                } while (string.IsNullOrEmpty(cellValue?.ToString()) || int.TryParse(cellValue.ToString(), out _));
+                endFrameRow--;
+
+                // 雛形Excelの行が足りない場合、行追加を行う
+                if ((dgv.Rows.Count - 1) > (endFrameRow - startRow + 1))
+                {
+                    int rowsToAdd = (dgv.Rows.Count - 1) - (endFrameRow - startRow + 1);
+                    Excel.Range insertRange = worksheet.Rows[endFrameRow + 1];
+                    insertRange.Resize[rowsToAdd].Insert(Excel.XlInsertShiftDirection.xlShiftDown);
+                    // 新規行に連番を振る
+                    for (int i = 1; i <= rowsToAdd; i++)
+                    {
+                        worksheet.Cells[endFrameRow + i, 1] = (endFrameRow - startRow + 1) + i;
+                    }
+                    // endRowを更新
+                    endFrameRow += rowsToAdd;
+                    // 外枠内枠の引き直し
+                    Excel.Range rng = worksheet.Range[worksheet.Cells[startRow, 1], worksheet.Cells[endFrameRow, endCol]];
+                    rng.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                }
+
+                // DataGridView のデータを Excel に書き込む（NewRowを除く）
+                for (int r = 0; r < dgv.Rows.Count - 1; r++)
+                {
+                    int excelRow = r + startRow;
+
+                    foreach (DataGridViewColumn col in dgv.Columns)
+                    {
+                        string dgvHeader = col.HeaderText;
+
+                        if (dgvMap.TryGetValue(dgvHeader, out int excelCol))
                         {
-                            map[header] = excelColName;
+                            if (!excelFormulas.Contains(excelCol))
+                            {
+                                var value = dgv.Rows[r].Cells[col.Index].Value;
+                                worksheet.Cells[excelRow, excelCol].Value = value;
+                            }
                         }
                     }
                 }
-            }
 
-            return map;
-        }
-
-
-        public static void ExportByHeaderMatch(ref DataGridView dgv, string excelPath)
-        {
-            var app = new Excel.Application();
-            app.Visible = true;
-
-            Excel.Workbook book = app.Workbooks.Open(excelPath);
-            Excel.Worksheet sheet = (Excel.Worksheet)book.ActiveSheet;
-
-            // ★ Excel の 3行目以降からマッピングを作成
-            var excelMap = GetExcelColumnMap(sheet);
-
-            // ★ DataGridView のデータを Excel の 4行目以降に書き込む
-            for (int r = 0; r < dgv.Rows.Count; r++)
-            {
-                int excelRow = r + 5; // 5行目から書き込む
-
-                foreach (DataGridViewColumn col in dgv.Columns)
+                // 式のコピー
+                int endDataRow = worksheet.Cells[baserow, 2].End(Excel.XlDirection.xlDown).Row;
+                foreach (int col in excelFormulas)
                 {
-                    string dgvHeader = col.HeaderText;
+                    worksheet.Cells[startRow, col].Copy();
+                    worksheet.Range[worksheet.Cells[startRow + 1, col], worksheet.Cells[endDataRow, col]]
+                        .PasteSpecial(Excel.XlPasteType.xlPasteFormulas);
+                }
+                for (int i = endDataRow + 1; i <= endFrameRow; i++)
+                {
+                    worksheet.Cells[i, 1].Value = "";
+                }
+                // 別名で保存（Desktopに作成）
+                savePath = MakeSaveExcelFullPath(fullPath);
+                workbook.SaveAs(savePath);
 
-                    if (excelMap.ContainsKey(dgvHeader))
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("エラー: " + ex.Message, "計画印刷", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // ブックを閉じる
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+
+                // Excelアプリケーション終了
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                // ガベージコレクションを2回強制実行してCOM参照を完全解放
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                // 関連付けられたアプリで開く
+                if (File.Exists(@savePath))
+                {
+                    var psi = new ProcessStartInfo
                     {
-                        string excelCol = excelMap[dgvHeader];
-                        var value = dgv.Rows[r].Cells[col.Index].Value;
-
-                        sheet.Range[$"{excelCol}{excelRow}"].Value = value;
-                    }
+                        FileName = @savePath,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
                 }
             }
+
         }
 
 

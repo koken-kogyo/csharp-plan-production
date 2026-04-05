@@ -42,6 +42,10 @@ namespace PlanProduction
             OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
             ReCreateODCDButtons();
 
+            monthCalendar1.MaxSelectionCount = 1; // 単一日付選択に制限
+            monthCalendar1.DateSelected += MonthCalendar1_DateSelected; // 日付選択イベントの追加
+
+            // サンプルデータ
             monthCalendar1.BoldedDates =
             [
                 new DateTime(2026, 3, 10),
@@ -216,18 +220,16 @@ namespace PlanProduction
             frm.Show();
         }
 
-        // 「計画入力」と「手配一覧（計画入力からのコールバック付きで呼び出される）」をモードレスで呼び出す
+        // 「計画入力」と「手配一覧（コールバック付き）」をモードレスで呼び出す
         private void ButtonPlanEntry_Click(object sender, EventArgs e)
         {
-            var frm = new FormPlanEntry(OdCdSetting);
+            DateTime planDate = monthCalendar1.SelectionStart; // カレンダーから選択した日付を取得
+            var frm = new FormPlanEntry(planDate, OdCdSetting);
             frm.Show();
         }
-
-        // （未作成）
         private void MonthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
-            DateTime d = e.Start;
-            MessageBox.Show(d.ToShortDateString());
+            ButtonPlanEntry_Click(sender, e);
         }
 
     }// FormPlanProduction

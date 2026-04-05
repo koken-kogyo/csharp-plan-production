@@ -46,6 +46,7 @@
             Plan開始時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Plan終了時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Plan休憩時間 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Plan可動率 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Plan作業者 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Plan備考 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             labelPlanTitle = new System.Windows.Forms.Label();
@@ -57,7 +58,7 @@
             label10 = new System.Windows.Forms.Label();
             label9 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
-            textBoxPlanKdo = new System.Windows.Forms.TextBox();
+            textBoxPlanOpe = new System.Windows.Forms.TextBox();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -81,6 +82,7 @@
             Achieve開始時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Achieve終了時刻 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Achieve休憩時間 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Achieve可動率 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Achieve作業者 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Achieve備考 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             labelAchieveTitle = new System.Windows.Forms.Label();
@@ -258,7 +260,7 @@
             dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridViewPlan.ColumnHeadersHeight = 30;
             dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Plan品番, PlanCT, Plan本数, Plan開始時刻, Plan終了時刻, Plan休憩時間, Plan作業者, Plan備考 });
+            dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Plan品番, PlanCT, Plan本数, Plan開始時刻, Plan終了時刻, Plan休憩時間, Plan可動率, Plan作業者, Plan備考 });
             dataGridViewPlan.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridViewPlan.Location = new System.Drawing.Point(10, 70);
             dataGridViewPlan.Margin = new System.Windows.Forms.Padding(4);
@@ -306,6 +308,12 @@
             Plan休憩時間.Name = "Plan休憩時間";
             Plan休憩時間.Width = 55;
             // 
+            // Plan可動率
+            // 
+            Plan可動率.HeaderText = "可動率";
+            Plan可動率.Name = "Plan可動率";
+            Plan可動率.Visible = false;
+            // 
             // Plan作業者
             // 
             Plan作業者.HeaderText = "作業者";
@@ -352,7 +360,7 @@
             panelPlanOptions.Controls.Add(label10);
             panelPlanOptions.Controls.Add(label9);
             panelPlanOptions.Controls.Add(label8);
-            panelPlanOptions.Controls.Add(textBoxPlanKdo);
+            panelPlanOptions.Controls.Add(textBoxPlanOpe);
             panelPlanOptions.Controls.Add(label6);
             panelPlanOptions.Controls.Add(label7);
             panelPlanOptions.Controls.Add(label1);
@@ -456,18 +464,18 @@
             label8.Text = "開始時刻";
             label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxPlanKdo
+            // textBoxPlanOpe
             // 
-            textBoxPlanKdo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBoxPlanKdo.Enabled = false;
-            textBoxPlanKdo.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            textBoxPlanKdo.Location = new System.Drawing.Point(183, 35);
-            textBoxPlanKdo.Margin = new System.Windows.Forms.Padding(4);
-            textBoxPlanKdo.Name = "textBoxPlanKdo";
-            textBoxPlanKdo.Size = new System.Drawing.Size(49, 29);
-            textBoxPlanKdo.TabIndex = 20;
-            textBoxPlanKdo.Text = "8.95";
-            textBoxPlanKdo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxPlanOpe.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxPlanOpe.Enabled = false;
+            textBoxPlanOpe.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
+            textBoxPlanOpe.Location = new System.Drawing.Point(183, 35);
+            textBoxPlanOpe.Margin = new System.Windows.Forms.Padding(4);
+            textBoxPlanOpe.Name = "textBoxPlanOpe";
+            textBoxPlanOpe.Size = new System.Drawing.Size(49, 29);
+            textBoxPlanOpe.TabIndex = 20;
+            textBoxPlanOpe.Text = "8.95";
+            textBoxPlanOpe.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label6
             // 
@@ -681,7 +689,7 @@
             dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dataGridViewAchieve.ColumnHeadersHeight = 30;
             dataGridViewAchieve.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridViewAchieve.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Achieve品番, AchieveCT, Achieve本数, Achieve開始時刻, Achieve終了時刻, Achieve休憩時間, Achieve作業者, Achieve備考 });
+            dataGridViewAchieve.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Achieve品番, AchieveCT, Achieve本数, Achieve開始時刻, Achieve終了時刻, Achieve休憩時間, Achieve可動率, Achieve作業者, Achieve備考 });
             dataGridViewAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridViewAchieve.Location = new System.Drawing.Point(3, 70);
             dataGridViewAchieve.Margin = new System.Windows.Forms.Padding(4);
@@ -729,11 +737,17 @@
             Achieve休憩時間.Name = "Achieve休憩時間";
             Achieve休憩時間.Width = 55;
             // 
+            // Achieve可動率
+            // 
+            Achieve可動率.HeaderText = "可動率";
+            Achieve可動率.Name = "Achieve可動率";
+            Achieve可動率.Width = 55;
+            // 
             // Achieve作業者
             // 
             Achieve作業者.HeaderText = "作業者";
             Achieve作業者.Name = "Achieve作業者";
-            Achieve作業者.Width = 50;
+            Achieve作業者.Width = 55;
             // 
             // Achieve備考
             // 
@@ -876,7 +890,7 @@
         private System.Windows.Forms.TextBox textBoxPlanQty;
         private System.Windows.Forms.Label labelPlanQty2;
         private System.Windows.Forms.Label labelPlanQty;
-        private System.Windows.Forms.TextBox textBoxPlanKdo;
+        private System.Windows.Forms.TextBox textBoxPlanOpe;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label1;
@@ -889,22 +903,6 @@
         private System.Windows.Forms.Label labelTitleDate;
         private System.Windows.Forms.DataGridView dataGridViewAchieve;
         private System.Windows.Forms.DataGridView dataGridViewPlan;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan品番;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PlanCT;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan本数;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan開始時刻;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan終了時刻;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan休憩時間;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan作業者;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plan備考;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve品番;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AchieveCT;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve本数;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve開始時刻;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve終了時刻;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve休憩時間;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve作業者;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve備考;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textBoxPlanStartTime;
         private System.Windows.Forms.Button buttonPlanClear;
@@ -917,5 +915,23 @@
         private System.Windows.Forms.Button buttonSaveClose;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonUndo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan品番;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PlanCT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan本数;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan開始時刻;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan終了時刻;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan休憩時間;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan可動率;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan作業者;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plan備考;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve品番;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AchieveCT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve本数;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve開始時刻;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve終了時刻;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve休憩時間;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve可動率;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve作業者;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Achieve備考;
     }
 }

@@ -440,7 +440,6 @@
             monthCalendar1.Location = new System.Drawing.Point(9, 45);
             monthCalendar1.Name = "monthCalendar1";
             monthCalendar1.TabIndex = 14;
-            monthCalendar1.DateSelected += MonthCalendar1_DateSelected;
             // 
             // buttonOrderList
             // 

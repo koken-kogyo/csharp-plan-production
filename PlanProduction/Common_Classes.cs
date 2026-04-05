@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace PlanProduction
@@ -139,5 +140,28 @@ namespace PlanProduction
         public int InsertRowIndex;
     }
 
+    // データ保存クラス
+    public class SaveOptions
+    {
+        // 主キー
+        public string Odcd { get; set; }
+        public DateTime PlanDate { get; set; }
+        public string Type { get; set; }
+        // データ
+        public string 開始時刻 { get; set; }
+        public string 終了時刻 { get; set; }
+
+        public bool 昼稼働 { get; set; }
+        public bool 休憩稼働 { get; set; }
+        public bool ピカピカ { get; set; }
+        public bool 早昼 { get; set; }
+
+        public string 所感 { get; set; }
+
+        public int 合計本数 { get; set; }
+        public double CT合計時間 { get; set; }
+        public double 合計稼働時間 { get; set; }
+        public double 可動率 { get; set; }
+    }
 
 }
