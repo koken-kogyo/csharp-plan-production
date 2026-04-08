@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -9,12 +10,19 @@ namespace PlanProduction
 {
     public partial class FormPlanProduction : Form
     {
-        private FormConfig settings;
-
         // 現在表示中の手配先コードを格納する変数
         private string selectedOdCd;
         private OdCdSetting OdCdSetting;
+        private DateTime PlanDate;
 
+        // フォームのサイズ等セッティング
+        private FormConfig settings;
+
+        // 表示データ
+        private DataTable planDt = new();
+        private DataTable achieveDt = new();
+
+        // コンストラクタ
         public FormPlanProduction()
         {
             InitializeComponent();
@@ -38,23 +46,154 @@ namespace PlanProduction
                 this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
             }
 
+            PlanDate = DateTime.Now.Date;
             selectedOdCd = DataStore.DefaultOdCd;
             OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
             ReCreateODCDButtons();
 
             monthCalendar1.MaxSelectionCount = 1; // 単一日付選択に制限
+            monthCalendar1.SelectionStart = PlanDate;
+            monthCalendar1.SelectionEnd = monthCalendar1.SelectionStart;
             monthCalendar1.DateSelected += MonthCalendar1_DateSelected; // 日付選択イベントの追加
 
-            // サンプルデータ
-            monthCalendar1.BoldedDates =
-            [
-                new DateTime(2026, 3, 10),
-                new DateTime(2026, 3, 15),
-                new DateTime(2026, 3, 20)
-            ];
+            // コントロールの初期化
+            dataGridViewPlan.EnableHeadersVisualStyles = false;
+            dataGridViewPlan.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+            dataGridViewPlan.RowHeadersVisible = false;
+            dataGridViewPlan.DataBindingComplete += DataGridViewPlan_DataBindingComplete;
+
+            dataGridViewAchieve.EnableHeadersVisualStyles = false;
+            dataGridViewAchieve.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+            dataGridViewAchieve.RowHeadersVisible = false;
+            dataGridViewAchieve.DataBindingComplete += DataGridViewAchieve_DataBindingComplete;
 
 
+            // 初期表示
+            RefreshPlanProduction();
+        }
 
+        // 初期表示
+        private void RefreshPlanProduction()
+        {
+            // タイトル設定
+            labelTitle.Text = $"【{PlanDate:M/d}】 計画と実績";
+
+            // 登録された計画日のカレンダーをBoldにする
+            List<DateTime> planDates = DBAccessor.GetRegistDates();
+            monthCalendar1.BoldedDates = [.. planDates];
+
+            // 計画入力データの設定
+            var paramPlan = new SaveOptions
+            {
+                OdCd = OdCdSetting.OdCd,
+                PlanDate = PlanDate,
+                Type = "P"
+            };
+            checkBoxPlanお昼稼働.Checked = false;
+            checkBoxPlan休憩稼働.Checked = false;
+            checkBoxPlanピカピカ.Checked = false;
+            checkBoxPlan早昼.Checked = false;
+            textBoxPlan可動率.Text = "";
+            if (!DBAccessor.GetKD8020(ref paramPlan)) return;
+            checkBoxPlanお昼稼働.Checked = paramPlan.昼稼働;
+            checkBoxPlan休憩稼働.Checked = paramPlan.休憩稼働;
+            checkBoxPlanピカピカ.Checked = paramPlan.ピカピカ;
+            checkBoxPlan早昼.Checked = paramPlan.早昼;
+            textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
+            planDt.Rows.Clear(); // ここから明細
+            if (!DBAccessor.GetKD8030(ref planDt, paramPlan)) return;
+            dataGridViewPlan.DataSource = planDt;
+
+            // 実績入力データの設定
+            var aparam = new SaveOptions
+            {
+                OdCd = OdCdSetting.OdCd,
+                PlanDate = PlanDate,
+                Type = "J"
+            };
+            checkBoxAchieveお昼稼働.Checked = false;
+            checkBoxAchieve休憩稼働.Checked = false;
+            checkBoxAchieveピカピカ.Checked = false;
+            checkBoxAchieve早昼.Checked = false;
+            textBoxAchieve可動率.Text = "";
+            if (!DBAccessor.GetKD8020(ref aparam)) return;
+            checkBoxAchieveお昼稼働.Checked = aparam.昼稼働;
+            checkBoxAchieve休憩稼働.Checked = aparam.休憩稼働;
+            checkBoxAchieveピカピカ.Checked = aparam.ピカピカ;
+            checkBoxAchieve早昼.Checked = aparam.早昼;
+            textBoxAchieve可動率.Text = (aparam.可動率 != 0) ? aparam.可動率.ToString("F0") : "";
+            achieveDt.Rows.Clear(); // ここから明細
+            if (!DBAccessor.GetKD8030(ref achieveDt, aparam)) return;
+            dataGridViewAchieve.DataSource = achieveDt;
+
+        }
+
+        // データバインド後の調整
+        private void DataGridViewPlan_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dataGridViewPlan.ColumnHeadersDefaultCellStyle.Font = new Font(
+                    dataGridViewPlan.ColumnHeadersDefaultCellStyle.Font.FontFamily, 7.0f);      // 小さいサイズ
+
+            string[] colNames1Plan = ["No", "CT", "本数", "可動率"];
+            foreach (string colName in colNames1Plan)
+            {
+                var col = dataGridViewPlan.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;      // セル右寄せ
+            }
+            dataGridViewPlan.Columns["CT"].DefaultCellStyle.Format = "N1";                      // CTは小数点以下1桁
+            dataGridViewPlan.Columns["可動率"].DefaultCellStyle.Format = "N0";                  // 小数点以下0桁
+
+            string[] colNames2Plan = ["開始時刻", "終了時刻", "休憩時間"];
+            foreach (string colName in colNames2Plan)
+            {
+                var col = dataGridViewPlan.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
+                col.DefaultCellStyle.Alignment = (colName != "休憩時間") ?
+                    DataGridViewContentAlignment.MiddleCenter :
+                    DataGridViewContentAlignment.MiddleRight;
+                col.ReadOnly = true;
+            }
+
+            dataGridViewPlan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            // No列は固定幅
+            var colNo = dataGridViewPlan.Columns["No"];
+            colNo.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            colNo.Width = 30;
+        }
+
+        // データバインド後の調整
+        private void DataGridViewAchieve_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dataGridViewAchieve.ColumnHeadersDefaultCellStyle.Font = new Font(
+                    dataGridViewAchieve.ColumnHeadersDefaultCellStyle.Font.FontFamily, 7.0f);  // 小さいサイズ
+
+            string[] colNames1Plan = ["No", "CT", "本数", "可動率"];
+            foreach (string colName in colNames1Plan)
+            {
+                var col = dataGridViewAchieve.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;    // ヘッダー中央寄せ
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;     // セル右寄せ
+            }
+            dataGridViewAchieve.Columns["CT"].DefaultCellStyle.Format = "N1";                  // CTは小数点以下1桁
+            dataGridViewAchieve.Columns["可動率"].DefaultCellStyle.Format = "N0";              // 小数点以下0桁
+
+            string[] colNames2Plan = ["開始時刻", "終了時刻", "休憩時間"];
+            foreach (string colName in colNames2Plan)
+            {
+                var col = dataGridViewAchieve.Columns[colName];
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;     // ヘッダー中央寄せ
+                col.DefaultCellStyle.Alignment = (colName != "休憩時間") ?
+                    DataGridViewContentAlignment.MiddleCenter :
+                    DataGridViewContentAlignment.MiddleRight;
+                col.ReadOnly = true;
+            }
+
+            dataGridViewAchieve.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            // No列は固定幅
+            var colNo = dataGridViewAchieve.Columns["No"];
+            colNo.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            colNo.Width = 30;
         }
 
         // フォームの状態を保存
@@ -135,6 +274,7 @@ namespace PlanProduction
                     if (ctrl is Button)
                         ctrl.BackColor = (ctrl.Name == selectedOdCd) ? Color.LightBlue : Color.LightGray;
                 }
+                RefreshPlanProduction();
             };
             btn.MouseEnter += (s, e) =>
             {
@@ -156,12 +296,16 @@ namespace PlanProduction
                 Application.Exit();             // アプリケーション全体を終了
                 e.Handled = true;
             }
+            if (e.KeyCode == Keys.F5)
+            {
+                RefreshPlanProduction();
+            }
         }
 
         // アプリケーションの終了
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
 
         // 「設定画面」をモーダルで呼び出す
@@ -223,14 +367,23 @@ namespace PlanProduction
         // 「計画入力」と「手配一覧（コールバック付き）」をモードレスで呼び出す
         private void ButtonPlanEntry_Click(object sender, EventArgs e)
         {
-            DateTime planDate = monthCalendar1.SelectionStart; // カレンダーから選択した日付を取得
-            var frm = new FormPlanEntry(planDate, OdCdSetting);
+            var frm = new FormPlanEntry(PlanDate, OdCdSetting);
+            // イベント登録
+            frm.IsUpdated += CallBackPlanEntry;
             frm.Show();
         }
+        // コールバック関数（サブフォームからの戻り値を受け取る）
+        private void CallBackPlanEntry(bool isupdated)
+        {
+            if (isupdated) RefreshPlanProduction();
+        }
+        // カレンダー選択
         private void MonthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
-            ButtonPlanEntry_Click(sender, e);
+            PlanDate = monthCalendar1.SelectionStart;
+            RefreshPlanProduction();
         }
+
 
     }// FormPlanProduction
 

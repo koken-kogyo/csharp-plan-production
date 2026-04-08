@@ -16,6 +16,39 @@ namespace PlanProduction
     public static partial class Common
     {
 
+        /// <summary>
+        /// 一定時間後に自動で閉じるメッセージボックスクラス
+        /// </summary>
+        public static class MessageBox2
+        {
+            public static void Show(string text, string caption, int timeout, MessageBoxIcon icon)
+            {
+                var timer = new System.Windows.Forms.Timer
+                {
+                    Interval = timeout
+                };
+                timer.Tick += (s, e) =>
+                {
+                    timer.Stop();
+                    IntPtr mbWnd = FindWindow(null, caption);
+                    if (mbWnd != IntPtr.Zero)
+                    {
+                        int v = SendMessage(mbWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    }
+                };
+                timer.Start();
+
+                MessageBox.Show(text, caption, MessageBoxButtons.OK, icon);
+            }
+
+            [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+            private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+            [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            private static extern int SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+            private const uint WM_CLOSE = 0x0010;
+        }
 
 
         /// <summary>
@@ -286,6 +319,7 @@ namespace PlanProduction
             }
             return columnName;
         }
+
         // dgv行ヘッダーのマッピングを作成
         private static Dictionary<string, int> GetDgvColumnMap(ref DataGridView dgv, ref Excel.Worksheet sheet, int baserow)
         {
@@ -308,6 +342,7 @@ namespace PlanProduction
             }
             return map;
         }
+
         // excelの行ヘッダーマッピングを作成
         private static List<int> GetFormulaColumnList(ref Excel.Worksheet sheet, int baserow)
         {
@@ -324,39 +359,55 @@ namespace PlanProduction
             }
             return ary;
         }
-        // 保存ファイル名の作成
-        private static string MakeSaveExcelFullPath(string fullPath)
+
+        // 保存ファイル名の存在チェックと作成
+        public static bool CreateSaveFullPath(string odcd, DateTime plandt, out string saveFullPath)
         {
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string baseName = Path.GetFileNameWithoutExtension(fullPath); // 元ファイル名（拡張子なし）
-            baseName = baseName.Replace("雛形_", "");
-            string ext = Path.GetExtension(fullPath); // 拡張子
-            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string saveName = $"{baseName}_{timestamp}{ext}";
-            return Path.Combine(desktop, saveName);
+            saveFullPath = @$"{desktop}\可動率_計画と実績_{odcd}_{plandt:yyyyMMdd}.xlsx";
+            return !File.Exists(saveFullPath);
         }
+
         /// <summary>
         /// 計画を印刷
         /// 　雛形ファイルを開いて、計画を貼り付け
         /// 　デスクトップに名前を付けて保存し終了
         /// </summary>
-        /// <param name="fullPath"></param>
-        public static void PrintPlan(ref DataGridView dgv, string fullPath)
+        /// <param name="dgv">(参照型)DataGridView</param>
+        /// <param name="odcd">手配先コード</param>
+        /// <param name="plandt">計画日</param>
+        /// <param name="hinapath">雛形ExcelのFullPath</param>
+        /// <param name="hinapath">出力ファイルのFullPath</param>
+        public static bool PrintPlan(ref DataGridView dgv, string odcd, DateTime plandt, string タイトル可動率
+            , string hinapath, string savefullpath)
         {
+            bool ret = false;
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
             Excel.Worksheet worksheet = null;
-            string savePath = string.Empty;
             try
             {
+                // Excel本体と雛形ファイルを開く
                 excelApp = new()
                 {
                     Visible = true
                 };
-
-                // 雛形ファイルを開く
-                workbook = excelApp.Workbooks.Open(fullPath);
+                workbook = excelApp.Workbooks.Open(hinapath);
                 worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+                worksheet.Name = plandt.ToString("MMdd");
+
+                // タイトルのチェックと作成（Excelの名前の管理に存在する事）
+                List<string> names = [];
+                foreach (Excel.Name n in workbook.Names) names.Add(n.Name);
+                if (!names.Contains("タイトル") || !names.Contains("タイトル日付") || !names.Contains("可動率"))
+                {
+                    savefullpath = hinapath; // finally で雛形ファイルを開かせる
+                    excelApp.Visible = false;
+                    throw new Exception("雛形Excelを修正してください．\n\n数式 ＞ 名前の管理を作成してください．\n「タイトル:A1」「タイトル日付:C2」「可動率:O2」");
+                }
+                worksheet.Range["タイトル"].Value = DataStore.M0300Map[odcd];
+                worksheet.Range["タイトル日付"].Value = plandt.ToString("yyyy/MM/dd");
+                worksheet.Range["可動率"].Value = タイトル可動率;
 
                 // タイトルの行番号とタイトルの最終列番号を取得
                 int baserow = GetRowNo(ref worksheet, "No", 1);
@@ -383,18 +434,20 @@ namespace PlanProduction
                 if ((dgv.Rows.Count - 1) > (endFrameRow - startRow + 1))
                 {
                     int rowsToAdd = (dgv.Rows.Count - 1) - (endFrameRow - startRow + 1);
-                    Excel.Range insertRange = worksheet.Rows[endFrameRow + 1];
+                    Excel.Range insertRange = worksheet.Rows[endFrameRow];
                     insertRange.Resize[rowsToAdd].Insert(Excel.XlInsertShiftDirection.xlShiftDown);
-                    // 新規行に連番を振る
-                    for (int i = 1; i <= rowsToAdd; i++)
-                    {
-                        worksheet.Cells[endFrameRow + i, 1] = (endFrameRow - startRow + 1) + i;
-                    }
                     // endRowを更新
                     endFrameRow += rowsToAdd;
-                    // 外枠内枠の引き直し
-                    Excel.Range rng = worksheet.Range[worksheet.Cells[startRow, 1], worksheet.Cells[endFrameRow, endCol]];
-                    rng.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    // 連番を振り直す
+                    int i = 1;
+                    for (int noRow = startRow; noRow <= endFrameRow; noRow++)
+                    {
+                        worksheet.Cells[noRow, 1] = i;
+                        i++;
+                    }
+                    //// 外枠内枠の引き直し
+                    //Excel.Range rng = worksheet.Range[worksheet.Cells[startRow, 1], worksheet.Cells[endFrameRow, endCol]];
+                    //rng.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
                 }
 
                 // DataGridView のデータを Excel に書き込む（NewRowを除く）
@@ -430,9 +483,8 @@ namespace PlanProduction
                     worksheet.Cells[i, 1].Value = "";
                 }
                 // 別名で保存（Desktopに作成）
-                savePath = MakeSaveExcelFullPath(fullPath);
-                workbook.SaveAs(savePath);
-
+                workbook.SaveAs(savefullpath);
+                ret = true;
             }
             catch (Exception ex)
             {
@@ -462,18 +514,18 @@ namespace PlanProduction
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                // 関連付けられたアプリで開く
-                if (File.Exists(@savePath))
+                // 関連付けられたアプリでExcelを開く
+                if (File.Exists(@savefullpath))
                 {
                     var psi = new ProcessStartInfo
                     {
-                        FileName = @savePath,
+                        FileName = @savefullpath,
                         UseShellExecute = true
                     };
                     Process.Start(psi);
                 }
             }
-
+            return ret;
         }
 
 

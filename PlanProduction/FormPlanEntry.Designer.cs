@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             tableLayoutPanelButtons = new System.Windows.Forms.TableLayoutPanel();
             buttonUndo = new System.Windows.Forms.Button();
             buttonSaveClose = new System.Windows.Forms.Button();
@@ -88,6 +88,24 @@
             labelAchieveTitle = new System.Windows.Forms.Label();
             labelTitleDate = new System.Windows.Forms.Label();
             panelAchieveOptions = new System.Windows.Forms.Panel();
+            textBoxAchieveEndTime = new System.Windows.Forms.TextBox();
+            textBoxAchieveStartTime = new System.Windows.Forms.TextBox();
+            label11 = new System.Windows.Forms.Label();
+            label12 = new System.Windows.Forms.Label();
+            label13 = new System.Windows.Forms.Label();
+            textBoxAchieveOpe = new System.Windows.Forms.TextBox();
+            label14 = new System.Windows.Forms.Label();
+            label15 = new System.Windows.Forms.Label();
+            label16 = new System.Windows.Forms.Label();
+            label17 = new System.Windows.Forms.Label();
+            textBoxAchieve可動率 = new System.Windows.Forms.TextBox();
+            label18 = new System.Windows.Forms.Label();
+            textBoxAchieveCT = new System.Windows.Forms.TextBox();
+            label19 = new System.Windows.Forms.Label();
+            label20 = new System.Windows.Forms.Label();
+            textBoxAchieveQty = new System.Windows.Forms.TextBox();
+            label21 = new System.Windows.Forms.Label();
+            label22 = new System.Windows.Forms.Label();
             checkBoxAchieve早昼 = new System.Windows.Forms.CheckBox();
             checkBoxAchieveピカピカ = new System.Windows.Forms.CheckBox();
             checkBoxAchieve休憩稼働 = new System.Windows.Forms.CheckBox();
@@ -153,7 +171,7 @@
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(159, 47);
             buttonSaveClose.TabIndex = 9;
-            buttonSaveClose.Text = "保存して閉じる";
+            buttonSaveClose.Text = "実績登録";
             buttonSaveClose.UseVisualStyleBackColor = false;
             buttonSaveClose.Click += ButtonSaveClose_Click;
             // 
@@ -251,13 +269,13 @@
             // 
             // dataGridViewPlan
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewPlan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewPlan.ColumnHeadersHeight = 30;
             dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Plan品番, PlanCT, Plan本数, Plan開始時刻, Plan終了時刻, Plan休憩時間, Plan可動率, Plan作業者, Plan備考 });
@@ -680,13 +698,13 @@
             // 
             // dataGridViewAchieve
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewAchieve.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dataGridViewAchieve.ColumnHeadersHeight = 30;
             dataGridViewAchieve.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewAchieve.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Achieve品番, AchieveCT, Achieve本数, Achieve開始時刻, Achieve終了時刻, Achieve休憩時間, Achieve可動率, Achieve作業者, Achieve備考 });
@@ -783,6 +801,24 @@
             // 
             // panelAchieveOptions
             // 
+            panelAchieveOptions.Controls.Add(textBoxAchieveEndTime);
+            panelAchieveOptions.Controls.Add(textBoxAchieveStartTime);
+            panelAchieveOptions.Controls.Add(label11);
+            panelAchieveOptions.Controls.Add(label12);
+            panelAchieveOptions.Controls.Add(label13);
+            panelAchieveOptions.Controls.Add(textBoxAchieveOpe);
+            panelAchieveOptions.Controls.Add(label14);
+            panelAchieveOptions.Controls.Add(label15);
+            panelAchieveOptions.Controls.Add(label16);
+            panelAchieveOptions.Controls.Add(label17);
+            panelAchieveOptions.Controls.Add(textBoxAchieve可動率);
+            panelAchieveOptions.Controls.Add(label18);
+            panelAchieveOptions.Controls.Add(textBoxAchieveCT);
+            panelAchieveOptions.Controls.Add(label19);
+            panelAchieveOptions.Controls.Add(label20);
+            panelAchieveOptions.Controls.Add(textBoxAchieveQty);
+            panelAchieveOptions.Controls.Add(label21);
+            panelAchieveOptions.Controls.Add(label22);
             panelAchieveOptions.Controls.Add(checkBoxAchieve早昼);
             panelAchieveOptions.Controls.Add(checkBoxAchieveピカピカ);
             panelAchieveOptions.Controls.Add(checkBoxAchieve休憩稼働);
@@ -793,6 +829,228 @@
             panelAchieveOptions.Name = "panelAchieveOptions";
             panelAchieveOptions.Size = new System.Drawing.Size(569, 94);
             panelAchieveOptions.TabIndex = 2;
+            // 
+            // textBoxAchieveEndTime
+            // 
+            textBoxAchieveEndTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieveEndTime.Enabled = false;
+            textBoxAchieveEndTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxAchieveEndTime.Location = new System.Drawing.Point(453, 30);
+            textBoxAchieveEndTime.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieveEndTime.Name = "textBoxAchieveEndTime";
+            textBoxAchieveEndTime.Size = new System.Drawing.Size(61, 36);
+            textBoxAchieveEndTime.TabIndex = 41;
+            textBoxAchieveEndTime.Text = "17:10";
+            textBoxAchieveEndTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxAchieveStartTime
+            // 
+            textBoxAchieveStartTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieveStartTime.Enabled = false;
+            textBoxAchieveStartTime.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxAchieveStartTime.Location = new System.Drawing.Point(375, 30);
+            textBoxAchieveStartTime.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieveStartTime.Name = "textBoxAchieveStartTime";
+            textBoxAchieveStartTime.Size = new System.Drawing.Size(61, 36);
+            textBoxAchieveStartTime.TabIndex = 39;
+            textBoxAchieveStartTime.Text = "08:15";
+            textBoxAchieveStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            label11.Location = new System.Drawing.Point(435, 42);
+            label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(19, 15);
+            label11.TabIndex = 43;
+            label11.Text = "～";
+            label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label12.Location = new System.Drawing.Point(456, 70);
+            label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(55, 15);
+            label12.TabIndex = 42;
+            label12.Text = "終了時刻";
+            label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label13.Location = new System.Drawing.Point(378, 70);
+            label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(55, 15);
+            label13.TabIndex = 40;
+            label13.Text = "開始時刻";
+            label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxAchieveOpe
+            // 
+            textBoxAchieveOpe.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieveOpe.Enabled = false;
+            textBoxAchieveOpe.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
+            textBoxAchieveOpe.Location = new System.Drawing.Point(198, 35);
+            textBoxAchieveOpe.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieveOpe.Name = "textBoxAchieveOpe";
+            textBoxAchieveOpe.Size = new System.Drawing.Size(49, 29);
+            textBoxAchieveOpe.TabIndex = 38;
+            textBoxAchieveOpe.Text = "8.95";
+            textBoxAchieveOpe.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            label14.Location = new System.Drawing.Point(249, 42);
+            label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(31, 15);
+            label14.TabIndex = 37;
+            label14.Text = "時間";
+            label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label15.Location = new System.Drawing.Point(195, 70);
+            label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new System.Drawing.Size(55, 15);
+            label15.TabIndex = 36;
+            label15.Text = "計画稼働";
+            label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new System.Drawing.Font("Yu Gothic UI", 6F);
+            label16.Location = new System.Drawing.Point(297, 81);
+            label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(44, 11);
+            label16.TabIndex = 35;
+            label16.Text = "(べきどうりつ)";
+            label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label17.Location = new System.Drawing.Point(297, 68);
+            label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new System.Drawing.Size(43, 15);
+            label17.TabIndex = 34;
+            label17.Text = "可動率";
+            label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxAchieve可動率
+            // 
+            textBoxAchieve可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieve可動率.Enabled = false;
+            textBoxAchieve可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxAchieve可動率.Location = new System.Drawing.Point(297, 30);
+            textBoxAchieve可動率.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieve可動率.Name = "textBoxAchieve可動率";
+            textBoxAchieve可動率.Size = new System.Drawing.Size(43, 36);
+            textBoxAchieve可動率.TabIndex = 33;
+            textBoxAchieve可動率.Text = "100";
+            textBoxAchieve可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            label18.Location = new System.Drawing.Point(342, 42);
+            label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new System.Drawing.Size(19, 15);
+            label18.TabIndex = 32;
+            label18.Text = "％";
+            label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxAchieveCT
+            // 
+            textBoxAchieveCT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieveCT.Enabled = false;
+            textBoxAchieveCT.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
+            textBoxAchieveCT.Location = new System.Drawing.Point(108, 35);
+            textBoxAchieveCT.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieveCT.Name = "textBoxAchieveCT";
+            textBoxAchieveCT.Size = new System.Drawing.Size(49, 29);
+            textBoxAchieveCT.TabIndex = 31;
+            textBoxAchieveCT.Text = "18.95";
+            textBoxAchieveCT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            label19.Location = new System.Drawing.Point(159, 42);
+            label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(31, 15);
+            label19.TabIndex = 30;
+            label19.Text = "時間";
+            label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label20.Location = new System.Drawing.Point(107, 70);
+            label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(52, 15);
+            label20.TabIndex = 29;
+            label20.Text = "CT×本数";
+            label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxAchieveQty
+            // 
+            textBoxAchieveQty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieveQty.Enabled = false;
+            textBoxAchieveQty.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
+            textBoxAchieveQty.Location = new System.Drawing.Point(28, 35);
+            textBoxAchieveQty.Margin = new System.Windows.Forms.Padding(4);
+            textBoxAchieveQty.Name = "textBoxAchieveQty";
+            textBoxAchieveQty.Size = new System.Drawing.Size(51, 29);
+            textBoxAchieveQty.TabIndex = 28;
+            textBoxAchieveQty.Text = "1,999";
+            textBoxAchieveQty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            label21.Location = new System.Drawing.Point(81, 42);
+            label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new System.Drawing.Size(19, 15);
+            label21.TabIndex = 27;
+            label21.Text = "本";
+            label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            label22.Location = new System.Drawing.Point(26, 70);
+            label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new System.Drawing.Size(55, 15);
+            label22.TabIndex = 26;
+            label22.Text = "合計本数";
+            label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // checkBoxAchieve早昼
             // 
@@ -933,5 +1191,23 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Achieve可動率;
         private System.Windows.Forms.DataGridViewTextBoxColumn Achieve作業者;
         private System.Windows.Forms.DataGridViewTextBoxColumn Achieve備考;
+        private System.Windows.Forms.TextBox textBoxAchieveEndTime;
+        private System.Windows.Forms.TextBox textBoxAchieveStartTime;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBoxAchieveOpe;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox textBoxAchieve可動率;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox textBoxAchieveCT;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBoxAchieveQty;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
     }
 }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -35,23 +37,23 @@
             button3 = new System.Windows.Forms.Button();
             splitContainer上下 = new System.Windows.Forms.SplitContainer();
             splitContainer計画と実績 = new System.Windows.Forms.SplitContainer();
-            dataGridView1 = new System.Windows.Forms.DataGridView();
+            dataGridViewPlan = new System.Windows.Forms.DataGridView();
             panelPlanResult = new System.Windows.Forms.Panel();
-            textBox可動率 = new System.Windows.Forms.TextBox();
+            textBoxPlan可動率 = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             checkBoxPlan早昼 = new System.Windows.Forms.CheckBox();
             checkBoxPlanピカピカ = new System.Windows.Forms.CheckBox();
             checkBoxPlan休憩稼働 = new System.Windows.Forms.CheckBox();
             checkBoxPlanお昼稼働 = new System.Windows.Forms.CheckBox();
             labelPlanCaption = new System.Windows.Forms.Label();
-            dataGridView2 = new System.Windows.Forms.DataGridView();
+            dataGridViewAchieve = new System.Windows.Forms.DataGridView();
             panelAchieveResult = new System.Windows.Forms.Panel();
-            textBox1 = new System.Windows.Forms.TextBox();
+            textBoxAchieve可動率 = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
-            checkBox1 = new System.Windows.Forms.CheckBox();
-            checkBox2 = new System.Windows.Forms.CheckBox();
-            checkBox3 = new System.Windows.Forms.CheckBox();
-            checkBox4 = new System.Windows.Forms.CheckBox();
+            checkBoxAchieve早昼 = new System.Windows.Forms.CheckBox();
+            checkBoxAchieveピカピカ = new System.Windows.Forms.CheckBox();
+            checkBoxAchieve休憩稼働 = new System.Windows.Forms.CheckBox();
+            checkBoxAchieveお昼稼働 = new System.Windows.Forms.CheckBox();
             labelAchieveCaption = new System.Windows.Forms.Label();
             panelTitle = new System.Windows.Forms.Panel();
             labelTitle = new System.Windows.Forms.Label();
@@ -74,9 +76,9 @@
             splitContainer計画と実績.Panel1.SuspendLayout();
             splitContainer計画と実績.Panel2.SuspendLayout();
             splitContainer計画と実績.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewPlan).BeginInit();
             panelPlanResult.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewAchieve).BeginInit();
             panelAchieveResult.SuspendLayout();
             panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
@@ -99,8 +101,8 @@
             // 
             splitContainerMain.Panel2.Controls.Add(splitContainer上下);
             splitContainerMain.Panel2.Controls.Add(panel1);
-            splitContainerMain.Size = new System.Drawing.Size(1214, 591);
-            splitContainerMain.SplitterDistance = 201;
+            splitContainerMain.Size = new System.Drawing.Size(1037, 413);
+            splitContainerMain.SplitterDistance = 147;
             splitContainerMain.TabIndex = 8;
             // 
             // button3
@@ -108,7 +110,7 @@
             button3.Dock = System.Windows.Forms.DockStyle.Top;
             button3.Location = new System.Drawing.Point(10, 30);
             button3.Name = "button3";
-            button3.Size = new System.Drawing.Size(189, 36);
+            button3.Size = new System.Drawing.Size(135, 36);
             button3.TabIndex = 1;
             button3.Text = "実行時に削除される";
             button3.UseVisualStyleBackColor = true;
@@ -130,8 +132,8 @@
             // 
             splitContainer上下.Panel2.Controls.Add(chart1);
             splitContainer上下.Panel2.Padding = new System.Windows.Forms.Padding(5, 5, 0, 15);
-            splitContainer上下.Size = new System.Drawing.Size(792, 591);
-            splitContainer上下.SplitterDistance = 438;
+            splitContainer上下.Size = new System.Drawing.Size(669, 413);
+            splitContainer上下.SplitterDistance = 306;
             splitContainer上下.TabIndex = 5;
             // 
             // splitContainer計画と実績
@@ -142,59 +144,67 @@
             // 
             // splitContainer計画と実績.Panel1
             // 
-            splitContainer計画と実績.Panel1.Controls.Add(dataGridView1);
+            splitContainer計画と実績.Panel1.Controls.Add(dataGridViewPlan);
             splitContainer計画と実績.Panel1.Controls.Add(panelPlanResult);
             splitContainer計画と実績.Panel1.Controls.Add(labelPlanCaption);
             splitContainer計画と実績.Panel1.Padding = new System.Windows.Forms.Padding(5, 0, 3, 0);
             // 
             // splitContainer計画と実績.Panel2
             // 
-            splitContainer計画と実績.Panel2.Controls.Add(dataGridView2);
+            splitContainer計画と実績.Panel2.Controls.Add(dataGridViewAchieve);
             splitContainer計画と実績.Panel2.Controls.Add(panelAchieveResult);
             splitContainer計画と実績.Panel2.Controls.Add(labelAchieveCaption);
             splitContainer計画と実績.Panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            splitContainer計画と実績.Size = new System.Drawing.Size(792, 388);
-            splitContainer計画と実績.SplitterDistance = 406;
+            splitContainer計画と実績.Size = new System.Drawing.Size(669, 256);
+            splitContainer計画と実績.SplitterDistance = 342;
             splitContainer計画と実績.TabIndex = 8;
             // 
-            // dataGridView1
+            // dataGridViewPlan
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            dataGridView1.Location = new System.Drawing.Point(5, 23);
-            dataGridView1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.RowTemplate.Height = 21;
-            dataGridView1.Size = new System.Drawing.Size(398, 304);
-            dataGridView1.TabIndex = 5;
+            dataGridViewPlan.AllowUserToAddRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewPlan.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewPlan.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGridViewPlan.Location = new System.Drawing.Point(5, 23);
+            dataGridViewPlan.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            dataGridViewPlan.Name = "dataGridViewPlan";
+            dataGridViewPlan.RowHeadersWidth = 51;
+            dataGridViewPlan.RowTemplate.Height = 21;
+            dataGridViewPlan.Size = new System.Drawing.Size(334, 172);
+            dataGridViewPlan.TabIndex = 5;
             // 
             // panelPlanResult
             // 
             panelPlanResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            panelPlanResult.Controls.Add(textBox可動率);
+            panelPlanResult.Controls.Add(textBoxPlan可動率);
             panelPlanResult.Controls.Add(label2);
             panelPlanResult.Controls.Add(checkBoxPlan早昼);
             panelPlanResult.Controls.Add(checkBoxPlanピカピカ);
             panelPlanResult.Controls.Add(checkBoxPlan休憩稼働);
             panelPlanResult.Controls.Add(checkBoxPlanお昼稼働);
             panelPlanResult.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panelPlanResult.Location = new System.Drawing.Point(5, 327);
+            panelPlanResult.Location = new System.Drawing.Point(5, 195);
             panelPlanResult.Name = "panelPlanResult";
-            panelPlanResult.Size = new System.Drawing.Size(398, 61);
+            panelPlanResult.Size = new System.Drawing.Size(334, 61);
             panelPlanResult.TabIndex = 4;
             // 
-            // textBox可動率
+            // textBoxPlan可動率
             // 
-            textBox可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBox可動率.Enabled = false;
-            textBox可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBox可動率.Location = new System.Drawing.Point(263, 16);
-            textBox可動率.Name = "textBox可動率";
-            textBox可動率.Size = new System.Drawing.Size(45, 36);
-            textBox可動率.TabIndex = 12;
-            textBox可動率.Text = "100";
-            textBox可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxPlan可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxPlan可動率.Enabled = false;
+            textBoxPlan可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxPlan可動率.Location = new System.Drawing.Point(263, 16);
+            textBoxPlan可動率.Name = "textBoxPlan可動率";
+            textBoxPlan可動率.Size = new System.Drawing.Size(45, 36);
+            textBoxPlan可動率.TabIndex = 12;
+            textBoxPlan可動率.Text = "100";
+            textBoxPlan可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label2
             // 
@@ -263,49 +273,57 @@
             labelPlanCaption.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             labelPlanCaption.Location = new System.Drawing.Point(5, 0);
             labelPlanCaption.Name = "labelPlanCaption";
-            labelPlanCaption.Size = new System.Drawing.Size(398, 23);
+            labelPlanCaption.Size = new System.Drawing.Size(334, 23);
             labelPlanCaption.TabIndex = 2;
             labelPlanCaption.Text = "計画";
             labelPlanCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // dataGridView2
+            // dataGridViewAchieve
             // 
-            dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            dataGridView2.Location = new System.Drawing.Point(3, 23);
-            dataGridView2.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.RowHeadersWidth = 51;
-            dataGridView2.RowTemplate.Height = 21;
-            dataGridView2.Size = new System.Drawing.Size(379, 304);
-            dataGridView2.TabIndex = 7;
+            dataGridViewAchieve.AllowUserToAddRows = false;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewAchieve.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGridViewAchieve.Location = new System.Drawing.Point(3, 23);
+            dataGridViewAchieve.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            dataGridViewAchieve.Name = "dataGridViewAchieve";
+            dataGridViewAchieve.RowHeadersWidth = 51;
+            dataGridViewAchieve.RowTemplate.Height = 21;
+            dataGridViewAchieve.Size = new System.Drawing.Size(320, 172);
+            dataGridViewAchieve.TabIndex = 7;
             // 
             // panelAchieveResult
             // 
             panelAchieveResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            panelAchieveResult.Controls.Add(textBox1);
+            panelAchieveResult.Controls.Add(textBoxAchieve可動率);
             panelAchieveResult.Controls.Add(label1);
-            panelAchieveResult.Controls.Add(checkBox1);
-            panelAchieveResult.Controls.Add(checkBox2);
-            panelAchieveResult.Controls.Add(checkBox3);
-            panelAchieveResult.Controls.Add(checkBox4);
+            panelAchieveResult.Controls.Add(checkBoxAchieve早昼);
+            panelAchieveResult.Controls.Add(checkBoxAchieveピカピカ);
+            panelAchieveResult.Controls.Add(checkBoxAchieve休憩稼働);
+            panelAchieveResult.Controls.Add(checkBoxAchieveお昼稼働);
             panelAchieveResult.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panelAchieveResult.Location = new System.Drawing.Point(3, 327);
+            panelAchieveResult.Location = new System.Drawing.Point(3, 195);
             panelAchieveResult.Name = "panelAchieveResult";
-            panelAchieveResult.Size = new System.Drawing.Size(379, 61);
+            panelAchieveResult.Size = new System.Drawing.Size(320, 61);
             panelAchieveResult.TabIndex = 6;
             // 
-            // textBox1
+            // textBoxAchieve可動率
             // 
-            textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBox1.Enabled = false;
-            textBox1.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
-            textBox1.Location = new System.Drawing.Point(268, 16);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new System.Drawing.Size(45, 36);
-            textBox1.TabIndex = 18;
-            textBox1.Text = "100";
-            textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxAchieve可動率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieve可動率.Enabled = false;
+            textBoxAchieve可動率.Font = new System.Drawing.Font("Yu Gothic UI", 16F, System.Drawing.FontStyle.Bold);
+            textBoxAchieve可動率.Location = new System.Drawing.Point(268, 16);
+            textBoxAchieve可動率.Name = "textBoxAchieve可動率";
+            textBoxAchieve可動率.Size = new System.Drawing.Size(45, 36);
+            textBoxAchieve可動率.TabIndex = 18;
+            textBoxAchieve可動率.Text = "100";
+            textBoxAchieve可動率.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
@@ -318,53 +336,53 @@
             label1.Text = "％";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // checkBox1
+            // checkBoxAchieve早昼
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Enabled = false;
-            checkBox1.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            checkBox1.Location = new System.Drawing.Point(119, 33);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new System.Drawing.Size(127, 19);
-            checkBox1.TabIndex = 16;
-            checkBox1.Text = "早昼 (11:30～12:15)";
-            checkBox1.UseVisualStyleBackColor = true;
+            checkBoxAchieve早昼.AutoSize = true;
+            checkBoxAchieve早昼.Enabled = false;
+            checkBoxAchieve早昼.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            checkBoxAchieve早昼.Location = new System.Drawing.Point(119, 33);
+            checkBoxAchieve早昼.Name = "checkBoxAchieve早昼";
+            checkBoxAchieve早昼.Size = new System.Drawing.Size(127, 19);
+            checkBoxAchieve早昼.TabIndex = 16;
+            checkBoxAchieve早昼.Text = "早昼 (11:30～12:15)";
+            checkBoxAchieve早昼.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // checkBoxAchieveピカピカ
             // 
-            checkBox2.AutoSize = true;
-            checkBox2.Enabled = false;
-            checkBox2.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            checkBox2.Location = new System.Drawing.Point(119, 8);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new System.Drawing.Size(98, 19);
-            checkBox2.TabIndex = 15;
-            checkBox2.Text = "ピカピカ大作戦";
-            checkBox2.UseVisualStyleBackColor = true;
+            checkBoxAchieveピカピカ.AutoSize = true;
+            checkBoxAchieveピカピカ.Enabled = false;
+            checkBoxAchieveピカピカ.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            checkBoxAchieveピカピカ.Location = new System.Drawing.Point(119, 8);
+            checkBoxAchieveピカピカ.Name = "checkBoxAchieveピカピカ";
+            checkBoxAchieveピカピカ.Size = new System.Drawing.Size(98, 19);
+            checkBoxAchieveピカピカ.TabIndex = 15;
+            checkBoxAchieveピカピカ.Text = "ピカピカ大作戦";
+            checkBoxAchieveピカピカ.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // checkBoxAchieve休憩稼働
             // 
-            checkBox3.AutoSize = true;
-            checkBox3.Enabled = false;
-            checkBox3.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            checkBox3.Location = new System.Drawing.Point(15, 33);
-            checkBox3.Name = "checkBox3";
-            checkBox3.Size = new System.Drawing.Size(98, 19);
-            checkBox3.TabIndex = 14;
-            checkBox3.Text = "休憩時間稼働";
-            checkBox3.UseVisualStyleBackColor = true;
+            checkBoxAchieve休憩稼働.AutoSize = true;
+            checkBoxAchieve休憩稼働.Enabled = false;
+            checkBoxAchieve休憩稼働.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            checkBoxAchieve休憩稼働.Location = new System.Drawing.Point(15, 33);
+            checkBoxAchieve休憩稼働.Name = "checkBoxAchieve休憩稼働";
+            checkBoxAchieve休憩稼働.Size = new System.Drawing.Size(98, 19);
+            checkBoxAchieve休憩稼働.TabIndex = 14;
+            checkBoxAchieve休憩稼働.Text = "休憩時間稼働";
+            checkBoxAchieve休憩稼働.UseVisualStyleBackColor = true;
             // 
-            // checkBox4
+            // checkBoxAchieveお昼稼働
             // 
-            checkBox4.AutoSize = true;
-            checkBox4.Enabled = false;
-            checkBox4.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            checkBox4.Location = new System.Drawing.Point(15, 8);
-            checkBox4.Name = "checkBox4";
-            checkBox4.Size = new System.Drawing.Size(95, 19);
-            checkBox4.TabIndex = 13;
-            checkBox4.Text = "お昼休み稼働";
-            checkBox4.UseVisualStyleBackColor = true;
+            checkBoxAchieveお昼稼働.AutoSize = true;
+            checkBoxAchieveお昼稼働.Enabled = false;
+            checkBoxAchieveお昼稼働.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            checkBoxAchieveお昼稼働.Location = new System.Drawing.Point(15, 8);
+            checkBoxAchieveお昼稼働.Name = "checkBoxAchieveお昼稼働";
+            checkBoxAchieveお昼稼働.Size = new System.Drawing.Size(95, 19);
+            checkBoxAchieveお昼稼働.TabIndex = 13;
+            checkBoxAchieveお昼稼働.Text = "お昼休み稼働";
+            checkBoxAchieveお昼稼働.UseVisualStyleBackColor = true;
             // 
             // labelAchieveCaption
             // 
@@ -374,7 +392,7 @@
             labelAchieveCaption.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             labelAchieveCaption.Location = new System.Drawing.Point(3, 0);
             labelAchieveCaption.Name = "labelAchieveCaption";
-            labelAchieveCaption.Size = new System.Drawing.Size(379, 23);
+            labelAchieveCaption.Size = new System.Drawing.Size(320, 23);
             labelAchieveCaption.TabIndex = 2;
             labelAchieveCaption.Text = "実績";
             labelAchieveCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -386,7 +404,7 @@
             panelTitle.Location = new System.Drawing.Point(0, 0);
             panelTitle.Name = "panelTitle";
             panelTitle.Padding = new System.Windows.Forms.Padding(5, 5, 0, 5);
-            panelTitle.Size = new System.Drawing.Size(792, 45);
+            panelTitle.Size = new System.Drawing.Size(669, 45);
             panelTitle.TabIndex = 0;
             // 
             // labelTitle
@@ -396,9 +414,9 @@
             labelTitle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 128);
             labelTitle.Location = new System.Drawing.Point(5, 5);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new System.Drawing.Size(787, 35);
+            labelTitle.Size = new System.Drawing.Size(664, 35);
             labelTitle.TabIndex = 0;
-            labelTitle.Text = "3/21 計画と実績";
+            labelTitle.Text = "【3/21】 計画と実績";
             labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // chart1
@@ -415,7 +433,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             chart1.Series.Add(series1);
-            chart1.Size = new System.Drawing.Size(787, 129);
+            chart1.Size = new System.Drawing.Size(664, 83);
             chart1.TabIndex = 10;
             chart1.Text = "chart1";
             // 
@@ -427,10 +445,10 @@
             panel1.Controls.Add(buttonSettings);
             panel1.Controls.Add(buttonExit);
             panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            panel1.Location = new System.Drawing.Point(792, 0);
+            panel1.Location = new System.Drawing.Point(669, 0);
             panel1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(217, 591);
+            panel1.Size = new System.Drawing.Size(217, 413);
             panel1.TabIndex = 4;
             // 
             // monthCalendar1
@@ -479,7 +497,7 @@
             buttonExit.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonExit.BackColor = System.Drawing.Color.FromArgb(255, 192, 192);
             buttonExit.Font = new System.Drawing.Font("Meiryo UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonExit.Location = new System.Drawing.Point(9, 527);
+            buttonExit.Location = new System.Drawing.Point(9, 349);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new System.Drawing.Size(199, 52);
             buttonExit.TabIndex = 6;
@@ -491,7 +509,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1214, 591);
+            ClientSize = new System.Drawing.Size(1037, 413);
             Controls.Add(splitContainerMain);
             Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
@@ -513,10 +531,10 @@
             splitContainer計画と実績.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer計画と実績).EndInit();
             splitContainer計画と実績.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewPlan).EndInit();
             panelPlanResult.ResumeLayout(false);
             panelPlanResult.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewAchieve).EndInit();
             panelAchieveResult.ResumeLayout(false);
             panelAchieveResult.PerformLayout();
             panelTitle.ResumeLayout(false);
@@ -542,21 +560,21 @@
         private System.Windows.Forms.Label labelAchieveCaption;
         private System.Windows.Forms.Panel panelTitle;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView dataGridViewPlan;
+        private System.Windows.Forms.DataGridView dataGridViewAchieve;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.CheckBox checkBoxPlan早昼;
         private System.Windows.Forms.CheckBox checkBoxPlanピカピカ;
         private System.Windows.Forms.CheckBox checkBoxPlan休憩稼働;
         private System.Windows.Forms.CheckBox checkBoxPlanお昼稼働;
-        private System.Windows.Forms.TextBox textBox可動率;
+        private System.Windows.Forms.TextBox textBoxPlan可動率;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxAchieve可動率;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox checkBoxAchieve早昼;
+        private System.Windows.Forms.CheckBox checkBoxAchieveピカピカ;
+        private System.Windows.Forms.CheckBox checkBoxAchieve休憩稼働;
+        private System.Windows.Forms.CheckBox checkBoxAchieveお昼稼働;
         private System.Windows.Forms.Button button3;
     }
 }

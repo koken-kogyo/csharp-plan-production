@@ -304,6 +304,10 @@ namespace PlanProduction
 
             foreach (DataGridViewCell c in query)
             {
+                if (c.ColumnIndex == 0 || c.ColumnIndex == dataGridView1.Columns["CT"].Index) continue; // 優先度、CT
+                if (c.Visible == false) continue;                                                       // 非表示列
+                if (c.Value == null || string.IsNullOrEmpty(c.Value.ToString())) continue;              // データなし
+
                 string hmcd = dataGridView1.Rows[c.RowIndex].Cells["HMCD"].Value.ToString();
                 int qty = 0;
                 if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;

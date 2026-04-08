@@ -1,6 +1,7 @@
 ﻿using DecryptPassword;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
@@ -48,6 +49,7 @@ namespace PlanProduction
             }
             catch
             {
+                MessageBox.Show("データベースに接続できません．", "MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 kkCnn?.Close();	// 接続の解除
                 ret = false;
             }
@@ -77,6 +79,7 @@ namespace PlanProduction
             {
                 // 切削生産計画システム データベースへ接続
                 DBAccessor.IsConnectMySqlSchema();
+                Debug.WriteLine($"{active}{authLv}");
 
                 string sql;
                 sql = "SELECT "
@@ -155,7 +158,7 @@ namespace PlanProduction
                     }
 
                     cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@手配先コード", opt.Odcd);
+                    cmd.Parameters.AddWithValue("@手配先コード", opt.OdCd);
                     cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
                     cmd.Parameters.AddWithValue("@計画種別", opt.Type);
                     cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
@@ -176,7 +179,7 @@ namespace PlanProduction
                 }
 
                 // 明細を一旦削除
-                sql = $"DELETE FROM KD8030 WHERE ODCD='{opt.Odcd}' and PLANDT='{opt.PlanDate.Date}' and TYPE='{opt.Type}'";
+                sql = $"DELETE FROM KD8030 WHERE ODCD='{opt.OdCd}' and PLANDT='{opt.PlanDate.Date}' and TYPE='{opt.Type}'";
                 using (var cmd = new MySqlCommand(sql, kkCnn))
                 {
                     int deleteCount = cmd.ExecuteNonQuery();
@@ -211,7 +214,7 @@ namespace PlanProduction
                             endDateTime = endDateTime.AddDays(1); // 終了日時が開始日時より前の場合は翌日にする
                         }
 
-                        cmd.Parameters.AddWithValue("@手配先コード", opt.Odcd);
+                        cmd.Parameters.AddWithValue("@手配先コード", opt.OdCd);
                         cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
                         cmd.Parameters.AddWithValue("@計画種別", opt.Type);
                         cmd.Parameters.AddWithValue("@行番号", no);
@@ -221,7 +224,7 @@ namespace PlanProduction
                         cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
                         cmd.Parameters.AddWithValue("@終了時刻", endDateTime);
                         cmd.Parameters.AddWithValue("@休憩時間", row.Cells[5].Value);
-                        cmd.Parameters.AddWithValue("@可動率", row.Cells[6].Value);
+                        cmd.Parameters.AddWithValue("@可動率", (opt.Type == "P") ? opt.可動率 : row.Cells[6].Value);
                         cmd.Parameters.AddWithValue("@作業者", row.Cells[7].Value);
                         cmd.Parameters.AddWithValue("@備考", row.Cells[8].Value);
 
@@ -240,6 +243,118 @@ namespace PlanProduction
             }
         }
 
+        public static List<DateTime> GetRegistDates()
+        {
+            if (!IsConnectMySqlSchema()) return null;
+            try
+            {
+                // 登録
+                List<DateTime> planDates = [];
+                string sql = @"
+                    SELECT PLANDT FROM KD8020 
+                    WHERE PLANDT BETWEEN 
+                        DATE_ADD(CURRENT_DATE, INTERVAL -6 MONTH) AND DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH)
+                    GROUP BY PLANDT
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        planDates.Add(reader.GetDateTime("PLANDT"));
+                    }
+                }
+                CloseMySqlSchema();
+                return planDates;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+        }
+
+        public static bool GetKD8020(ref SaveOptions opt)
+        {
+            if (!IsConnectMySqlSchema()) return false;
+            try
+            {
+                string sql = @"
+                    SELECT * FROM KD8020 WHERE
+                        ODCD = @手配先コード and
+                        PLANDT = @計画日 and 
+                        TYPE = @計画種別
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    cmd.Parameters.AddWithValue("@手配先コード", opt.OdCd);
+                    cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
+                    cmd.Parameters.AddWithValue("@計画種別", opt.Type);
+                    using MySqlDataAdapter adapter = new(cmd);
+                    DataTable dt = new();
+                    adapter.Fill(dt);
+                    if (dt.Rows.Count > 0)
+                    {
+                        opt.開始時刻 = DateTime.Parse(dt.Rows[0]["STARTTIME"].ToString()).ToString("HH:mm");
+                        opt.終了時刻 = DateTime.Parse(dt.Rows[0]["ENDTIME"].ToString()).ToString("HH:mm");
+                        opt.昼稼働 = (dt.Rows[0]["HIRUKADO"].ToString() == "1");
+                        opt.休憩稼働 = (dt.Rows[0]["KYUKEIKADO"].ToString() == "1");
+                        opt.ピカピカ = (dt.Rows[0]["PIKAPIKA"].ToString() == "1");
+                        opt.早昼 = (dt.Rows[0]["HAYAHIRU"].ToString() == "1");
+                        opt.所感 = dt.Rows[0]["NOTE"].ToString();
+                        opt.合計本数 = dt.Rows[0]["TTLQTY"].ToIntOrDefault();
+                        opt.CT合計時間 = dt.Rows[0]["CTHOUR"].ToDoubleOrDefault();
+                        opt.合計稼働時間 = dt.Rows[0]["OPEHOUR"].ToDoubleOrDefault();
+                        opt.可動率 = dt.Rows[0]["AVA"].ToDoubleOrDefault();
+                    }
+                }
+                CloseMySqlSchema();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public static bool GetKD8030(ref DataTable dt, SaveOptions opt)
+        {
+            if (!IsConnectMySqlSchema()) return false;
+            try
+            {
+                string sql = @"
+                    SELECT NO as No, HMCD as 品番, CT, QTY as 本数
+                        , DATE_FORMAT(STARTTIME,'%H:%i') as 開始時刻 
+                        , DATE_FORMAT(ENDTIME,'%H:%i') as 終了時刻
+                        , BREAKTIME as 休憩時間
+                        , TANNM as 作業者, NOTE as 備考, AVA as 可動率
+                    FROM 
+                        KD8030 
+                    WHERE
+                        ODCD = @手配先コード and
+                        PLANDT = @計画日 and 
+                        TYPE = @計画種別
+                    ORDER BY NO
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    cmd.Parameters.AddWithValue("@手配先コード", opt.OdCd);
+                    cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
+                    cmd.Parameters.AddWithValue("@計画種別", opt.Type);
+                    using MySqlDataAdapter adapter = new(cmd);
+                    adapter.Fill(dt);
+                }
+                CloseMySqlSchema();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
 
 
 
