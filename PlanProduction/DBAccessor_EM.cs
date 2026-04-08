@@ -169,7 +169,7 @@ namespace PlanProduction
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 a, "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 m "
                     + "WHERE a.ODCD=m.ODCD "
-                    + "ORDER BY a.ODCD, a.WKGRNM"
+                    + "ORDER BY a.ODCD, a.WKGRCD"
                     ;
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
