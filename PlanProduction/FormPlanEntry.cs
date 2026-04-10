@@ -355,7 +355,11 @@ namespace PlanProduction
                 ButtonUndo_Click(sender, e);    // ボタンの「元に戻す」を呼び出す
                 e.Handled = true;
             }
-            if (e.KeyCode == Keys.Escape)
+            else if (e.KeyCode == Keys.F9)
+            {
+                ButtonSaveAchieve_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.Escape)
             {
                 Close();
             }
@@ -613,6 +617,7 @@ namespace PlanProduction
                     !string.IsNullOrWhiteSpace(Convert.ToString(row.Cells[4].Value));
                 if (filled)
                 {
+                    // 下の休憩時間の変更イベントが発生しないようにする
                     dataGridViewAchieve.CellValueChanged -= DataGridViewAchieve_CellValueChanged;
                     CalculateAchieve(e.RowIndex, true);
                     dataGridViewAchieve.CellValueChanged += DataGridViewAchieve_CellValueChanged;
@@ -731,13 +736,16 @@ namespace PlanProduction
                     , MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        // データグリッド上のコントロール個別処理
+        /*
+         * データグリッド上のコントロール個別処理
+         */
+        // 「品番」小文字大文字変換
         private void HMCDTextBox_TextChanged(object sender, EventArgs e)
         {
             var tb = sender as TextBox;
             tb.Text = tb.Text.ToUpper();
-            tb.SelectionStart = tb.Text.Length; // カーソルを末尾へ
         }
+        // 「時刻」自動コロン
         private void TimeTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             backspacePressed = (e.KeyCode == Keys.Back);
@@ -924,7 +932,7 @@ namespace PlanProduction
             }
         }
         // 「実績登録」
-        private void ButtonSaveClose_Click(object sender, EventArgs e)
+        private void ButtonSaveAchieve_Click(object sender, EventArgs e)
         {
             if (dataGridViewAchieve.Rows.Count <= 1)
             {
@@ -1209,7 +1217,7 @@ namespace PlanProduction
             // １行目の開始時刻をテキストボックスの開始時刻にセット
             if (rowindex == 0)
             {
-                if (textBoxPlanStartTime.Text != startTimeStr) textBoxPlanStartTime.Text = startTimeStr;
+                if (textBoxAchieveStartTime.Text != startTimeStr) textBoxAchieveStartTime.Text = startTimeStr;
             }
             // 次行の開始時刻を今回の終了時刻にセット
             if (!dataGridViewAchieve.Rows[rowindex + 1].IsNewRow)
@@ -1224,7 +1232,7 @@ namespace PlanProduction
             // ループしてトータル時間を算出（開始時刻・終了時刻が入力された行まで）
             double 合計本数 = 0.0;
             double CT稼働時間 = 0.0;
-            double 計画稼働時間 = 0.0;
+            double 合計休憩時間 = 0.0;
             string 最終終了時刻 = string.Empty;
             for (int i = 0; i < dataGridViewAchieve.Rows.Count; i++)
             {
@@ -1242,16 +1250,20 @@ namespace PlanProduction
                 // サマリー
                 double ct = row.Cells["AchieveCT"].Value.ToDoubleOrDefault();
                 int 本数 = row.Cells["Achieve本数"].Value.ToIntOrDefault();
-                double 可動率 = row.Cells["Achieve可動率"].Value.ToDoubleOrDefault();
+                double 休憩時間 = row.Cells["Achieve休憩時間"].Value.ToDoubleOrDefault();
                 合計本数 += 本数;
                 CT稼働時間 += ct * 本数;
-                計画稼働時間 += (可動率 > 0) ? ct * 本数 * (1 / 可動率 * 100) : 0;
+                合計休憩時間 += 休憩時間;
             }
+            textBoxAchieveEndTime.Text = 最終終了時刻;
+            DateTime 開始時刻 = textBoxAchieveStartTime.Text.ToDateTimeOrDefaultToday();
+            DateTime 終了時刻 = textBoxAchieveEndTime.Text.ToDateTimeOrDefaultToday();
+            double 実際稼働時間 = (終了時刻 - 開始時刻).TotalSeconds;
+
             textBoxAchieveQty.Text = 合計本数.ToString("#,0");
             textBoxAchieveCT.Text = (CT稼働時間 / 3600).ToString("N2");
-            textBoxAchieveOpe.Text = (計画稼働時間 / 3600).ToString("N2");
-            textBoxAchieve可動率.Text = (CT稼働時間 / 計画稼働時間 * 100).ToString("N0");
-            textBoxAchieveEndTime.Text = 最終終了時刻;
+            textBoxAchieveOpe.Text = ((実際稼働時間) / 3600).ToString("N2");
+            textBoxAchieve可動率.Text = (CT稼働時間 / (実際稼働時間) * 100).ToString("N0");
         }
 
         /// <summary>

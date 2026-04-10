@@ -4,7 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static PlanProduction.Common;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PlanProduction
 {
@@ -79,7 +79,7 @@ namespace PlanProduction
             labelTitle.Text = $"【{PlanDate:M/d}】 計画と実績";
 
             // 登録された計画日のカレンダーをBoldにする
-            List<DateTime> planDates = DBAccessor.GetRegistDates();
+            List<DateTime> planDates = DBAccessor.GetRegistDates(selectedOdCd);
             monthCalendar1.BoldedDates = [.. planDates];
 
             // 計画入力データの設定
@@ -126,6 +126,10 @@ namespace PlanProduction
             if (!DBAccessor.GetKD8030(ref achieveDt, aparam)) return;
             dataGridViewAchieve.DataSource = achieveDt;
 
+            // Chartデータの更新
+            DataTable dt = new();
+            if (!DBAccessor.GetKD8020Chart(ref dt, selectedOdCd)) return;
+            InitializeChart(ref dt);
         }
 
         // データバインド後の調整
@@ -196,10 +200,67 @@ namespace PlanProduction
             colNo.Width = 30;
         }
 
+        // チャートの作成
+        private void InitializeChart(ref DataTable dt)
+        {
+            // ▼ デザイナで自動生成された Series を消す
+            chart1.Series.Clear();
+            chart1.ChartAreas.Clear();
+
+            // ▼ ChartArea（必須）
+            var area = new ChartArea("MainArea");
+            chart1.ChartAreas.Add(area);
+
+            chart1.ChartAreas["MainArea"].AxisX.IsReversed = true;              // 左から右
+            chart1.ChartAreas["MainArea"].AxisY.MajorGrid.Enabled = false;      // グリッド線なし
+
+            // ▼ 縦棒グラフ（本数）
+            var bar = new Series("本数")
+            {
+                ChartType = SeriesChartType.Column,
+                XValueType = ChartValueType.String,
+                YValueType = ChartValueType.Int32,
+                ChartArea = "MainArea",
+                IsValueShownAsLabel = true,
+                Font = new Font("Meiryo", 7)
+            };
+            bar["BarLabelStyle"] = "Center";
+            bar.SmartLabelStyle.Enabled = false;
+
+            // ▼ 折れ線グラフ（可動率）
+            var line = new Series("可動率")
+            {
+                ChartType = SeriesChartType.Line,
+                BorderWidth = 3,
+                XValueType = ChartValueType.String,
+                YValueType = ChartValueType.Double,
+                YAxisType = AxisType.Secondary   // ← 右側の軸を使う
+            };
+
+            // ▼ データ
+            foreach (DataRow row in dt.Rows)
+            {
+                string plandt = ((DateTime)row["PLANDT"]).ToString("MM/dd");
+                int count = Convert.ToInt32(row["TTLQTY"]);
+                double rate = Convert.ToDouble(row["AVA"]);
+
+                bar.Points.AddXY(plandt, count);
+                line.Points.AddXY(plandt, rate);
+            }
+
+            chart1.Series.Add(bar);
+            chart1.Series.Add(line);
+
+            // ▼ 軸の設定（見やすくする）
+            area.AxisY.Title = "本数";
+            area.AxisY2.Title = "可動率(%)";
+            area.AxisY2.Enabled = AxisEnabled.True;
+        }
+
         // フォームの状態を保存
         private void FormPlanProduction_FormClosing(object sender, FormClosingEventArgs e)
         {
-            settings = FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
             string key = this.Name;
             if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
             var s = settings.Forms[key];
@@ -213,7 +274,7 @@ namespace PlanProduction
             Common.FormSettingsSave(settings);
         }
 
-        // 左パネルにボタンを作成
+        // 左パネルに手配先ボタンを作成
         private void ReCreateODCDButtons()
         {
             // アプリケーション設定ファイルをグループ化
@@ -251,7 +312,7 @@ namespace PlanProduction
                 splitContainerMain.Panel1.Controls.Add(spacer);
             }
         }
-        // 左パネルにボタンを作成（実態）
+        // ボタンの形状作成とイベント登録
         private Button CreateTileButton(string odcd, string odrnm, int buttonHeight)
         {
             var btn = new Button
@@ -319,14 +380,17 @@ namespace PlanProduction
                 OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
                 DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
                 ReCreateODCDButtons();
+                RefreshPlanProduction();
             }
             // アプリケーション設定が変更されているかを
             // 判定
             if (DataStore.originalDefaultOdCd != DataStore.DefaultOdCd)
             {
                 selectedOdCd = DataStore.DefaultOdCd;
+                OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
                 DataStore.originalDefaultOdCd = selectedOdCd;
                 ReCreateODCDButtons();
+                RefreshPlanProduction();
             }
         }
 

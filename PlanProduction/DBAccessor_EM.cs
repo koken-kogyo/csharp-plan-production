@@ -1,5 +1,6 @@
 ﻿using DecryptPassword;
 using Oracle.ManagedDataAccess.Client;
+using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -337,7 +338,7 @@ namespace PlanProduction
         /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410Pivot(ref DataTable dt, string condition)
+        public static bool ReadD0410Pivot(ref DataTable dt, string condition, int sortorder)
         {
             bool ret = false;
             string sql = string.Empty;
@@ -408,6 +409,10 @@ namespace PlanProduction
                 }
                 string casewhenList = string.Join(" ", conditions) + " ";
 
+                // SortOrder 句の作成 (Common.sortOrderMap)
+                string orderbyList = (sortorder == 1) ? "pivot.HMCD" :
+                                     (sortorder == 2) ? "優先度, pivot.HMCD" : "pivot.HMCD";
+
                 // 実際の取得
                 sql =
                     "WITH pivot as ( "
@@ -441,7 +446,7 @@ namespace PlanProduction
                         + "else 9 end as 優先度 "
                         + ", pivot.* "
                     + "from pivot "
-                    + "ORDER BY 優先度, pivot.HMCD";
+                    + "ORDER BY " + orderbyList;
                 using (OracleCommand myCmd = new(sql, oraCnn))
                 {
                     using OracleDataAdapter myDa = new(myCmd);
@@ -454,6 +459,52 @@ namespace PlanProduction
                 // エラー
                 string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
                 MessageBox.Show(msg + "\n" + sql);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM 品目手順の1個前手順の在庫情報を検索
+        /// dtD0410の品番＋工程コード＋手配先コードから前工程の在庫情報を検索
+        /// </summary>
+        /// <returns>DataTable</returns>
+        public static bool ReadD0520FromPrevious(ref DataTable dtD0410, ref DataTable dtD0520)
+        {
+            bool ret = false;
+            string sql = string.Empty;
+            try
+            {
+                // 条件作成
+                List<string> s = null;
+                foreach (DataRow dr in dtD0410.Rows)
+                {
+                    s.Add(string.Concat(dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString()));
+                }
+                string conditions = string.Join(",", s);
+
+                sql = @"
+                    select main.HMCD, z.ZAIQTY from M0510 main, D0520 z,
+                    (
+                        select a.HMCD, a.VALDTF, a.KTSEQ from M0510 a where a.HMCD || a.KTCD || a.ODCD = @検索キー
+                        and a.valdtf = (select max(valdtf) from M0510 where hmcd = a.hmcd)
+                    ) target
+                    where main.HMCD = target.HMCD
+                    and main.VALDTF = target.VALDTF
+                    and main.KTSEQ<target.KTSEQ
+                    and main.JIKBN = '1'
+                    and z.HMCD = main.HMCD
+                    and z.KTCD = main.KTCD
+                ";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(dtD0520);
+                }
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(sql + "\n" + ex.Message);
             }
             return ret;
         }

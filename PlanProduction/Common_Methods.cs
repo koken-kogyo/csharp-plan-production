@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;           // Marshal.ReleaseComObject
+using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -405,7 +406,8 @@ namespace PlanProduction
                     excelApp.Visible = false;
                     throw new Exception("雛形Excelを修正してください．\n\n数式 ＞ 名前の管理を作成してください．\n「タイトル:A1」「タイトル日付:C2」「可動率:O2」");
                 }
-                worksheet.Range["タイトル"].Value = DataStore.M0300Map[odcd];
+                // 半角カタカナ → 全角カタカナ （.NET の String.Normalize を使用）（予想外の動きの為注意）
+                worksheet.Range["タイトル"].Value = DataStore.M0300Map[odcd].ToZenkakuKanaKeepMaruNumber();
                 worksheet.Range["タイトル日付"].Value = plandt.ToString("yyyy/MM/dd");
                 worksheet.Range["可動率"].Value = タイトル可動率;
 

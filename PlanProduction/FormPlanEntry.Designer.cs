@@ -171,9 +171,9 @@
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(159, 47);
             buttonSaveClose.TabIndex = 9;
-            buttonSaveClose.Text = "実績登録";
+            buttonSaveClose.Text = "実績登録 (F9)";
             buttonSaveClose.UseVisualStyleBackColor = false;
-            buttonSaveClose.Click += ButtonSaveClose_Click;
+            buttonSaveClose.Click += ButtonSaveAchieve_Click;
             // 
             // buttonClose
             // 
@@ -926,7 +926,7 @@
             label15.Name = "label15";
             label15.Size = new System.Drawing.Size(55, 15);
             label15.TabIndex = 36;
-            label15.Text = "計画稼働";
+            label15.Text = "実際稼働";
             label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label16

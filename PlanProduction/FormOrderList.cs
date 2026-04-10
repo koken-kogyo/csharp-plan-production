@@ -78,9 +78,9 @@ namespace PlanProduction
             可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
 
             // 表示するデータを取得
-            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);   // 抽出条件の作成            
-            DBAccessor.ReadD0410Pivot(ref dt, condition);                   // 手配データ取得
-            DBAccessor.ReadKM5030(ref dtKM5030, condition);                 // 標準作業時間マスタ取得
+            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
+            DBAccessor.ReadD0410Pivot(ref dt, condition, OdCdSetting.SortOrder);    // 手配データ取得
+            DBAccessor.ReadKM5030(ref dtKM5030, condition);                         // 標準作業時間マスタ取得
             // 表示するデータテーブルを編集（CTをくっつける）
             MargeDataTable(ref dt, ref dtKM5030);
 
@@ -124,7 +124,19 @@ namespace PlanProduction
         // キーボードショートカット
         private void FormOrderList_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (e.KeyCode == Keys.F4)
+            {
+                ButtonAddPlan_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.F5)
+            {
+                ButtonRefresh_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.F6)
+            {
+                ButtonAddAchieve_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.Escape)
             {
                 Close();
             }

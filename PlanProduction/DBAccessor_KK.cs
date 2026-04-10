@@ -243,19 +243,14 @@ namespace PlanProduction
             }
         }
 
-        public static List<DateTime> GetRegistDates()
+        // カレンダーに表示する登録済み計画日一覧を取得
+        public static List<DateTime> GetRegistDates(string odcd)
         {
             if (!IsConnectMySqlSchema()) return null;
             try
             {
-                // 登録
                 List<DateTime> planDates = [];
-                string sql = @"
-                    SELECT PLANDT FROM KD8020 
-                    WHERE PLANDT BETWEEN 
-                        DATE_ADD(CURRENT_DATE, INTERVAL -6 MONTH) AND DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH)
-                    GROUP BY PLANDT
-                ";
+                string sql = $"SELECT PLANDT FROM KD8020 WHERE ODCD='{odcd}' GROUP BY PLANDT";
                 using (var cmd = new MySqlCommand(sql, kkCnn))
                 {
                     using var reader = cmd.ExecuteReader();
@@ -272,7 +267,6 @@ namespace PlanProduction
                 MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
-
         }
 
         public static bool GetKD8020(ref SaveOptions opt)
@@ -318,7 +312,30 @@ namespace PlanProduction
                 return false;
             }
         }
-
+        // チャート用データを過去20日分取得
+        public static bool GetKD8020Chart(ref DataTable dt, string odcd)
+        {
+            if (!IsConnectMySqlSchema()) return false;
+            try
+            {
+                string sql = "SELECT PLANDT, TTLQTY, AVA FROM KD8020 "
+                    + $"WHERE ODCD='{odcd}' and TYPE = 'J' and "
+                    + "PLANDT <= SYSDATE() ORDER BY PLANDT desc limit 20";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    using MySqlDataAdapter adapter = new(cmd);
+                    adapter.Fill(dt);
+                }
+                CloseMySqlSchema();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+        // 製造部計画表
         public static bool GetKD8030(ref DataTable dt, SaveOptions opt)
         {
             if (!IsConnectMySqlSchema()) return false;

@@ -86,7 +86,7 @@
             buttonClose.Size = new System.Drawing.Size(217, 54);
             buttonClose.TabIndex = 8;
             buttonClose.TabStop = false;
-            buttonClose.Text = "閉じる";
+            buttonClose.Text = "閉じる (Esc)";
             buttonClose.UseVisualStyleBackColor = false;
             buttonClose.Click += ButtonClose_Click;
             // 
@@ -101,7 +101,7 @@
             buttonRefresh.Size = new System.Drawing.Size(217, 54);
             buttonRefresh.TabIndex = 7;
             buttonRefresh.TabStop = false;
-            buttonRefresh.Text = "再読み込み";
+            buttonRefresh.Text = "再読み込み (F5)";
             buttonRefresh.UseVisualStyleBackColor = false;
             // 
             // buttonAddPlan
@@ -115,7 +115,7 @@
             buttonAddPlan.Size = new System.Drawing.Size(217, 54);
             buttonAddPlan.TabIndex = 5;
             buttonAddPlan.TabStop = false;
-            buttonAddPlan.Text = "計画へ追加";
+            buttonAddPlan.Text = "計画へ追加 (F4)";
             buttonAddPlan.UseVisualStyleBackColor = false;
             buttonAddPlan.Click += ButtonAddPlan_Click;
             // 
@@ -130,7 +130,7 @@
             buttonAddAchieve.Size = new System.Drawing.Size(217, 54);
             buttonAddAchieve.TabIndex = 6;
             buttonAddAchieve.TabStop = false;
-            buttonAddAchieve.Text = "実績へ追加";
+            buttonAddAchieve.Text = "実績へ追加 (F6)";
             buttonAddAchieve.UseVisualStyleBackColor = false;
             buttonAddAchieve.Click += ButtonAddAchieve_Click;
             // 
