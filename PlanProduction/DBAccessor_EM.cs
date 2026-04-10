@@ -464,10 +464,9 @@ namespace PlanProduction
         }
 
         /// <summary>
-        /// EM 品目手順の1個前手順の在庫情報を検索
-        /// dtD0410の品番＋工程コード＋手配先コードから前工程の在庫情報を検索
+        /// EM 在庫情報取得
+        /// dtD0410のデータから次工程の在庫情報と前工程の在庫情報を取得
         /// </summary>
-        /// <returns>DataTable</returns>
         public static bool ReadD0520FromPrevious(ref DataTable dtD0410, ref DataTable dtD0520)
         {
             bool ret = false;
@@ -475,30 +474,32 @@ namespace PlanProduction
             try
             {
                 // 条件作成
-                List<string> s = null;
+                List<string> s = [];
                 foreach (DataRow dr in dtD0410.Rows)
                 {
-                    s.Add(string.Concat(dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString()));
+                    s.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'") );
                 }
-                string conditions = string.Join(",", s);
+                string conditions = string.Concat("(", string.Join(",", s), ")");
 
-                sql = @"
-                    select main.HMCD, z.ZAIQTY from M0510 main, D0520 z,
-                    (
-                        select a.HMCD, a.VALDTF, a.KTSEQ from M0510 a where a.HMCD || a.KTCD || a.ODCD = @検索キー
-                        and a.valdtf = (select max(valdtf) from M0510 where hmcd = a.hmcd)
-                    ) target
-                    where main.HMCD = target.HMCD
-                    and main.VALDTF = target.VALDTF
-                    and main.KTSEQ<target.KTSEQ
-                    and main.JIKBN = '1'
-                    and z.HMCD = main.HMCD
-                    and z.KTCD = main.KTCD
-                ";
-                using (OracleCommand myCmd = new(sql, oraCnn))
+                sql =
+                    "select target.HMCD, mz.ZAIQTY as MZAIQTY, z.ZAIQTY from " + 
+                    "(" +
+                        "select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from M0510 a where " +
+                        $"a.HMCD || a.KTCD || a.ODCD in {conditions}" +
+                        "and a.VALDTF = (select max(valdtf) from m0510 where hmcd = a.hmcd) " +
+                    ") target " +
+                    "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD " +
+                    "left outer join M0510 maekt on " +
+                        "maekt.HMCD = target.HMCD and " +
+                        "maekt.VALDTF = target.VALDTF and " +
+                        "maekt.KTSEQ < target.KTSEQ and " +
+                        "maekt.JIKBN = '1' " +
+                    "left outer join D0520 mz on mz.HMCD = maekt.HMCD and mz.KTCD = maekt.KTCD"
+                ;
+                using (OracleCommand cmd = new(sql, oraCnn))
                 {
-                    using OracleDataAdapter myDa = new(myCmd);
-                    myDa.Fill(dtD0520);
+                    using OracleDataAdapter da = new(cmd);
+                    da.Fill(dtD0520);
                 }
                 ret = true;
             }

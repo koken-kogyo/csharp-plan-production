@@ -21,6 +21,7 @@ namespace PlanProduction
         // DataTable を保持するフィールドを作る
         private DataTable dt = new();
         private DataTable dtKM5030 = new();
+        private DataTable dtD0520 = new();
 
         // 複数列選択用のセルリスト
         private readonly List<DataGridViewCell> selectedCells = [];
@@ -54,7 +55,7 @@ namespace PlanProduction
             dataGridView1.DataBindingComplete += DataGridView1_DataBindingComplete;
             dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
             dataGridView1.SelectionChanged += DataGridView1_SelectionChanged;
-            buttonRefresh.Click += ButtonRefresh_Click;
+            dataGridView1.CellMouseDown += DataGridView1_CellMouseDown;
             buttonRefresh.Click += ButtonRefresh_Click;
 
             // コントロールの初期化
@@ -77,14 +78,103 @@ namespace PlanProduction
             textBox可動率.Text = (string.IsNullOrEmpty(OdCdSetting.Ava)) ? "70" : OdCdSetting.Ava;
             可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
 
-            // 表示するデータを取得
+            // 初期表示
+            RefreshOrderList();
+        }
+
+
+
+        // オーダーリスト作成
+        private void RefreshOrderList()
+        {
+            dt = new DataTable();
+            dtKM5030 = new DataTable();
+            dtD0520 = new DataTable();
             var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
             DBAccessor.ReadD0410Pivot(ref dt, condition, OdCdSetting.SortOrder);    // 手配データ取得
             DBAccessor.ReadKM5030(ref dtKM5030, condition);                         // 標準作業時間マスタ取得
+            DBAccessor.ReadD0520FromPrevious(ref dt, ref dtD0520);
             // 表示するデータテーブルを編集（CTをくっつける）
-            MargeDataTable(ref dt, ref dtKM5030);
+            MargeDataTable(ref dt, ref dtKM5030, ref dtD0520);
 
             dataGridView1.DataSource = dt;
+        }
+        // CTと前工程在庫情報と在庫情報をくっつける
+        private static void MargeDataTable(ref DataTable dt, ref DataTable km5030, ref DataTable d0520)
+        {
+            dt.Columns.Add("CT", typeof(double));
+            dt.Columns.Add("前在", typeof(int));
+            dt.Columns["前在"].SetOrdinal(6);    // 列を途中に割り込ませる
+            foreach (DataRow row in dt.Rows)
+            {
+                var findRow = km5030.AsEnumerable()
+                    .Where(r =>
+                        r.Field<string>("ODCD") == row["ODCD"].ToString() &&
+                        r.Field<string>("WKGRCD") == row["KTCD"].ToString() &&
+                        r.Field<string>("HMCD") == row["HMCD"].ToString()
+                    )
+                    .OrderByDescending(x => x.Field<string>("ODCD"))
+                    .ToList();
+                if (findRow == null || findRow.Count == 0)
+                {
+                    row["CT"] = 0;
+                }
+                else
+                {
+                    row["CT"] = findRow[0]["CT"];
+                }
+                var findZaiko = d0520.AsEnumerable()
+                    .Where(r => r.Field<string>("HMCD") == row["HMCD"].ToString())
+                    .ToList();
+                if (findZaiko == null || findZaiko.Count == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    int v = findZaiko[0]["MZAIQTY"].ToIntOrDefault();
+                    if (v != 0) row["前在"] = v;
+                }
+            }
+        }
+        // データバインド完了後に行ヘッダーを設定しないといけない
+        private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            // 列 0〜6 と CTを行ヘッダーと同じ色にする
+            for (int col = 0; col < 7; col++)
+            {
+                dataGridView1.Columns[col].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
+            }
+            dataGridView1.Columns["CT"].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
+            // データ列の設定（幅、右揃え、ソート機能なし）
+            for (int col = 6; col < dataGridView1.Columns.Count; col++)
+            {
+                //dataGridView1.Columns[col].Width = 50;
+                dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
+                dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
+                dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
+            }
+            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";     // CTは小数点以下1桁
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        }
+        // 行番号を付ける（1 から始める）
+        private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            string rowNumber = (e.RowIndex + 1).ToString();
+            // 行ヘッダーの描画範囲
+            var headerBounds = new Rectangle(
+                e.RowBounds.Left,
+                e.RowBounds.Top,
+                dataGridView1.RowHeadersWidth,
+                e.RowBounds.Height);
+            // 行番号を描画
+            TextRenderer.DrawText(
+                e.Graphics,
+                rowNumber,
+                dataGridView1.Font,
+                headerBounds,
+                Color.Black,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
         }
         // ロード後の初期表示
         private void FormOrderList_Shown(object sender, EventArgs e)
@@ -105,6 +195,9 @@ namespace PlanProduction
                 if (s.Flg3 == 1) checkBoxWKNOTE.Checked = true;
             }
         }
+
+
+
         // フォームの状態を保存
         private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -143,64 +236,8 @@ namespace PlanProduction
         }
 
 
-        // CTをくっつける
-        private static void MargeDataTable(ref DataTable dt, ref DataTable km5030)
-        {
-            dt.Columns.Add("CT", typeof(double));
-            foreach (DataRow row in dt.Rows)
-            {
-                var findRow = km5030.AsEnumerable()
-                    .Where(r =>
-                        r.Field<string>("ODCD") == row["ODCD"].ToString() &&
-                        r.Field<string>("WKGRCD") == row["KTCD"].ToString() &&
-                        r.Field<string>("HMCD") == row["HMCD"].ToString()
-                    )
-                    .OrderByDescending(x => x.Field<string>("ODCD"))
-                    .ToList();
-                if (findRow == null || findRow.Count == 0)
-                {
-                    row["CT"] = 0;
-                }
-                else
-                {
-                    row["CT"] = findRow[0]["CT"];
-                }
-            }
-        }
 
-        // データバインド完了後に行ヘッダーを設定しないといけない
-        private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            // データ列の設定（幅、右揃え、ソート機能なし）
-            for (int col = 6; col < dataGridView1.Columns.Count; col++)
-            {
-                //dataGridView1.Columns[col].Width = 50;
-                dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
-                dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
-                dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
-            }
-            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";     // CTは小数点以下1桁
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-        }
-        // 行番号を付ける（1 から始める）
-        private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            string rowNumber = (e.RowIndex + 1).ToString();
-            // 行ヘッダーの描画範囲
-            var headerBounds = new Rectangle(
-                e.RowBounds.Left,
-                e.RowBounds.Top,
-                dataGridView1.RowHeadersWidth,
-                e.RowBounds.Height);
-            // 行番号を描画
-            TextRenderer.DrawText(
-                e.Graphics,
-                rowNumber,
-                dataGridView1.Font,
-                headerBounds,
-                Color.Black,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
-        }
+        // （おまけ処理）選択した作業時間を算出して表示
         private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             double sumProduct = 0;
@@ -230,12 +267,66 @@ namespace PlanProduction
 
             textBox作業時間.Text = (sumProduct / 3600).ToString("N2");
         }
-        // 再読み込み
-        private void ButtonRefresh_Click(object sender, EventArgs e)
+        // （おまけ処理）並び替え
+        private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            MessageBox.Show("まだ作れていません", "未実装");
+
+            if (e.ColumnIndex < 0) return;
+            int col = e.ColumnIndex;
+
+            bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
+
+            // Ctrl が押されていなければ選択クリア
+            if (!isCtrl)
+            {
+                selectedCells.Clear();
+                dataGridView1.ClearSelection();
+            }
+
+            // この列のすべてのセルを追加（新規行も含む）
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                DataGridViewCell cell = row.Cells[col];
+
+                if (!selectedCells.Contains(cell))
+                    selectedCells.Add(cell);
+
+                cell.Selected = true;
+            }
+        }
+        // （おまけ処理）クリップボード処理
+        private void DataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (dataGridView1.SelectedCells.Count > 1)
+                {
+                    List<string> selectedData = [];
+                    foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
+                    {
+                        if (cell.Value == null) continue;
+                        selectedData.Add(string.IsNullOrEmpty(cell.Value.ToString()) ? "" : cell.Value.ToString());
+                    }
+                    Clipboard.SetText(string.Join("\n", selectedData));
+                }
+                else
+                {
+                    int col = dataGridView1.CurrentCell.ColumnIndex;
+                    string ht = dataGridView1.Columns[col].HeaderText;
+                    string val = dataGridView1[col, e.RowIndex].Value.ToString();
+                    if (val != "")
+                    {
+                        Clipboard.SetText(val);
+                    }
+                }
+            }
         }
 
+
+
+        /*
+         * チェックボックス関連
+         */
         // 「主キー」の表示／非表示
         private void CheckBoxPKey_CheckedChanged(object sender, EventArgs e)
         {
@@ -256,11 +347,11 @@ namespace PlanProduction
             dataGridView1.Columns["WKNOTE"].Visible = checkBoxWKNOTE.Checked;
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
 
+
+        /*
+         * テキストボックス関連
+         */
         private void TextBox可動率_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -290,19 +381,36 @@ namespace PlanProduction
             textBox可動率.SelectAll();
         }
 
+
+
+        /*
+         * ボタン関連
+         */
+        // 「再読み込み」ボタン
+        private void ButtonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshOrderList();
+        }
+        // 「閉じる」ボタン
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+        // 「計画に追加」ボタン
         private void ButtonAddPlan_Click(object sender, EventArgs e)
         {
             // 「計画リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Plan", list);
         }
+        // 「実績に追加」ボタン
         private void ButtonAddAchieve_Click(object sender, EventArgs e)
         {
             // 「実績リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Achieve", list);
         }
-
+        // DTO（データ転送オブジェクト）を作成
         private List<SelectedItem> MakeSelectedItemList()
         {
             // 品番ごとの合計結果を保存する辞書
@@ -347,32 +455,12 @@ namespace PlanProduction
             return list;
         }
 
-        private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
 
-            if (e.ColumnIndex < 0) return;
-            int col = e.ColumnIndex;
 
-            bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
 
-            // Ctrl が押されていなければ選択クリア
-            if (!isCtrl)
-            {
-                selectedCells.Clear();
-                dataGridView1.ClearSelection();
-            }
 
-            // この列のすべてのセルを追加（新規行も含む）
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                DataGridViewCell cell = row.Cells[col];
 
-                if (!selectedCells.Contains(cell))
-                    selectedCells.Add(cell);
 
-                cell.Selected = true;
-            }
-        }
 
     }
 }
