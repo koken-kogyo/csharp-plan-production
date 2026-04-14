@@ -75,7 +75,7 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel2.Location = new System.Drawing.Point(0, 379);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(1048, 81);
+            panel2.Size = new System.Drawing.Size(1053, 81);
             panel2.TabIndex = 32;
             // 
             // checkBoxAllCheck
@@ -96,7 +96,7 @@
             buttonSaveClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonSaveClose.BackColor = System.Drawing.Color.LightCoral;
             buttonSaveClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonSaveClose.Location = new System.Drawing.Point(699, 14);
+            buttonSaveClose.Location = new System.Drawing.Point(704, 14);
             buttonSaveClose.Margin = new System.Windows.Forms.Padding(4);
             buttonSaveClose.Name = "buttonSaveClose";
             buttonSaveClose.Size = new System.Drawing.Size(194, 54);
@@ -110,7 +110,7 @@
             buttonCancelClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             buttonCancelClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonCancelClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonCancelClose.Location = new System.Drawing.Point(901, 14);
+            buttonCancelClose.Location = new System.Drawing.Point(906, 14);
             buttonCancelClose.Margin = new System.Windows.Forms.Padding(4);
             buttonCancelClose.Name = "buttonCancelClose";
             buttonCancelClose.Size = new System.Drawing.Size(134, 54);
@@ -155,7 +155,7 @@
             panel3.Dock = System.Windows.Forms.DockStyle.Top;
             panel3.Location = new System.Drawing.Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(1048, 122);
+            panel3.Size = new System.Drawing.Size(1053, 122);
             panel3.TabIndex = 33;
             // 
             // buttonInitialValue
@@ -243,12 +243,12 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Yu Gothic UI Semibold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 128);
-            label1.Location = new System.Drawing.Point(106, 9);
+            label1.Location = new System.Drawing.Point(96, 9);
             label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(736, 45);
+            label1.Size = new System.Drawing.Size(899, 45);
             label1.TabIndex = 31;
-            label1.Text = "このパソコンで使用する「手配先コード」を選択してください";
+            label1.Text = "このパソコンで使用する「手配先コード＋工程コード」を選択してください";
             // 
             // panel1
             // 
@@ -256,7 +256,7 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 122);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1048, 257);
+            panel1.Size = new System.Drawing.Size(1053, 257);
             panel1.TabIndex = 34;
             // 
             // dataGridView1
@@ -282,7 +282,7 @@
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 36;
-            dataGridView1.Size = new System.Drawing.Size(1048, 257);
+            dataGridView1.Size = new System.Drawing.Size(1053, 257);
             dataGridView1.TabIndex = 3;
             dataGridView1.CellClick += DataGridView1_CellClick;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
@@ -390,7 +390,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1048, 460);
+            ClientSize = new System.Drawing.Size(1053, 460);
             Controls.Add(panel1);
             Controls.Add(panel3);
             Controls.Add(panel2);

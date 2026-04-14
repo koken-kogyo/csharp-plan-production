@@ -24,6 +24,23 @@ namespace PlanProduction
             }
             Common.DbConfig = Common.ReserializeDBConfigFile();
 
+            // ファイルシステム設定ファイルの読込
+            if (!File.Exists(@Common.CONFIG_FILE_FS))
+            {
+                MessageBox.Show("ファイルシステム設定ファイルが見つかりません！\nアプリケーションを中断します．"
+                    , "エラー", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+            Common.FsConfig = Common.ReserializeFSConfigFile();
+
+            // サーバーの共有フォルダが存在するか確認
+            if (!Directory.Exists(Common.FsConfig[0].ShareName))
+            {
+                MessageBox.Show("サーバーの共有フォルダにアクセス出来ません！\nアプリケーションを中断します．"
+                    , "エラー", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             // EMデータベースへの接続確認（コネクションプール接続）
             if (!DBAccessor.OpenOraSchema())
             {
@@ -31,34 +48,9 @@ namespace PlanProduction
                     , "エラー", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
-            // 作業グループマスタと手配先マスタを読み込んでおく
-            DBAccessor.ReadKM5010();
-            DBAccessor.ReadM300();
 
-            // 一旦Oracleコネクションを削除（コネクションプールなしで細かな制御をしたい場合に必要）
-            //DBAccessor.CloseOraSchema();
-
-            // 初回起動の場合は設定画面からスタート
-            if (!File.Exists(@Common.CONFIG_FILE_AS))
-            {
-                MessageBox.Show("設定画面を起動します。\n\n初回設定を行ってください．"
-                    , "[生産計画]", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Application.Run(new FormSrttings());
-                // 初回起動のがキャンセルされたら終了
-                if (!File.Exists(@Common.CONFIG_FILE_AS))
-                {
-                    Application.Exit();
-                    return;
-                }
-            }
-            else
-            {
-                // アプリケーション設定ファイルの読込
-                Common.DeserializeAppSettings();
-            }
-
-            // メイン画面起動
-            Application.Run(new FormPlanProduction());
+            // ログイン画面起動
+            Application.Run(new FormLogin());
         }
     }
 }

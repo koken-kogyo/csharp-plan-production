@@ -318,9 +318,10 @@ namespace PlanProduction
             if (!IsConnectMySqlSchema()) return false;
             try
             {
-                string sql = "SELECT PLANDT, TTLQTY, AVA FROM KD8020 "
+                string sql = "SELECT * FROM (SELECT PLANDT, TTLQTY, AVA FROM KD8020 "
                     + $"WHERE ODCD='{odcd}' and TYPE = 'J' and "
-                    + "PLANDT <= SYSDATE() ORDER BY PLANDT desc limit 20";
+                    + "PLANDT <= SYSDATE() ORDER BY PLANDT desc limit 20"
+                    +") AS t ORDER BY PLANDT asc";
                 using (var cmd = new MySqlCommand(sql, kkCnn))
                 {
                     using MySqlDataAdapter adapter = new(cmd);

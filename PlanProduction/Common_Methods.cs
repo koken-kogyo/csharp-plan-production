@@ -110,9 +110,8 @@ namespace PlanProduction
         //
         public static void DeserializeAppSettings()
         {
-            string fileName = Common.CONFIG_FILE_AS;
-            
-            string jsonString = File.ReadAllText(@fileName);
+            string fullPath = AppSettingsFullPath();
+            string jsonString = File.ReadAllText(@fullPath);
             // JSONデシリアライザー
             var config = JsonSerializer.Deserialize<AppConfig>(jsonString);
             // 読み込んだデータを表示
@@ -142,7 +141,6 @@ namespace PlanProduction
             DataStore.originalDefaultOdCd = config.DefaultOdCd;
             DataStore.originalKM5010kai = DataStore.dtKM5010kai.Copy();
         }
-
         // アプリケーション設定ファイルへの書き込み
         //
         // DataStore の dtKM5010kaiのチェックレコードと DefaultOdCd を書き込む
@@ -150,8 +148,6 @@ namespace PlanProduction
         public static void SerializeAppSettings()
         {
             List<OdCdSetting> records = [];
-            string fileName = Common.CONFIG_FILE_AS;
-
             foreach (DataRow row in DataStore.dtKM5010kai.Rows)
             {
                 bool v = bool.TryParse(row["CHECKED"]?.ToString(), out bool isChecked);
@@ -182,7 +178,18 @@ namespace PlanProduction
             };
             string json = JsonSerializer.Serialize(root, options: JsonWriteOptions);
             DataStore.OdCdSettings = records;
-            File.WriteAllText(fileName, json);
+            string fullPath = AppSettingsFullPath();
+            File.WriteAllText(@fullPath, json);
+        }
+        //
+        // アプリケーション設定ファイルのフルパス取得
+        //
+        public static string AppSettingsFullPath()
+        {
+            string shareFolder = Common.FsConfig[0].ShareName;
+            string subFolder = Common.設定フォルダ;
+            string fileName = Common.UserId + "_" + Common.CONFIG_FILE_AS;
+            return Path.Combine(shareFolder, subFolder, fileName);
         }
 
 
@@ -192,27 +199,55 @@ namespace PlanProduction
         //
         public static FormConfig FormSettingsLoad()
         {
-            if (!File.Exists(Common.CONFIG_FILE_WS))
+            try
+            {
+                string fullPath = FormSettingsFullPath();
+                if (!File.Exists(@fullPath)) return new FormConfig();
+                string json = File.ReadAllText(@fullPath);
+                return JsonSerializer.Deserialize<FormConfig>(json) ?? new FormConfig();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "書き込みエラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return new FormConfig();
-
-            string json = File.ReadAllText(Common.CONFIG_FILE_WS);
-            return JsonSerializer.Deserialize<FormConfig>(json) ?? new FormConfig();
+            }
         }
-
         //
         // 画面設定ファイルへの書き込み
         //
         public static void FormSettingsSave(FormConfig settings)
         {
-            string json = JsonSerializer.Serialize(settings, options: JsonWriteOptions);
-            File.WriteAllText(Common.CONFIG_FILE_WS, json);
+            try
+            {
+                string fullPath = FormSettingsFullPath();
+                string json = JsonSerializer.Serialize(settings, options: JsonWriteOptions);
+                File.WriteAllText(@fullPath, json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "書き込みエラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        //
+        // 画面設定ファイルのフルパス取得
+        //
+        private static string FormSettingsFullPath()
+        {
+            string shareFolder = Common.FsConfig[0].ShareName;
+            string subFolder = Common.設定フォルダ;
+            string fileName = Common.UserId + "_" + Common.CONFIG_FILE_WS;
+            return Path.Combine(shareFolder, subFolder, fileName);
         }
 
+
+
+        //
+        // Json オプション
+        //
         private static readonly JsonSerializerOptions JsonWriteOptions = new()
         {
             WriteIndented = true
         };
-
         private static readonly JsonSerializerOptions JsonReadOptions = new()
         {
             AllowTrailingCommas = true

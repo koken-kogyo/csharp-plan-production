@@ -117,8 +117,370 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>143, 36</value>
+  </data>
+  <data name="dataGridViewPlan.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 200</value>
+  </data>
+  <data name="panelPlanResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 223</value>
+  </data>
+  <data name="panelPlanResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 87</value>
+  </data>
+  <data name="labelPlanCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 23</value>
+  </data>
+  <data name="dataGridViewAchieve.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 200</value>
+  </data>
+  <data name="panelAchieveResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 223</value>
+  </data>
+  <data name="panelAchieveResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 87</value>
+  </data>
+  <data name="labelAchieveCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 23</value>
+  </data>
+  <data name="splitContainer計画と実績.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 310</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainer計画と実績.SplitterDistance" type="System.Int32, mscorlib">
+    <value>363</value>
+  </data>
+  <data name="panelTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 45</value>
+  </data>
+  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>719, 103</value>
+  </data>
   <data name="chart1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
+  </data>
+  <data name="splitContainer上下.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 487</value>
+  </data>
+  <data name="splitContainer上下.SplitterDistance" type="System.Int32, mscorlib">
+    <value>360</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>724, 0</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>217, 487</value>
+  </data>
+  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1100, 487</value>
+  </data>
+  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
+    <value>155</value>
+  </data>
+  <data name="textBoxPlanQty.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxPlanQty.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxPlanQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>18, 34</value>
+  </data>
+  <data name="textBoxPlanQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>51, 36</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="textBoxPlanQty.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="labelPlanQty.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelPlanQty.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelPlanQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>71, 45</value>
+  </data>
+  <data name="labelPlanQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelPlanQty.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="labelPlanQty.Text" xml:space="preserve">
+    <value>本</value>
+  </data>
+  <data name="textBoxPlanEndTime.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxPlanEndTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxPlanEndTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>190, 34</value>
+  </data>
+  <data name="textBoxPlanEndTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 36</value>
+  </data>
+  <data name="textBoxPlanEndTime.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="textBoxPlanStartTime.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxPlanStartTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxPlanStartTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>104, 34</value>
+  </data>
+  <data name="textBoxPlanStartTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 36</value>
+  </data>
+  <data name="textBoxPlanStartTime.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="labelPlanTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelPlanTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelPlanTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>168, 45</value>
+  </data>
+  <data name="labelPlanTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelPlanTime.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="labelPlanTime.Text" xml:space="preserve">
+    <value>～</value>
+  </data>
+  <data name="textBoxPlan可動率.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="textBoxPlan可動率.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 33</value>
+  </data>
+  <data name="labelPlanAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="labelPlanAva.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelPlanAva.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelPlanAva.Location" type="System.Drawing.Point, System.Drawing">
+    <value>321, 43</value>
+  </data>
+  <data name="labelPlanAva.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelPlanAva.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="labelPlanAva.Text" xml:space="preserve">
+    <value>％</value>
+  </data>
+  <data name="labelPlanAva.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="checkBoxPlan早昼.Location" type="System.Drawing.Point, System.Drawing">
+    <value>270, 7</value>
+  </data>
+  <data name="checkBoxPlan早昼.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 19</value>
+  </data>
+  <data name="checkBoxPlan早昼.Text" xml:space="preserve">
+    <value>早昼</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Location" type="System.Drawing.Point, System.Drawing">
+    <value>189, 7</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 19</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Text" xml:space="preserve">
+    <value>ピカピカ</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 7</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 19</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Text" xml:space="preserve">
+    <value>休憩稼働</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>18, 8</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 19</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Text" xml:space="preserve">
+    <value>お昼稼働</value>
+  </data>
+  <data name="textBoxAchieveQty.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxAchieveQty.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 34</value>
+  </data>
+  <data name="textBoxAchieveQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 36</value>
+  </data>
+  <data name="textBoxAchieveQty.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="labelAchieveQty.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelAchieveQty.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>73, 45</value>
+  </data>
+  <data name="labelAchieveQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelAchieveQty.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="labelAchieveQty.Text" xml:space="preserve">
+    <value>本</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>194, 34</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 36</value>
+  </data>
+  <data name="textBoxAchieveEndTime.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>108, 35</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 36</value>
+  </data>
+  <data name="textBoxAchieveStartTime.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="labelAchieveTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelAchieveTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelAchieveTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>172, 44</value>
+  </data>
+  <data name="labelAchieveTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelAchieveTime.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="labelAchieveTime.Text" xml:space="preserve">
+    <value>～</value>
+  </data>
+  <data name="textBoxAchieve可動率.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="textBoxAchieve可動率.Location" type="System.Drawing.Point, System.Drawing">
+    <value>280, 33</value>
+  </data>
+  <data name="labelAchieveAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="labelAchieveAva.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labelAchieveAva.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 10pt</value>
+  </data>
+  <data name="labelAchieveAva.Location" type="System.Drawing.Point, System.Drawing">
+    <value>329, 42</value>
+  </data>
+  <data name="labelAchieveAva.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 19</value>
+  </data>
+  <data name="labelAchieveAva.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="labelAchieveAva.Text" xml:space="preserve">
+    <value>％</value>
+  </data>
+  <data name="labelAchieveAva.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Location" type="System.Drawing.Point, System.Drawing">
+    <value>275, 8</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 19</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Text" xml:space="preserve">
+    <value>早昼</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Location" type="System.Drawing.Point, System.Drawing">
+    <value>194, 8</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 19</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Text" xml:space="preserve">
+    <value>ピカピカ</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 8</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 19</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Text" xml:space="preserve">
+    <value>休憩稼働</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 8</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 19</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Text" xml:space="preserve">
+    <value>お昼稼働</value>
+  </data>
+  <data name="labelTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>719, 35</value>
+  </data>
+  <data name="buttonExit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 423</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1100, 487</value>
   </data>
 </root>

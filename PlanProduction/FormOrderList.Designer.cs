@@ -34,6 +34,7 @@
             buttonAddPlan = new System.Windows.Forms.Button();
             buttonAddAchieve = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
+            checkBoxKTSEQ = new System.Windows.Forms.CheckBox();
             checkBoxWKNOTE = new System.Windows.Forms.CheckBox();
             checkBoxHMRNM = new System.Windows.Forms.CheckBox();
             labelTitleOdCd = new System.Windows.Forms.Label();
@@ -136,6 +137,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(checkBoxKTSEQ);
             panel1.Controls.Add(checkBoxWKNOTE);
             panel1.Controls.Add(checkBoxHMRNM);
             panel1.Controls.Add(labelTitleOdCd);
@@ -148,10 +150,28 @@
             panel1.Size = new System.Drawing.Size(900, 61);
             panel1.TabIndex = 3;
             // 
+            // checkBoxKTSEQ
+            // 
+            checkBoxKTSEQ.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            checkBoxKTSEQ.AutoSize = true;
+            checkBoxKTSEQ.Checked = true;
+            checkBoxKTSEQ.CheckState = System.Windows.Forms.CheckState.Checked;
+            checkBoxKTSEQ.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            checkBoxKTSEQ.ForeColor = System.Drawing.SystemColors.ControlDark;
+            checkBoxKTSEQ.Location = new System.Drawing.Point(376, 39);
+            checkBoxKTSEQ.Name = "checkBoxKTSEQ";
+            checkBoxKTSEQ.Size = new System.Drawing.Size(60, 19);
+            checkBoxKTSEQ.TabIndex = 7;
+            checkBoxKTSEQ.Text = "KTSEQ";
+            checkBoxKTSEQ.UseVisualStyleBackColor = true;
+            checkBoxKTSEQ.CheckedChanged += CheckBoxKTSEQ_CheckedChanged;
+            // 
             // checkBoxWKNOTE
             // 
             checkBoxWKNOTE.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             checkBoxWKNOTE.AutoSize = true;
+            checkBoxWKNOTE.Checked = true;
+            checkBoxWKNOTE.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxWKNOTE.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxWKNOTE.ForeColor = System.Drawing.SystemColors.ControlDark;
             checkBoxWKNOTE.Location = new System.Drawing.Point(520, 39);
@@ -166,6 +186,8 @@
             // 
             checkBoxHMRNM.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             checkBoxHMRNM.AutoSize = true;
+            checkBoxHMRNM.Checked = true;
+            checkBoxHMRNM.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxHMRNM.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxHMRNM.ForeColor = System.Drawing.SystemColors.ControlDark;
             checkBoxHMRNM.Location = new System.Drawing.Point(442, 39);
@@ -191,9 +213,11 @@
             // 
             checkBoxPKey.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             checkBoxPKey.AutoSize = true;
+            checkBoxPKey.Checked = true;
+            checkBoxPKey.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxPKey.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxPKey.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxPKey.Location = new System.Drawing.Point(382, 39);
+            checkBoxPKey.Location = new System.Drawing.Point(315, 39);
             checkBoxPKey.Name = "checkBoxPKey";
             checkBoxPKey.Size = new System.Drawing.Size(55, 19);
             checkBoxPKey.TabIndex = 0;
@@ -369,5 +393,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxWKNOTE;
         private System.Windows.Forms.CheckBox checkBoxHMRNM;
+        private System.Windows.Forms.CheckBox checkBoxKTSEQ;
     }
 }

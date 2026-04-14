@@ -22,6 +22,8 @@ namespace PlanProduction
         public static readonly string CONFIG_FILE_FS = "ConfigFS.xml";      // ファイル システム設定ファイル
         public static readonly string CONFIG_FILE_AS = "AppSettings.json";  // アプリケーション設定ファイル
         public static readonly string CONFIG_FILE_WS = "FormSettings.json"; // 画面設定ファイル
+        public static readonly string 雛形フォルダ = @"Applications\雛形ファイル"; // FSConfig共有フォルダからのパス
+        public static readonly string 設定フォルダ = @"Applications\設定ファイル"; // FSConfig共有フォルダからのパス
 
 
         /// <summary>

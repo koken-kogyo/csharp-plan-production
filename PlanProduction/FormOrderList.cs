@@ -65,7 +65,7 @@ namespace PlanProduction
 
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
-            string key = this.Name;
+            string key = this.Name + OdCdSetting.OdCd;
             if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
                 this.StartPosition = FormStartPosition.Manual;
@@ -93,7 +93,7 @@ namespace PlanProduction
             var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
             DBAccessor.ReadD0410Pivot(ref dt, condition, OdCdSetting.SortOrder);    // 手配データ取得
             DBAccessor.ReadKM5030(ref dtKM5030, condition);                         // 標準作業時間マスタ取得
-            DBAccessor.ReadD0520FromPrevious(ref dt, ref dtD0520);
+            DBAccessor.ReadD0520FromPrevious(ref dt, ref dtD0520);                  // 前工程の在庫を調べて取得
             // 表示するデータテーブルを編集（CTをくっつける）
             MargeDataTable(ref dt, ref dtKM5030, ref dtD0520);
 
@@ -104,7 +104,7 @@ namespace PlanProduction
         {
             dt.Columns.Add("CT", typeof(double));
             dt.Columns.Add("前在", typeof(int));
-            dt.Columns["前在"].SetOrdinal(6);    // 列を途中に割り込ませる
+            dt.Columns["前在"].SetOrdinal(7);    // 列を途中に割り込ませる
             foreach (DataRow row in dt.Rows)
             {
                 var findRow = km5030.AsEnumerable()
@@ -123,31 +123,36 @@ namespace PlanProduction
                 {
                     row["CT"] = findRow[0]["CT"];
                 }
-                var findZaiko = d0520.AsEnumerable()
-                    .Where(r => r.Field<string>("HMCD") == row["HMCD"].ToString())
-                    .ToList();
-                if (findZaiko == null || findZaiko.Count == 0)
+                if (d0520.Rows.Count > 0)
                 {
-                    continue;
-                }
-                else
-                {
-                    int v = findZaiko[0]["MZAIQTY"].ToIntOrDefault();
-                    if (v != 0) row["前在"] = v;
+                    var findZaiko = d0520.AsEnumerable()
+                        .Where(r => r.Field<string>("HMCD") == row["HMCD"].ToString())
+                        .ToList();
+                    if (findZaiko == null || findZaiko.Count == 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        int v = findZaiko[0]["MZAIQTY"].ToIntOrDefault();
+                        if (v != 0) row["前在"] = v;
+                    }
                 }
             }
         }
         // データバインド完了後に行ヘッダーを設定しないといけない
         private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            // 列 0〜6 と CTを行ヘッダーと同じ色にする
-            for (int col = 0; col < 7; col++)
+            // 列 0〜7 と CTを行ヘッダーと同じ色にする
+            string[] colNames = ["優先度", "HMCD", "ODCD", "KTSEQ", "KTCD", "HMRNM", "WKNOTE", "前在"];
+            foreach (string col in colNames)
             {
                 dataGridView1.Columns[col].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
             }
             dataGridView1.Columns["CT"].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
             // データ列の設定（幅、右揃え、ソート機能なし）
-            for (int col = 6; col < dataGridView1.Columns.Count; col++)
+            int startCol = dataGridView1.Columns["前在"].Index;
+            for (int col = startCol; col < dataGridView1.Columns.Count; col++)
             {
                 //dataGridView1.Columns[col].Width = 50;
                 dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
@@ -180,7 +185,7 @@ namespace PlanProduction
         private void FormOrderList_Shown(object sender, EventArgs e)
         {
             // チェックの状態を復元
-            string key = this.Name;
+            string key = this.Name + OdCdSetting.OdCd;
             if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
                 if (s.Flg1 == 0)
@@ -188,11 +193,13 @@ namespace PlanProduction
                     dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
                     dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
                 }
-                if (s.Flg1 == 1) checkBoxPKey.Checked = true;
                 if (s.Flg2 == 0) dataGridView1.Columns["HMRNM"].Visible = false;
-                if (s.Flg2 == 1) checkBoxHMRNM.Checked = true;
                 if (s.Flg3 == 0) dataGridView1.Columns["WKNOTE"].Visible = false;
-                if (s.Flg3 == 1) checkBoxWKNOTE.Checked = true;
+                if (s.Flg4 == 0) dataGridView1.Columns["KTSEQ"].Visible = false;
+                checkBoxPKey.Checked = (s.Flg1 == 1);
+                checkBoxHMRNM.Checked = (s.Flg2 == 1);
+                checkBoxWKNOTE.Checked = (s.Flg3 == 1);
+                checkBoxKTSEQ.Checked = (s.Flg4 == 1);
             }
         }
 
@@ -202,16 +209,18 @@ namespace PlanProduction
         private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
         {
             settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
-            string key = this.Name;
+            string key = this.Name + OdCdSetting.OdCd;
             if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
             var s = settings.Forms[key];
             s.X = this.Location.X;
             s.Y = this.Location.Y;
-            s.Width = this.Width;
-            s.Height = this.Height;
+            var f = (FormOrderList)sender;
+            s.Width = f.Width;
+            s.Height = f.Height;
             s.Flg1 = (checkBoxPKey.Checked) ? 1 : 0;
             s.Flg2 = (checkBoxHMRNM.Checked) ? 1 : 0;
             s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
+            s.Flg4 = (checkBoxKTSEQ.Checked) ? 1 : 0;
             Common.FormSettingsSave(settings);
         }
         // キーボードショートカット
@@ -345,6 +354,12 @@ namespace PlanProduction
         {
             if (dataGridView1.Rows.Count <= 0) return;
             dataGridView1.Columns["WKNOTE"].Visible = checkBoxWKNOTE.Checked;
+        }
+        // 「KTSEQ」の表示／非表示
+        private void CheckBoxKTSEQ_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0) return;
+            dataGridView1.Columns["KTSEQ"].Visible = checkBoxKTSEQ.Checked;
         }
 
 

@@ -117,1055 +117,1373 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;panelTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="chart1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 15</value>
   </data>
-  <data name="&gt;&gt;labelPlanCaption.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;labelAchieveQty.Name" xml:space="preserve">
+    <value>labelAchieveQty</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="labelPlanCaption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="checkBoxAchieve休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 19</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="button3.Text" xml:space="preserve">
-    <value>実行時に削除される</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
-  </data>
-  <data name="&gt;&gt;textBoxAchieve可動率.Parent" xml:space="preserve">
-    <value>panelAchieveResult</value>
-  </data>
-  <data name="labelAchieveCaption.Text" xml:space="preserve">
-    <value>実績</value>
-  </data>
-  <data name="textBoxAchieve可動率.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 36</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Parent" xml:space="preserve">
-    <value>splitContainerMain.Panel2</value>
-  </data>
-  <data name="textBoxPlan可動率.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 16pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlan休憩稼働.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewPlan.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="buttonExit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 349</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="checkBoxPlan休憩稼働.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="labelAchieveAva.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
   </data>
-  <data name="checkBoxAchieveピカピカ.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 19</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewAchieve.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="dataGridViewAchieve.Size" type="System.Drawing.Size, System.Drawing">
-    <value>320, 172</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanお昼稼働.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
-  </data>
-  <data name="buttonOrderList.Text" xml:space="preserve">
-    <value>手配一覧の参照</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieveピカピカ.Name" xml:space="preserve">
-    <value>checkBoxAchieveピカピカ</value>
-  </data>
-  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>664, 83</value>
-  </data>
-  <data name="&gt;&gt;textBoxAchieve可動率.Name" xml:space="preserve">
-    <value>textBoxAchieve可動率</value>
-  </data>
-  <data name="&gt;&gt;panelAchieveResult.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieveピカピカ.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlan休憩稼働.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlan早昼.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Name" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel1</value>
-  </data>
-  <data name="textBoxPlan可動率.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="checkBoxAchieve休憩稼働.Text" xml:space="preserve">
-    <value>休憩時間稼働</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;buttonPlanEntry.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panelPlanResult.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="splitContainer計画と実績.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 45</value>
-  </data>
-  <data name="&gt;&gt;panelAchieveResult.Name" xml:space="preserve">
-    <value>panelAchieveResult</value>
-  </data>
-  <data name="panelPlanResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewAchieve.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel2</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 29</value>
-  </data>
-  <data name="&gt;&gt;buttonExit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;labelPlanTime.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
   </data>
   <data name="&gt;&gt;chart1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 36</value>
+  <data name="&gt;&gt;monthCalendar1.Name" xml:space="preserve">
+    <value>monthCalendar1</value>
   </data>
-  <data name="&gt;&gt;labelTitle.Parent" xml:space="preserve">
-    <value>panelTitle</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Name" xml:space="preserve">
-    <value>checkBoxAchieve休憩稼働</value>
-  </data>
-  <data name="&gt;&gt;chart1.Parent" xml:space="preserve">
-    <value>splitContainer上下.Panel2</value>
-  </data>
-  <data name="buttonPlanEntry.Text" xml:space="preserve">
-    <value>計画入力</value>
-  </data>
-  <data name="checkBoxAchieve休憩稼働.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 21</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Name" xml:space="preserve">
-    <value>checkBoxAchieveお昼稼働</value>
-  </data>
-  <data name="checkBoxPlan早昼.Size" type="System.Drawing.Size, System.Drawing">
-    <value>127, 19</value>
-  </data>
-  <data name="textBoxAchieve可動率.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
+  <data name="checkBoxAchieve早昼.Text" xml:space="preserve">
+    <value>早昼 (11:30～12:15)</value>
   </data>
   <data name="panelTitle.Size" type="System.Drawing.Size, System.Drawing">
     <value>669, 45</value>
   </data>
+  <data name="labelPlanAva.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="monthCalendar1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 24pt</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve休憩稼働.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="dataGridViewPlan.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="textBoxPlan可動率.Size" type="System.Drawing.Size, System.Drawing">
+    <value>45, 36</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 19</value>
+  </data>
   <data name="&gt;&gt;splitContainer計画と実績.Panel2.Parent" xml:space="preserve">
     <value>splitContainer計画と実績</value>
   </data>
-  <data name="checkBoxPlanピカピカ.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 19</value>
+  <data name="chart1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 5</value>
   </data>
-  <data name="splitContainer計画と実績.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 0, 0, 0</value>
+  <data name="&gt;&gt;dataGridViewAchieve.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;buttonSettings.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;buttonSettings.Name" xml:space="preserve">
-    <value>buttonSettings</value>
-  </data>
-  <data name="checkBoxPlanピカピカ.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="&gt;&gt;labelPlanCaption.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel1</value>
-  </data>
-  <data name="checkBoxAchieveピカピカ.Location" type="System.Drawing.Point, System.Drawing">
-    <value>119, 8</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Name" xml:space="preserve">
-    <value>splitContainer計画と実績</value>
-  </data>
-  <data name="panelTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="panelAchieveResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="&gt;&gt;buttonOrderList.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;panelTitle.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>[生産計画]</value>
-  </data>
-  <data name="buttonSettings.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 29</value>
-  </data>
-  <data name="checkBoxAchieve早昼.Location" type="System.Drawing.Point, System.Drawing">
-    <value>119, 33</value>
-  </data>
-  <data name="textBoxAchieve可動率.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 16pt, style=Bold</value>
-  </data>
-  <data name="buttonOrderList.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
-  </data>
-  <data name="checkBoxPlan早昼.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="checkBoxPlan休憩稼働.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel1.Parent" xml:space="preserve">
-    <value>splitContainerMain</value>
-  </data>
-  <data name="checkBoxAchieve早昼.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Name" xml:space="preserve">
-    <value>splitContainerMain.Panel2</value>
-  </data>
-  <data name="labelTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="buttonPlanEntry.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer上下</value>
-  </data>
-  <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+  <data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
-  <data name="splitContainer上下.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;textBoxAchieveEndTime.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
-  <data name="textBoxPlan可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 16</value>
+  <data name="&gt;&gt;labelPlanTime.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1037, 413</value>
+  <data name="&gt;&gt;label10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;monthCalendar1.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="splitContainer計画と実績.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 45</value>
   </data>
-  <data name="&gt;&gt;checkBoxPlan休憩稼働.Name" xml:space="preserve">
-    <value>checkBoxPlan休憩稼働</value>
+  <data name="&gt;&gt;labelPlanCaption.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
-  <data name="panelTitle.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 0, 5</value>
+  <data name="&gt;&gt;buttonPlanEntry.Parent" xml:space="preserve">
+    <value>panel1</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Parent" xml:space="preserve">
-    <value>panelAchieveResult</value>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Name" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel1</value>
   </data>
-  <data name="dataGridViewPlan.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="buttonPlanEntry.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 52</value>
-  </data>
-  <data name="splitContainer上下.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="checkBoxPlan休憩稼働.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;checkBoxPlanお昼稼働.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="panelAchieveResult.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 195</value>
+  <data name="textBoxPlanEndTime.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="&gt;&gt;dataGridViewPlan.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel1</value>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="buttonPlanEntry.Text" xml:space="preserve">
+    <value>計画入力</value>
+  </data>
+  <data name="&gt;&gt;labelPlanCaption.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="labelPlanCaption.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 0</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>panelAchieveResult</value>
   </data>
-  <data name="&gt;&gt;splitContainer上下.Panel2.Name" xml:space="preserve">
-    <value>splitContainer上下.Panel2</value>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;splitContainerMain.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;buttonSettings.Name" xml:space="preserve">
+    <value>buttonSettings</value>
   </data>
-  <data name="checkBoxAchieve休憩稼働.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
+    <value>147</value>
   </data>
-  <data name="checkBoxPlan早昼.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="checkBoxPlanピカピカ.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 19</value>
   </data>
-  <data name="&gt;&gt;checkBoxPlan休憩稼働.Parent" xml:space="preserve">
+  <data name="&gt;&gt;labelPlanAva.Parent" xml:space="preserve">
     <value>panelPlanResult</value>
   </data>
-  <data name="dataGridViewPlan.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
+  <data name="&gt;&gt;textBoxPlan可動率.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
-  <data name="textBoxAchieve可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>268, 16</value>
+  <data name="&gt;&gt;panelPlanResult.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel1</value>
   </data>
-  <data name="checkBoxAchieve休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 33</value>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
   </data>
-  <data name="button3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="panelPlanResult.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="buttonExit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 52</value>
+  </data>
+  <data name="textBoxAchieve可動率.Text" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="textBoxPlanStartTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 19</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel2.Name" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel2</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveCaption.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="checkBoxPlanピカピカ.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="labelTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
+  <data name="&gt;&gt;splitContainer上下.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;buttonPlanEntry.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="labelTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanEndTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan早昼.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlanピカピカ.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;buttonOrderList.Name" xml:space="preserve">
+    <value>buttonOrderList</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanQty.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="textBoxAchieve可動率.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;panelPlanResult.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="labelPlanCaption.Text" xml:space="preserve">
+    <value>計画</value>
+  </data>
+  <data name="panelPlanResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 12pt</value>
+  </data>
+  <data name="panelAchieveResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;buttonSettings.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveQty.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labelPlanCaption.Name" xml:space="preserve">
+    <value>labelPlanCaption</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1037, 413</value>
+  </data>
+  <data name="dataGridViewPlan.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>％</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieve可動率.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="labelAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>73, 45</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanStartTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="textBoxPlan可動率.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="&gt;&gt;label4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonOrderList.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonPlanEntry.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxPlan早昼.Text" xml:space="preserve">
+    <value>早昼 (11:30～12:15)</value>
+  </data>
+  <data name="&gt;&gt;buttonOrderList.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve早昼.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="dataGridViewAchieve.Size" type="System.Drawing.Size, System.Drawing">
+    <value>320, 172</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="labelPlanCaption.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
   <data name="checkBoxPlanお昼稼働.Text" xml:space="preserve">
     <value>お昼休み稼働</value>
   </data>
-  <data name="panelAchieveResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>320, 61</value>
-  </data>
-  <data name="splitContainer上下.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 0, 15</value>
-  </data>
-  <data name="labelAchieveCaption.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 12pt</value>
-  </data>
-  <data name="buttonExit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 52</value>
-  </data>
-  <data name="&gt;&gt;buttonSettings.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="labelPlanCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>334, 23</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="panelPlanResult.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="checkBoxPlan早昼.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanピカピカ.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="labelTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>664, 35</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve早昼.Name" xml:space="preserve">
-    <value>checkBoxAchieve早昼</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanピカピカ.Parent" xml:space="preserve">
-    <value>panelPlanResult</value>
-  </data>
-  <data name="checkBoxPlan早昼.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 33</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlan早昼.Name" xml:space="preserve">
-    <value>checkBoxPlan早昼</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="&gt;&gt;labelTitle.Name" xml:space="preserve">
-    <value>labelTitle</value>
-  </data>
-  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="checkBoxPlanピカピカ.Text" xml:space="preserve">
-    <value>ピカピカ大作戦</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanお昼稼働.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlan休憩稼働.ZOrder" xml:space="preserve">
-    <value>4</value>
+  <data name="checkBoxAchieve早昼.Location" type="System.Drawing.Point, System.Drawing">
+    <value>119, 33</value>
   </data>
   <data name="&gt;&gt;splitContainer上下.Panel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="labelPlanCaption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 0</value>
+  <data name="&gt;&gt;panelTitle.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieveピカピカ.Parent" xml:space="preserve">
-    <value>panelAchieveResult</value>
+  <data name="textBoxAchieve可動率.Location" type="System.Drawing.Point, System.Drawing">
+    <value>268, 16</value>
   </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="splitContainer計画と実績.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1037, 413</value>
-  </data>
-  <data name="&gt;&gt;buttonPlanEntry.Name" xml:space="preserve">
-    <value>buttonPlanEntry</value>
-  </data>
-  <data name="dataGridViewAchieve.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="checkBoxPlanピカピカ.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="panelPlanResult.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 195</value>
-  </data>
-  <data name="checkBoxAchieve早昼.Size" type="System.Drawing.Size, System.Drawing">
-    <value>127, 19</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve早昼.Parent" xml:space="preserve">
-    <value>panelAchieveResult</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanピカピカ.Name" xml:space="preserve">
-    <value>checkBoxPlanピカピカ</value>
-  </data>
-  <data name="textBoxPlan可動率.Text" xml:space="preserve">
-    <value>100</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlan早昼.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="buttonExit.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;buttonExit.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve早昼.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button3.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;textBoxPlan可動率.Name" xml:space="preserve">
-    <value>textBoxPlan可動率</value>
-  </data>
-  <data name="&gt;&gt;checkBoxPlanピカピカ.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlanお昼稼働.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
-    <value>splitContainerMain.Panel2</value>
-  </data>
-  <data name="labelAchieveCaption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel2.Parent" xml:space="preserve">
-    <value>splitContainer上下</value>
-  </data>
-  <data name="checkBoxAchieve早昼.Text" xml:space="preserve">
-    <value>早昼 (11:30～12:15)</value>
-  </data>
-  <data name="&gt;&gt;labelAchieveCaption.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>669, 0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Name" xml:space="preserve">
-    <value>splitContainer上下</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel1.Name" xml:space="preserve">
-    <value>splitContainerMain.Panel1</value>
-  </data>
-  <data name="checkBoxAchieve早昼.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;labelPlanCaption.Name" xml:space="preserve">
-    <value>labelPlanCaption</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>panelPlanResult</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>FormPlanProduction</value>
-  </data>
-  <data name="checkBoxPlanピカピカ.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="panelTitle.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 0, 5</value>
   </data>
   <data name="&gt;&gt;checkBoxPlanお昼稼働.Name" xml:space="preserve">
     <value>checkBoxPlanお昼稼働</value>
   </data>
-  <data name="splitContainerMain.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>10, 30, 2, 30</value>
+  <data name="labelAchieveQty.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="panelAchieveResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 195</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="label4.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="buttonExit.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom</value>
+  <data name="labelAchieveAva.Location" type="System.Drawing.Point, System.Drawing">
+    <value>329, 42</value>
   </data>
-  <data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;buttonOrderList.Parent" xml:space="preserve">
+  <data name="&gt;&gt;monthCalendar1.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;textBoxPlan可動率.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Parent" xml:space="preserve">
-    <value>splitContainer上下.Panel1</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>％</value>
-  </data>
   <data name="&gt;&gt;textBoxAchieve可動率.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>5</value>
   </data>
-  <data name="buttonSettings.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
+  <data name="checkBoxPlan早昼.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 33</value>
   </data>
-  <data name="&gt;&gt;panelPlanResult.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel1</value>
+  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>664, 83</value>
   </data>
-  <data name="labelTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="checkBoxAchieve休憩稼働.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="buttonPlanEntry.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Parent" xml:space="preserve">
-    <value>splitContainerMain</value>
-  </data>
-  <data name="labelPlanCaption.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;chart1.Name" xml:space="preserve">
-    <value>chart1</value>
-  </data>
-  <data name="labelPlanCaption.Text" xml:space="preserve">
-    <value>計画</value>
-  </data>
-  <data name="checkBoxAchieve早昼.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;chart1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataVisualization.Charting.Chart, WinForms.DataVisualization, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="labelPlanCaption.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 12pt</value>
-  </data>
-  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
-    <value>147</value>
-  </data>
-  <data name="labelAchieveCaption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 0</value>
-  </data>
-  <data name="&gt;&gt;monthCalendar1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MonthCalendar, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="splitContainerMain.Panel1.AutoScroll" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="splitContainer計画と実績.Size" type="System.Drawing.Size, System.Drawing">
-    <value>669, 256</value>
-  </data>
-  <data name="&gt;&gt;textBoxPlan可動率.Parent" xml:space="preserve">
+  <data name="&gt;&gt;checkBoxPlanお昼稼働.Parent" xml:space="preserve">
     <value>panelPlanResult</value>
   </data>
-  <data name="&gt;&gt;labelTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;textBoxAchieveStartTime.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
   </data>
-  <data name="chart1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="&gt;&gt;panelAchieveResult.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="labelTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 5</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveお昼稼働.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="splitContainer計画と実績.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieveピカピカ.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="buttonSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 35</value>
   </data>
-  <data name="splitContainer上下.SplitterDistance" type="System.Int32, mscorlib">
-    <value>306</value>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
   </data>
-  <data name="monthCalendar1.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+  <data name="checkBoxPlan早昼.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="textBoxPlan可動率.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 16</value>
   </data>
-  <data name="checkBoxAchieveお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 8</value>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Name" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>19, 15</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;labelAchieveCaption.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlanお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 8</value>
-  </data>
-  <data name="labelPlanCaption.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="panelTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="buttonExit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 349</value>
-  </data>
-  <data name="buttonExit.Text" xml:space="preserve">
-    <value>終了</value>
-  </data>
-  <data name="checkBoxAchieveピカピカ.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="checkBoxAchieveピカピカ.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="buttonOrderList.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 286</value>
-  </data>
-  <data name="chart1.Text" xml:space="preserve">
-    <value>chart1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績</value>
-  </data>
-  <data name="&gt;&gt;panelTitle.Name" xml:space="preserve">
-    <value>panelTitle</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="buttonOrderList.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
-  <data name="checkBoxPlanお昼稼働.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="dataGridViewAchieve.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>51</value>
-  </data>
-  <data name="&gt;&gt;buttonExit.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="labelTitle.Text" xml:space="preserve">
-    <value>【3/21】 計画と実績</value>
-  </data>
-  <data name="&gt;&gt;labelAchieveCaption.Parent" xml:space="preserve">
+  <data name="&gt;&gt;panelAchieveResult.Parent" xml:space="preserve">
     <value>splitContainer計画と実績.Panel2</value>
   </data>
-  <data name="buttonOrderList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 52</value>
+  <data name="label1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt, style=Bold</value>
   </data>
-  <data name="buttonSettings.Text" xml:space="preserve">
-    <value>設定変更</value>
+  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1037, 413</value>
   </data>
-  <data name="&gt;&gt;buttonExit.Name" xml:space="preserve">
-    <value>buttonExit</value>
+  <data name="&gt;&gt;textBoxAchieve可動率.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
   </data>
-  <data name="&gt;&gt;textBoxAchieve可動率.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="labelAchieveCaption.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 12pt</value>
   </data>
-  <data name="monthCalendar1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 24pt</value>
+  <data name="&gt;&gt;monthCalendar1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;textBoxPlan可動率.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="splitContainer上下.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="textBoxAchieve可動率.Text" xml:space="preserve">
-    <value>100</value>
+  <data name="&gt;&gt;labelPlanQty.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;button3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="checkBoxAchieve休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 19</value>
   </data>
-  <data name="&gt;&gt;checkBoxPlan早昼.Parent" xml:space="preserve">
-    <value>panelPlanResult</value>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;labelPlanCaption.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;buttonPlanEntry.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;splitContainerMain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;textBoxPlanQty.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlan可動率.Name" xml:space="preserve">
+    <value>textBoxPlan可動率</value>
+  </data>
+  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel1.Name" xml:space="preserve">
+    <value>splitContainer上下.Panel1</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Location" type="System.Drawing.Point, System.Drawing">
+    <value>119, 8</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>669, 0</value>
+  </data>
+  <data name="panelAchieveResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>320, 61</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveStartTime.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="&gt;&gt;panelTitle.Parent" xml:space="preserve">
     <value>splitContainer上下.Panel1</value>
   </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewAchieve.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel2</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="checkBoxPlan早昼.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan休憩稼働.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="textBoxAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan休憩稼働.Name" xml:space="preserve">
+    <value>checkBoxPlan休憩稼働</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanQty.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panelAchieveResult.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FormPlanProduction</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Name" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;labelPlanQty.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewPlan.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel1</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="&gt;&gt;button3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Text" xml:space="preserve">
+    <value>ピカピカ大作戦</value>
+  </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="textBoxPlanQty.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;splitContainer上下.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieveお昼稼働.ZOrder" xml:space="preserve">
+  <data name="textBoxPlanQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlanピカピカ.Name" xml:space="preserve">
+    <value>checkBoxPlanピカピカ</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveピカピカ.Name" xml:space="preserve">
+    <value>checkBoxAchieveピカピカ</value>
+  </data>
+  <data name="&gt;&gt;labelPlanTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewAchieve.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainer計画と実績.Size" type="System.Drawing.Size, System.Drawing">
+    <value>669, 256</value>
+  </data>
+  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt, style=Bold</value>
+  </data>
+  <data name="chart1.Text" xml:space="preserve">
+    <value>chart1</value>
+  </data>
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="buttonExit.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlanピカピカ.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanEndTime.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="textBoxPlan可動率.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="labelPlanAva.Location" type="System.Drawing.Point, System.Drawing">
+    <value>321, 43</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>321, 29</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveピカピカ.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="textBoxAchieve可動率.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;labelTitle.Name" xml:space="preserve">
+    <value>labelTitle</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan休憩稼働.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;label10.Name" xml:space="preserve">
+    <value>label10</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveAva.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;button3.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel1</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanEndTime.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Text" xml:space="preserve">
+    <value>お昼休み稼働</value>
+  </data>
+  <data name="&gt;&gt;panelTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="textBoxAchieveQty.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveEndTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labelPlanCaption.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel1</value>
+  </data>
+  <data name="dataGridViewAchieve.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="buttonPlanEntry.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 222</value>
+  </data>
+  <data name="labelAchieveCaption.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 0</value>
+  </data>
+  <data name="textBoxPlanEndTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="labelTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 12pt, style=Bold</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveQty.Name" xml:space="preserve">
+    <value>textBoxAchieveQty</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve早昼.Name" xml:space="preserve">
+    <value>checkBoxAchieve早昼</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 8</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlan可動率.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="labelAchieveCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>320, 23</value>
+  </data>
+  <data name="labelTitle.Text" xml:space="preserve">
+    <value>【3/21】 計画と実績</value>
+  </data>
+  <data name="&gt;&gt;labelPlanAva.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="labelPlanCaption.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlan可動率.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="textBoxPlan可動率.Text" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="checkBoxPlan早昼.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.Text" xml:space="preserve">
+    <value>ピカピカ大作戦</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labelTitle.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="labelPlanTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>168, 45</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveTime.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="labelPlanQty.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="dataGridViewAchieve.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 23</value>
+  </data>
+  <data name="labelAchieveCaption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
   <data name="labelAchieveCaption.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
-  <data name="checkBoxAchieveピカピカ.Text" xml:space="preserve">
-    <value>ピカピカ大作戦</value>
+  <data name="&gt;&gt;splitContainer上下.Name" xml:space="preserve">
+    <value>splitContainer上下</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveAva.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxAchieve早昼.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan休憩稼働.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan早昼.Name" xml:space="preserve">
+    <value>checkBoxPlan早昼</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="chart1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="buttonExit.Text" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer上下.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 0, 15</value>
+  </data>
+  <data name="splitContainer計画と実績.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 0, 3, 0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="buttonSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveQty.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>[生産計画]</value>
+  </data>
+  <data name="labelTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="splitContainerMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="labelAchieveTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>172, 44</value>
+  </data>
+  <data name="dataGridViewPlan.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Text" xml:space="preserve">
+    <value>休憩時間稼働</value>
+  </data>
+  <data name="panelPlanResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>334, 61</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Name" xml:space="preserve">
+    <value>buttonExit</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanStartTime.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="textBoxAchieveEndTime.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="textBoxAchieveStartTime.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 8</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanQty.Name" xml:space="preserve">
+    <value>textBoxPlanQty</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewAchieve.Name" xml:space="preserve">
+    <value>dataGridViewAchieve</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
+  </data>
+  <data name="panelTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve早昼.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Parent" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveお昼稼働.Name" xml:space="preserve">
+    <value>checkBoxAchieveお昼稼働</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="splitContainer上下.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewPlan.Name" xml:space="preserve">
+    <value>dataGridViewPlan</value>
+  </data>
+  <data name="&gt;&gt;buttonPlanEntry.Name" xml:space="preserve">
+    <value>buttonPlanEntry</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 29</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer上下</value>
+  </data>
+  <data name="splitContainer上下.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label10.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 8</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>％</value>
+  </data>
+  <data name="labelTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>664, 35</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panelPlanResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label4.Name" xml:space="preserve">
+    <value>label4</value>
+  </data>
+  <data name="button3.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveTime.Name" xml:space="preserve">
+    <value>labelAchieveTime</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveピカピカ.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveAva.Name" xml:space="preserve">
+    <value>labelAchieveAva</value>
+  </data>
+  <data name="textBoxPlan可動率.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 36</value>
+  </data>
+  <data name="splitContainer上下.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 5</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="dataGridViewAchieve.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainerMain.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 30, 2, 30</value>
+  </data>
+  <data name="dataGridViewAchieve.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="dataGridViewAchieve.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="&gt;&gt;labelPlanAva.Name" xml:space="preserve">
+    <value>labelPlanAva</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer上下</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve早昼.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labelTitle.Parent" xml:space="preserve">
+    <value>panelTitle</value>
+  </data>
+  <data name="dataGridViewPlan.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan早昼.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;labelPlanTime.Name" xml:space="preserve">
+    <value>labelPlanTime</value>
+  </data>
+  <data name="labelPlanCaption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveQty.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlan早昼.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanStartTime.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Parent" xml:space="preserve">
+    <value>splitContainer上下.Panel1</value>
+  </data>
+  <data name="dataGridViewPlan.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 23</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlanお昼稼働.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="buttonOrderList.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 286</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 19</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieve可動率.Name" xml:space="preserve">
+    <value>textBoxAchieve可動率</value>
+  </data>
+  <data name="splitContainer計画と実績.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 0, 0, 0</value>
+  </data>
+  <data name="buttonPlanEntry.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 52</value>
+  </data>
+  <data name="labelTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="dataGridViewPlan.Size" type="System.Drawing.Size, System.Drawing">
+    <value>334, 172</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveAva.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panelPlanResult.Name" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;button3.Name" xml:space="preserve">
+    <value>button3</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewPlan.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;button3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;chart1.Parent" xml:space="preserve">
+    <value>splitContainer上下.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Name" xml:space="preserve">
+    <value>splitContainer計画と実績</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveStartTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxPlanピカピカ.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveEndTime.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="&gt;&gt;chart1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataVisualization.Charting.Chart, WinForms.DataVisualization, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>217, 413</value>
+  </data>
+  <data name="labelAchieveTime.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="buttonPlanEntry.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 33</value>
+  </data>
+  <data name="button3.Text" xml:space="preserve">
+    <value>実行時に削除される</value>
+  </data>
+  <data name="&gt;&gt;panelTitle.Name" xml:space="preserve">
+    <value>panelTitle</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanEndTime.Name" xml:space="preserve">
+    <value>textBoxPlanEndTime</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
   </data>
   <data name="checkBoxPlanお昼稼働.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="checkBoxAchieveお昼稼働.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxPlan早昼.Size" type="System.Drawing.Size, System.Drawing">
+    <value>127, 19</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;labelPlanQty.Name" xml:space="preserve">
+    <value>labelPlanQty</value>
+  </data>
+  <data name="textBoxPlanStartTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="buttonOrderList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 52</value>
+  </data>
+  <data name="labelPlanCaption.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 12pt</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveTime.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;labelPlanAva.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="labelAchieveCaption.Text" xml:space="preserve">
+    <value>実績</value>
+  </data>
+  <data name="&gt;&gt;checkBoxPlanピカピカ.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer計画と実績.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="splitContainer上下.Size" type="System.Drawing.Size, System.Drawing">
+    <value>669, 413</value>
+  </data>
+  <data name="&gt;&gt;labelPlanQty.Parent" xml:space="preserve">
+    <value>panelPlanResult</value>
+  </data>
+  <data name="&gt;&gt;checkBoxAchieveピカピカ.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxPlan休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 33</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="labelPlanTime.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveEndTime.Name" xml:space="preserve">
+    <value>textBoxAchieveEndTime</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 19</value>
+  </data>
+  <data name="textBoxPlanStartTime.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveCaption.Name" xml:space="preserve">
+    <value>labelAchieveCaption</value>
+  </data>
+  <data name="&gt;&gt;buttonSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="buttonSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 5</value>
+  </data>
+  <data name="&gt;&gt;splitContainer計画と実績.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="button3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 30</value>
+  </data>
+  <data name="textBoxAchieve可動率.Size" type="System.Drawing.Size, System.Drawing">
+    <value>45, 36</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="checkBoxAchieve早昼.Size" type="System.Drawing.Size, System.Drawing">
+    <value>127, 19</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveCaption.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="splitContainer上下.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;monthCalendar1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MonthCalendar, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>9, 21</value>
+  </data>
+  <data name="&gt;&gt;chart1.Name" xml:space="preserve">
+    <value>chart1</value>
+  </data>
+  <data name="labelPlanCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>334, 23</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="splitContainer上下.SplitterDistance" type="System.Int32, mscorlib">
+    <value>306</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="checkBoxPlan早昼.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="textBoxAchieveEndTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="&gt;&gt;buttonSettings.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer上下.Panel2.Name" xml:space="preserve">
+    <value>splitContainer上下.Panel2</value>
+  </data>
+  <data name="&gt;&gt;panelAchieveResult.Name" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveQty.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;textBoxPlanStartTime.Name" xml:space="preserve">
+    <value>textBoxPlanStartTime</value>
+  </data>
+  <data name="splitContainerMain.Panel1.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="panelTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="labelPlanQty.Location" type="System.Drawing.Point, System.Drawing">
+    <value>71, 45</value>
+  </data>
+  <data name="textBoxAchieve可動率.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 16pt, style=Bold</value>
+  </data>
+  <data name="&gt;&gt;labelAchieveTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="buttonExit.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Meiryo UI, 12pt</value>
+  </data>
+  <data name="buttonSettings.Text" xml:space="preserve">
+    <value>設定変更</value>
+  </data>
+  <data name="button3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Name" xml:space="preserve">
+    <value>splitContainerMain.Panel1</value>
+  </data>
+  <data name="labelAchieveCaption.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;labelTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Yu Gothic UI, 9pt</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="checkBoxAchieve休憩稼働.Text" xml:space="preserve">
+    <value>休憩時間稼働</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panelTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="checkBoxAchieveピカピカ.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="splitContainerMain.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
-  <data name="&gt;&gt;checkBoxAchieve早昼.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="labelTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="labelAchieveCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>320, 23</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewAchieve.Name" xml:space="preserve">
-    <value>dataGridViewAchieve</value>
-  </data>
-  <data name="dataGridViewPlan.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 23</value>
-  </data>
-  <data name="labelAchieveCaption.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="checkBoxPlanお昼稼働.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;buttonExit.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="buttonExit.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Meiryo UI, 12pt</value>
+  <data name="&gt;&gt;textBoxAchieveStartTime.Name" xml:space="preserve">
+    <value>textBoxAchieveStartTime</value>
   </data>
-  <data name="textBoxPlan可動率.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 36</value>
-  </data>
-  <data name="&gt;&gt;buttonOrderList.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxAchieveピカピカ.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="checkBoxPlanピカピカ.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 8</value>
-  </data>
-  <data name="splitContainer上下.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
-    <value>Horizontal</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve休憩稼働.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Name" xml:space="preserve">
-    <value>splitContainerMain</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 413</value>
-  </data>
-  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;panelAchieveResult.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="panelPlanResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>334, 61</value>
-  </data>
-  <data name="labelTitle.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 12pt, style=Bold</value>
-  </data>
-  <data name="splitContainerMain.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="textBoxPlanQty.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;checkBoxPlan早昼.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;labelAchieveCaption.Parent" xml:space="preserve">
+    <value>splitContainer計画と実績.Panel2</value>
   </data>
-  <data name="splitContainer上下.Size" type="System.Drawing.Size, System.Drawing">
-    <value>669, 413</value>
+  <data name="checkBoxAchieve早昼.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="dataGridViewAchieve.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 23</value>
-  </data>
-  <data name="&gt;&gt;monthCalendar1.Name" xml:space="preserve">
-    <value>monthCalendar1</value>
-  </data>
-  <data name="dataGridViewAchieve.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="splitContainerMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="buttonPlanEntry.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 222</value>
-  </data>
-  <data name="checkBoxAchieve早昼.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewAchieve.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlanお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 19</value>
-  </data>
-  <data name="&gt;&gt;labelAchieveCaption.Name" xml:space="preserve">
-    <value>labelAchieveCaption</value>
-  </data>
-  <data name="button3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 30</value>
-  </data>
-  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Parent" xml:space="preserve">
+  <data name="&gt;&gt;labelAchieveQty.Parent" xml:space="preserve">
     <value>panelAchieveResult</value>
   </data>
-  <data name="&gt;&gt;buttonPlanEntry.Parent" xml:space="preserve">
-    <value>panel1</value>
+  <data name="&gt;&gt;panelAchieveResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="buttonSettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 35</value>
+  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="buttonSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 5</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 19</value>
-  </data>
-  <data name="checkBoxAchieve休憩稼働.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="splitContainer計画と実績.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 0, 3, 0</value>
-  </data>
-  <data name="button3.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;labelTitle.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="textBoxPlan可動率.TabIndex" type="System.Int32, mscorlib">
+  <data name="buttonPlanEntry.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
-  </data>
-  <data name="&gt;&gt;panelPlanResult.Name" xml:space="preserve">
-    <value>panelPlanResult</value>
-  </data>
-  <data name="textBoxAchieve可動率.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;panelAchieveResult.Parent" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel2</value>
-  </data>
-  <data name="&gt;&gt;button3.Name" xml:space="preserve">
-    <value>button3</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewPlan.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>％</value>
-  </data>
-  <data name="checkBoxPlan休憩稼働.Text" xml:space="preserve">
-    <value>休憩時間稼働</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;buttonSettings.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 15</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="dataGridViewAchieve.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 5, 6</value>
-  </data>
-  <data name="splitContainer上下.Panel1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 5</value>
-  </data>
-  <data name="textBoxPlan可動率.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="checkBoxAchieveピカピカ.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt</value>
-  </data>
-  <data name="dataGridViewPlan.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>51</value>
-  </data>
-  <data name="dataGridViewPlan.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="checkBoxPlan休憩稼働.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 33</value>
-  </data>
-  <data name="&gt;&gt;panelPlanResult.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;buttonOrderList.Name" xml:space="preserve">
-    <value>buttonOrderList</value>
-  </data>
-  <data name="checkBoxPlan早昼.Text" xml:space="preserve">
-    <value>早昼 (11:30～12:15)</value>
-  </data>
-  <data name="splitContainer計画と実績.SplitterDistance" type="System.Int32, mscorlib">
-    <value>342</value>
-  </data>
-  <data name="splitContainer上下.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="dataGridViewPlan.Size" type="System.Drawing.Size, System.Drawing">
-    <value>334, 172</value>
-  </data>
-  <data name="textBoxAchieve可動率.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="checkBoxAchieveお昼稼働.Text" xml:space="preserve">
-    <value>お昼休み稼働</value>
-  </data>
-  <data name="monthCalendar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 45</value>
-  </data>
-  <data name="splitContainer計画と実績.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="&gt;&gt;splitContainer計画と実績.Panel2.Name" xml:space="preserve">
-    <value>splitContainer計画と実績.Panel2</value>
-  </data>
-  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 12pt</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Panel1.Name" xml:space="preserve">
-    <value>splitContainer上下.Panel1</value>
-  </data>
-  <data name="label1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Yu Gothic UI, 9pt, style=Bold</value>
-  </data>
-  <data name="panelAchieveResult.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;splitContainer上下.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="checkBoxPlan休憩稼働.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 19</value>
-  </data>
-  <data name="&gt;&gt;dataGridViewPlan.Name" xml:space="preserve">
-    <value>dataGridViewPlan</value>
-  </data>
-  <data name="&gt;&gt;button3.Parent" xml:space="preserve">
-    <value>splitContainerMain.Panel1</value>
-  </data>
-  <data name="&gt;&gt;monthCalendar1.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="panelTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
-  <data name="&gt;&gt;checkBoxPlanお昼稼働.Parent" xml:space="preserve">
-    <value>panelPlanResult</value>
+  <data name="&gt;&gt;checkBoxAchieve休憩稼働.Name" xml:space="preserve">
+    <value>checkBoxAchieve休憩稼働</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="textBoxPlan可動率.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="buttonOrderList.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="textBoxAchieve可動率.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="buttonOrderList.Text" xml:space="preserve">
+    <value>手配一覧の参照</value>
+  </data>
+  <data name="checkBoxPlanお昼稼働.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
+  </data>
+  <data name="splitContainer計画と実績.SplitterDistance" type="System.Int32, mscorlib">
+    <value>342</value>
+  </data>
+  <data name="textBoxPlanEndTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="textBoxAchieveStartTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="&gt;&gt;textBoxAchieveQty.Parent" xml:space="preserve">
+    <value>panelAchieveResult</value>
+  </data>
+  <data name="buttonSettings.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="monthCalendar1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 45</value>
+  </data>
+  <data name="panelPlanResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 195</value>
+  </data>
+  <data name="monthCalendar1.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="textBoxAchieveQty.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 29</value>
+  </data>
+  <data name="buttonExit.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewPlan.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonOrderList.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="$this.Language" type="System.Globalization.CultureInfo, System.Private.CoreLib, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
     <value>ja-JP</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
 </root>

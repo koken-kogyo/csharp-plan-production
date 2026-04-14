@@ -1,12 +1,10 @@
 ﻿using DecryptPassword;
 using Oracle.ManagedDataAccess.Client;
-using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace PlanProduction
@@ -88,11 +86,10 @@ namespace PlanProduction
         }
         
         /// <summary>
-        /// EM 利用権限確認 (M0010 担当者マスター)
+        /// 従業員確認 (KM0010 従業員マスタ)
         /// </summary>
-        /// <param name="isPasswdFree">パスワード不要か</param>
         /// <returns>権限あり</returns>
-        public static bool IsAuthrizedEMUser(bool isPasswdFree)
+        public static bool IsAuthrizedEMPUser(string userid)
         {
             bool ret = false;
 
@@ -101,49 +98,35 @@ namespace PlanProduction
 
             try
             {
-                string sql;
-                if (isPasswdFree)
-                {
-                    sql = "SELECT "
-                        + "TANCD, "
-                        + "TANNM, "
-                        + "PASSWD, "
-                        + "ATGCD "
+                string sql = "SELECT EMPNO, ACTIVE, NAME "
                         + "FROM "
-                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0010 "
+                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM0010 "
                         + "WHERE "
-                        + "TANCD = '" + Common.UserId + "'"
-                        ;
-                }
-                else
-                {
-                    sql = "SELECT "
-                        + "TANCD, "
-                        + "TANNM, "
-                        + "PASSWD, "
-                        + "ATGCD "
-                        + "FROM "
-                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0010 "
-                        + "WHERE "
-                        + "TANCD = '" + Common.UserId + "' AND "
-                        + "PASSWD = '" + Common.Passwd + "'"
-                        ;
-                }
+                        + "EMPNO = '" + userid + "'";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
                 var myDt = new DataTable();
                 // 結果取得
                 myDa.Fill(myDt);
-                foreach (DataRow dr in myDt.Rows)
+                if (myDt.Rows.Count == 0)
                 {
-                    Common.UserName = dr[1].ToString();
-                    Common.AtgCd = dr[3].ToString();
+                    MessageBox.Show("従業員番号が存在しません．", "認証", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    ret = false;
+                }
+                else if (myDt.Rows[0]["ACTIVE"].ToString() == "0")
+                {
+                    MessageBox.Show("有効な従業員番号ではありません．", "認証", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    ret = false;
+                }
+                else
+                {
+                    Common.UserName = myDt.Rows[0]["NAME"].ToString();
                     ret = true;
-                    break;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                MessageBox.Show("プログラムで異常が発生しました．\n" + e.Message, "認証", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 ret = false;
             }
             // 接続を閉じる
@@ -419,12 +402,12 @@ namespace PlanProduction
                         + "SELECT * "
                         + "FROM ( "
                             + "SELECT "
-                                + "a.HMCD, a.ODCD, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
+                                + "a.HMCD, a.ODCD, m51.KTSEQ, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
                             + "FROM "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a, "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0500 m50, "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0510 m51 "
-                            + "WHERE  "
+                            + "WHERE "
                                 + "m50.HMCD = a.HMCD "
                                 + "and m51.HMCD = a.HMCD "
                                 + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
@@ -473,33 +456,78 @@ namespace PlanProduction
             string sql = string.Empty;
             try
             {
+                // 空のデータテーブルを作成
+                dtD0520.Columns.Add("HMCD", typeof(string));
+                dtD0520.Columns.Add("MZAIQTY", typeof(int));
+                dtD0520.Columns.Add("ZAIQTY", typeof(int));
+
                 // 条件作成
-                List<string> s = [];
+                // ①工程SEQが初工程(10)の場合
+                // ②工程SEQが初工程(10)以外の場合
+                List<string> s10 = [];
+                List<string> s20 = [];
                 foreach (DataRow dr in dtD0410.Rows)
                 {
-                    s.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'") );
+                    if (dr["KTSEQ"].ToIntOrDefault() == 10)
+                    {
+                        s10.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                    }
+                    else
+                    {
+                        s20.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                    }
                 }
-                string conditions = string.Concat("(", string.Join(",", s), ")");
-
-                sql =
-                    "select target.HMCD, mz.ZAIQTY as MZAIQTY, z.ZAIQTY from " + 
-                    "(" +
-                        "select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from M0510 a where " +
-                        $"a.HMCD || a.KTCD || a.ODCD in {conditions}" +
-                        "and a.VALDTF = (select max(valdtf) from m0510 where hmcd = a.hmcd) " +
-                    ") target " +
-                    "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD " +
-                    "left outer join M0510 maekt on " +
-                        "maekt.HMCD = target.HMCD and " +
-                        "maekt.VALDTF = target.VALDTF and " +
-                        "maekt.KTSEQ < target.KTSEQ and " +
-                        "maekt.JIKBN = '1' " +
-                    "left outer join D0520 mz on mz.HMCD = maekt.HMCD and mz.KTCD = maekt.KTCD"
-                ;
-                using (OracleCommand cmd = new(sql, oraCnn))
+                string conditions10 = string.Concat("(", string.Join(",", s10), ")");
+                string conditions20 = string.Concat("(", string.Join(",", s20), ")");
+                // 初工程(SEQ=10)の場合は、M0520子品番の在庫(KTCD is null)を取得
+                if (s10.Count > 0)
                 {
-                    using OracleDataAdapter da = new(cmd);
-                    da.Fill(dtD0520);
+                    string sql10 =
+                        "select target.HMCD, min(mz.ZAIQTY) as MZAIQTY, min(z.ZAIQTY) as ZAIQTY from " +
+                        "(" +
+                            $"select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from m0510 a where a.HMCD || a.KTCD || a.ODCD in {conditions10} " +
+                            "and a.valdtf = (select max(valdtf) from m0510 where hmcd = a.hmcd) " +
+                        ") target " +
+                        "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD, " +
+                        "m0520 maekt " +
+                        "left outer join D0520 mz on mz.HMCD = maekt.KOHMCD and mz.KTCD is null " +
+                        "where maekt.OYAHMCD = target.HMCD " +
+                        "group by target.HMCD";
+                    sql = sql10;
+                    using (OracleCommand cmd = new(sql10, oraCnn))
+                    {
+                        using OracleDataAdapter da = new(cmd);
+                        da.Fill(dtD0520);
+                    }
+                }
+                // 2工程目以降の場合は、M0510前工程の在庫(KTCD = 前工程コード)を取得
+                if (s20.Count > 0)
+                {
+                    string sql20 =
+                        "with VIRTUALTBL as (" +
+                        "select target.HMCD, maekt.KTSEQ, mz.ZAIQTY as MZAIQTY, z.ZAIQTY from " +
+                        "(" +
+                            "select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from M0510 a where " +
+                            $"a.HMCD || a.KTCD || a.ODCD in {conditions20}" +
+                            "and a.VALDTF = (select max(b.valdtf) from m0510 b where b.hmcd=a.hmcd) " +
+                        ") target " +
+                        "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD " +
+                        "left outer join M0510 maekt on " +
+                            "maekt.HMCD = target.HMCD and " +
+                            "maekt.VALDTF = target.VALDTF and " +
+                            "maekt.KTSEQ < target.KTSEQ and " +
+                            "maekt.JIKBN = '1' " +
+                        "left outer join D0520 mz on mz.HMCD = maekt.HMCD and mz.KTCD = maekt.KTCD" +
+                        ") select * from VIRTUALTBL c where c.KTSEQ=" +
+                        "(select max(KTSEQ) from VIRTUALTBL d where d.hmcd=c.HMCD)";
+                    sql = sql20;
+                    using (OracleCommand cmd = new(sql20, oraCnn))
+                    {
+                        using OracleDataAdapter da = new(cmd);
+                        DataTable dt2 = new();
+                        da.Fill(dt2);
+                        dtD0520.Merge(dt2);
+                    }
                 }
                 ret = true;
             }

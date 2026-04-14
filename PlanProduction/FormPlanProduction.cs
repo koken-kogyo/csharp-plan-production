@@ -46,6 +46,8 @@ namespace PlanProduction
                 this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
             }
 
+            this.Text = $"[生産計画]  {Common.UserId}:{Common.UserName}";
+
             PlanDate = DateTime.Now.Date;
             selectedOdCd = DataStore.DefaultOdCd;
             OdCdSetting = DataStore.OdCdSettings.FirstOrDefault(s => s.OdCd == selectedOdCd) ?? new OdCdSetting();
@@ -89,41 +91,37 @@ namespace PlanProduction
                 PlanDate = PlanDate,
                 Type = "P"
             };
-            checkBoxPlanお昼稼働.Checked = false;
-            checkBoxPlan休憩稼働.Checked = false;
-            checkBoxPlanピカピカ.Checked = false;
-            checkBoxPlan早昼.Checked = false;
-            textBoxPlan可動率.Text = "";
             if (!DBAccessor.GetKD8020(ref paramPlan)) return;
             checkBoxPlanお昼稼働.Checked = paramPlan.昼稼働;
             checkBoxPlan休憩稼働.Checked = paramPlan.休憩稼働;
             checkBoxPlanピカピカ.Checked = paramPlan.ピカピカ;
             checkBoxPlan早昼.Checked = paramPlan.早昼;
+            textBoxPlanStartTime.Text = paramPlan.開始時刻;
+            textBoxPlanEndTime.Text = paramPlan.終了時刻;
+            textBoxPlanQty.Text = (paramPlan.合計本数 != 0) ? paramPlan.合計本数.ToString() : "";
             textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
             planDt.Rows.Clear(); // ここから明細
             if (!DBAccessor.GetKD8030(ref planDt, paramPlan)) return;
             dataGridViewPlan.DataSource = planDt;
 
             // 実績入力データの設定
-            var aparam = new SaveOptions
+            var paramA = new SaveOptions
             {
                 OdCd = OdCdSetting.OdCd,
                 PlanDate = PlanDate,
                 Type = "J"
             };
-            checkBoxAchieveお昼稼働.Checked = false;
-            checkBoxAchieve休憩稼働.Checked = false;
-            checkBoxAchieveピカピカ.Checked = false;
-            checkBoxAchieve早昼.Checked = false;
-            textBoxAchieve可動率.Text = "";
-            if (!DBAccessor.GetKD8020(ref aparam)) return;
-            checkBoxAchieveお昼稼働.Checked = aparam.昼稼働;
-            checkBoxAchieve休憩稼働.Checked = aparam.休憩稼働;
-            checkBoxAchieveピカピカ.Checked = aparam.ピカピカ;
-            checkBoxAchieve早昼.Checked = aparam.早昼;
-            textBoxAchieve可動率.Text = (aparam.可動率 != 0) ? aparam.可動率.ToString("F0") : "";
+            if (!DBAccessor.GetKD8020(ref paramA)) return;
+            checkBoxAchieveお昼稼働.Checked = paramA.昼稼働;
+            checkBoxAchieve休憩稼働.Checked = paramA.休憩稼働;
+            checkBoxAchieveピカピカ.Checked = paramA.ピカピカ;
+            checkBoxAchieve早昼.Checked = paramA.早昼;
+            textBoxAchieveStartTime.Text = paramA.開始時刻;
+            textBoxAchieveEndTime.Text = paramA.終了時刻;
+            textBoxAchieveQty.Text = (paramA.合計本数 != 0) ? paramA.合計本数.ToString() : "";
+            textBoxAchieve可動率.Text = (paramA.可動率 != 0) ? paramA.可動率.ToString("F0") : "";
             achieveDt.Rows.Clear(); // ここから明細
-            if (!DBAccessor.GetKD8030(ref achieveDt, aparam)) return;
+            if (!DBAccessor.GetKD8030(ref achieveDt, paramA)) return;
             dataGridViewAchieve.DataSource = achieveDt;
 
             // Chartデータの更新
@@ -211,7 +209,6 @@ namespace PlanProduction
             var area = new ChartArea("MainArea");
             chart1.ChartAreas.Add(area);
 
-            chart1.ChartAreas["MainArea"].AxisX.IsReversed = true;              // 左から右
             chart1.ChartAreas["MainArea"].AxisY.MajorGrid.Enabled = false;      // グリッド線なし
 
             // ▼ 縦棒グラフ（本数）
