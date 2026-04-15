@@ -16,6 +16,7 @@ namespace PlanProduction
     /// </summary>
     public partial class Common
     {
+        public static readonly int DEF_WKSEQ = 46;                          // このアプリだけで使用する原価管理マスタの作業順序
         public static readonly int DB_CONFIG_EM = 0;                        // DB 接続定義 (OracleEM)
         public static readonly int DB_CONFIG_KK = 1;                        // DB 接続定義 (MySQL内製プログラム)
         public static readonly string CONFIG_FILE_DB = "ConfigDB.xml";      // データベース設定ファイル

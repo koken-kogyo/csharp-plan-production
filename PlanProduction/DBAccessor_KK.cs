@@ -150,9 +150,9 @@ namespace PlanProduction
                 using (var cmd = new MySqlCommand(sql, kkCnn))
                 {
                     // 時刻の変換
-                    DateTime startDateTime = opt.PlanDate.Date + TimeSpan.Parse(opt.開始時刻);
-                    DateTime endDateTime = opt.PlanDate.Date + TimeSpan.Parse(opt.終了時刻);
-                    if (endDateTime < startDateTime)
+                    DateTime startDateTime = TimeSpan.TryParse(opt.開始時刻, out TimeSpan st) ? opt.PlanDate.Date + st : opt.PlanDate.Date;
+                    DateTime endDateTime = TimeSpan.TryParse(opt.終了時刻, out TimeSpan et) ? opt.PlanDate.Date + et : opt.PlanDate.Date;
+                    if (endDateTime < startDateTime && startDateTime != opt.PlanDate.Date && endDateTime != opt.PlanDate.Date)
                     {
                         endDateTime = endDateTime.AddDays(1); // 終了日時が開始日時より前の場合は翌日にする
                     }
@@ -161,8 +161,8 @@ namespace PlanProduction
                     cmd.Parameters.AddWithValue("@手配先コード", opt.OdCd);
                     cmd.Parameters.AddWithValue("@計画日", opt.PlanDate.Date);
                     cmd.Parameters.AddWithValue("@計画種別", opt.Type);
-                    cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
-                    cmd.Parameters.AddWithValue("@終了時刻", endDateTime);
+                    cmd.Parameters.AddWithValue("@開始時刻", (startDateTime == opt.PlanDate.Date) ? null : startDateTime);
+                    cmd.Parameters.AddWithValue("@終了時刻", (endDateTime == opt.PlanDate.Date) ? null : endDateTime);
 
                     cmd.Parameters.AddWithValue("@昼稼働", (opt.昼稼働) ? "1" : "0");
                     cmd.Parameters.AddWithValue("@休憩稼働", (opt.休憩稼働) ? "1" : "0");
@@ -207,9 +207,9 @@ namespace PlanProduction
                             : int.Parse(row.HeaderCell.Value.ToString());
 
                         // 時刻の変換
-                        DateTime startDateTime = opt.PlanDate.Date + TimeSpan.Parse(row.Cells[3].Value.ToString());
-                        DateTime endDateTime = opt.PlanDate.Date + TimeSpan.Parse(row.Cells[4].Value.ToString());
-                        if (endDateTime < startDateTime)
+                        DateTime startDateTime = TimeSpan.TryParse(row.Cells[3].Value?.ToString(), out TimeSpan st) ? opt.PlanDate.Date + st : opt.PlanDate.Date;
+                        DateTime endDateTime = TimeSpan.TryParse(row.Cells[4].Value?.ToString(), out TimeSpan et) ? opt.PlanDate.Date + et : opt.PlanDate.Date;
+                        if (endDateTime < startDateTime && startDateTime != opt.PlanDate.Date && endDateTime != opt.PlanDate.Date)
                         {
                             endDateTime = endDateTime.AddDays(1); // 終了日時が開始日時より前の場合は翌日にする
                         }
@@ -221,8 +221,8 @@ namespace PlanProduction
                         cmd.Parameters.AddWithValue("@品番", row.Cells[0].Value);
                         cmd.Parameters.AddWithValue("@CT", row.Cells[1].Value);
                         cmd.Parameters.AddWithValue("@本数", row.Cells[2].Value);
-                        cmd.Parameters.AddWithValue("@開始時刻", startDateTime);
-                        cmd.Parameters.AddWithValue("@終了時刻", endDateTime);
+                        cmd.Parameters.AddWithValue("@開始時刻", (startDateTime == opt.PlanDate.Date) ? null : startDateTime);
+                        cmd.Parameters.AddWithValue("@終了時刻", (endDateTime == opt.PlanDate.Date) ? null : endDateTime);
                         cmd.Parameters.AddWithValue("@休憩時間", row.Cells[5].Value);
                         cmd.Parameters.AddWithValue("@可動率", (opt.Type == "P") ? opt.可動率 : row.Cells[6].Value);
                         cmd.Parameters.AddWithValue("@作業者", row.Cells[7].Value);
@@ -290,8 +290,8 @@ namespace PlanProduction
                     adapter.Fill(dt);
                     if (dt.Rows.Count > 0)
                     {
-                        opt.開始時刻 = DateTime.Parse(dt.Rows[0]["STARTTIME"].ToString()).ToString("HH:mm");
-                        opt.終了時刻 = DateTime.Parse(dt.Rows[0]["ENDTIME"].ToString()).ToString("HH:mm");
+                        opt.開始時刻 = DateTime.TryParse(dt.Rows[0]["STARTTIME"].ToString(), out DateTime sd) ? sd.ToString("HH:mm") : "";
+                        opt.終了時刻 = DateTime.TryParse(dt.Rows[0]["ENDTIME"].ToString(), out DateTime ed) ? ed.ToString("HH:mm") : "";
                         opt.昼稼働 = (dt.Rows[0]["HIRUKADO"].ToString() == "1");
                         opt.休憩稼働 = (dt.Rows[0]["KYUKEIKADO"].ToString() == "1");
                         opt.ピカピカ = (dt.Rows[0]["PIKAPIKA"].ToString() == "1");

@@ -292,8 +292,8 @@ namespace PlanProduction
                 string hmcd = row["品番"].ToString();
                 double ct = row["CT"].ToDoubleOrDefault();
                 int qty = row["本数"].ToIntOrDefault();
-                string starttime = DateTime.Parse(row["開始時刻"].ToString()).ToString("HH:mm");
-                string endtime = DateTime.Parse(row["終了時刻"].ToString()).ToString("HH:mm");
+                string starttime = DateTime.TryParse(row["開始時刻"].ToString(), out DateTime sd) ? sd.ToString("HH:mm") : "";
+                string endtime = DateTime.TryParse(row["終了時刻"].ToString(), out DateTime ed) ? ed.ToString("HH:mm") : "";
                 int breaktime = row["休憩時間"].ToIntOrDefault();
                 string tannm = row["作業者"].ToString();
                 string note = row["備考"].ToString();
@@ -965,12 +965,13 @@ namespace PlanProduction
                     合計稼働時間 = totalOpe,
                     可動率 = ava
                 };
-                DBAccessor.SaveDataGridView(ref dataGridViewAchieve, opt);
-                
-                // 親フォームの再描画イベント発火
-                IsUpdated?.Invoke(true);
+                if (DBAccessor.SaveDataGridView(ref dataGridViewAchieve, opt))
+                {
+                    // 親フォームの再描画イベント発火
+                    IsUpdated?.Invoke(true);
 
-                Common.MessageBox2.Show("実績登録しました．", "計画と実績", 1000, MessageBoxIcon.Information);
+                    Common.MessageBox2.Show("実績登録しました．", "計画と実績", 1000, MessageBoxIcon.Information);
+                }
             }
         }
         // 「閉じる」ボタン

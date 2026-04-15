@@ -206,6 +206,35 @@ namespace PlanProduction
                 string sql = "SELECT * FROM "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
                     + "WHERE ODCD||WKGRCD in " + condition + " "
+                    + "and WKSEQ=" + Common.DEF_WKSEQ + " "
+                    + "ORDER BY HMCD";
+                using OracleCommand myCmd = new(sql, oraCnn);
+                using OracleDataAdapter myDa = new(myCmd);
+                myDa.Fill(dt);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM マスタ読み込み (KM5030 標準作業時間マスタ)
+        /// </summary>
+        public static bool ReadKM5030Simple(ref DataTable dt, string condition)
+        {
+            bool ret = false;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                string sql = "SELECT WKGRCD, HMCD, CT FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
+                    + "WHERE ODCD||WKGRCD in " + condition + " "
+                    + "and WKSEQ=" + Common.DEF_WKSEQ + " "
                     + "ORDER BY HMCD";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);

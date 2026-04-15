@@ -17,6 +17,7 @@ namespace PlanProduction
         // 現在表示中の手配先コードを格納する変数
         private readonly OdCdSetting OdCdSetting;
         private double 可動率;
+        private int 処理モード;      // 1:手配リスト, 2:CTマスタ
 
         // DataTable を保持するフィールドを作る
         private DataTable dt = new();
@@ -33,10 +34,10 @@ namespace PlanProduction
 
             this.KeyPreview = true;                     // フォームでキーイベントを受け取る設定
             this.OdCdSetting = OdCdSetting;             // 表示対象の手配先コードをこのフォームに保持
+            this.処理モード = 1;
 
             if (callback == null)
             {
-
                 // 直接呼び出された場合は、計画と実績の追加ボタンは無効化
                 buttonAddPlan.Enabled = false;
                 buttonAddPlan.BackColor = Color.LightGray;
@@ -87,6 +88,8 @@ namespace PlanProduction
         // オーダーリスト作成
         private void RefreshOrderList()
         {
+            処理モード = 1;
+            panel1.Enabled = true;
             dt = new DataTable();
             dtKM5030 = new DataTable();
             dtD0520 = new DataTable();
@@ -99,8 +102,18 @@ namespace PlanProduction
 
             dataGridView1.DataSource = dt;
         }
+        // CTマスタリスト作成
+        private void RefreshCTMaster()
+        {
+            処理モード = 2;
+            panel1.Enabled = false;
+            var dt = new DataTable();
+            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
+            DBAccessor.ReadKM5030Simple(ref dt, condition);                         // 標準作業時間マスタ取得
+            dataGridView1.DataSource = dt;
+        }
         // CTと前工程在庫情報と在庫情報をくっつける
-        private static void MargeDataTable(ref DataTable dt, ref DataTable km5030, ref DataTable d0520)
+        private void MargeDataTable(ref DataTable dt, ref DataTable km5030, ref DataTable d0520)
         {
             dt.Columns.Add("CT", typeof(double));
             dt.Columns.Add("前在", typeof(int));
@@ -143,24 +156,48 @@ namespace PlanProduction
         // データバインド完了後に行ヘッダーを設定しないといけない
         private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            // 列 0〜7 と CTを行ヘッダーと同じ色にする
-            string[] colNames = ["優先度", "HMCD", "ODCD", "KTSEQ", "KTCD", "HMRNM", "WKNOTE", "前在"];
-            foreach (string col in colNames)
+            if (処理モード == 1)
             {
-                dataGridView1.Columns[col].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
+                // 列 0〜7 と CTを行ヘッダーと同じ色にする
+                string[] colNames = ["優先度", "HMCD", "ODCD", "KTSEQ", "KTCD", "HMRNM", "WKNOTE", "前在"];
+                foreach (string col in colNames)
+                {
+                    dataGridView1.Columns[col].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
+                }
+                // データ列の設定（幅、右揃え、ソート機能なし）
+                int startCol = dataGridView1.Columns["前在"].Index;
+                for (int col = startCol; col < dataGridView1.Columns.Count; col++)
+                {
+                    //dataGridView1.Columns[col].Width = 50;
+                    dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
+                    dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
+                    dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
+                }
             }
             dataGridView1.Columns["CT"].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
-            // データ列の設定（幅、右揃え、ソート機能なし）
-            int startCol = dataGridView1.Columns["前在"].Index;
-            for (int col = startCol; col < dataGridView1.Columns.Count; col++)
-            {
-                //dataGridView1.Columns[col].Width = 50;
-                dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
-                dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
-                dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
-            }
-            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";     // CTは小数点以下1桁
+            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
+            dataGridView1.Columns["CT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // データの右寄せ
+            dataGridView1.Columns["CT"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;          // 列ヘッダー右寄せ
+            dataGridView1.Columns["CT"].SortMode = DataGridViewColumnSortMode.NotSortable;                              // ソート機能を無効化
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            // チェックの状態を復元
+            string key = this.Name + OdCdSetting.OdCd;
+            if (settings.Forms.TryGetValue(key, out FormSettings s))
+            {
+                if (s.Flg1 == 0 && 処理モード == 1)
+                {
+                    dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
+                    dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
+                }
+                if (s.Flg2 == 0 && 処理モード == 1) dataGridView1.Columns["HMRNM"].Visible = false;
+                if (s.Flg3 == 0 && 処理モード == 1) dataGridView1.Columns["WKNOTE"].Visible = false;
+                if (s.Flg4 == 0 && 処理モード == 1) dataGridView1.Columns["KTSEQ"].Visible = false;
+                checkBoxPKey.Checked = (s.Flg1 == 1);
+                checkBoxHMRNM.Checked = (s.Flg2 == 1);
+                checkBoxWKNOTE.Checked = (s.Flg3 == 1);
+                checkBoxKTSEQ.Checked = (s.Flg4 == 1);
+            }
         }
         // 行番号を付ける（1 から始める）
         private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -181,33 +218,13 @@ namespace PlanProduction
                 Color.Black,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
         }
-        // ロード後の初期表示
-        private void FormOrderList_Shown(object sender, EventArgs e)
-        {
-            // チェックの状態を復元
-            string key = this.Name + OdCdSetting.OdCd;
-            if (settings.Forms.TryGetValue(key, out FormSettings s))
-            {
-                if (s.Flg1 == 0)
-                {
-                    dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
-                    dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
-                }
-                if (s.Flg2 == 0) dataGridView1.Columns["HMRNM"].Visible = false;
-                if (s.Flg3 == 0) dataGridView1.Columns["WKNOTE"].Visible = false;
-                if (s.Flg4 == 0) dataGridView1.Columns["KTSEQ"].Visible = false;
-                checkBoxPKey.Checked = (s.Flg1 == 1);
-                checkBoxHMRNM.Checked = (s.Flg2 == 1);
-                checkBoxWKNOTE.Checked = (s.Flg3 == 1);
-                checkBoxKTSEQ.Checked = (s.Flg4 == 1);
-            }
-        }
 
 
 
         // フォームの状態を保存
         private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (処理モード != 1) return;
             settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
             string key = this.Name + OdCdSetting.OdCd;
             if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
@@ -339,26 +356,26 @@ namespace PlanProduction
         // 「主キー」の表示／非表示
         private void CheckBoxPKey_CheckedChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count <= 0) return;
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["ODCD"].Visible = checkBoxPKey.Checked;
             dataGridView1.Columns["KTCD"].Visible = checkBoxPKey.Checked;
         }
         // 「品目略称」の表示／非表示
         private void CheckBoxHMRNM_CheckedChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count <= 0) return;
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["HMRNM"].Visible = checkBoxHMRNM.Checked;
         }
         // 「作業内容」の表示／非表示
         private void CheckBoxWKNOTE_CheckedChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count <= 0) return;
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["WKNOTE"].Visible = checkBoxWKNOTE.Checked;
         }
         // 「KTSEQ」の表示／非表示
         private void CheckBoxKTSEQ_CheckedChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count <= 0) return;
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["KTSEQ"].Visible = checkBoxKTSEQ.Checked;
         }
 
@@ -405,6 +422,19 @@ namespace PlanProduction
         private void ButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshOrderList();
+        }
+        // 「パネル切り替え」ボタン
+        private void ButtonChangeView_Click(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = null;
+            if (処理モード == 1)
+            {
+                RefreshCTMaster();
+            }
+            else
+            {
+                RefreshOrderList();
+            }
         }
         // 「閉じる」ボタン
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -469,13 +499,6 @@ namespace PlanProduction
             }).ToList();
             return list;
         }
-
-
-
-
-
-
-
 
     }
 }

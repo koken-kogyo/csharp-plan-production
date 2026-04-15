@@ -29,10 +29,11 @@
         private void InitializeComponent()
         {
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            buttonClose = new System.Windows.Forms.Button();
-            buttonRefresh = new System.Windows.Forms.Button();
             buttonAddPlan = new System.Windows.Forms.Button();
             buttonAddAchieve = new System.Windows.Forms.Button();
+            buttonChangeView = new System.Windows.Forms.Button();
+            buttonClose = new System.Windows.Forms.Button();
+            buttonRefresh = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
             checkBoxKTSEQ = new System.Windows.Forms.CheckBox();
             checkBoxWKNOTE = new System.Windows.Forms.CheckBox();
@@ -58,15 +59,17 @@
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 4;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(buttonClose, 3, 0);
-            tableLayoutPanel1.Controls.Add(buttonRefresh, 2, 0);
+            tableLayoutPanel1.ColumnCount = 5;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             tableLayoutPanel1.Controls.Add(buttonAddPlan, 0, 0);
             tableLayoutPanel1.Controls.Add(buttonAddAchieve, 1, 0);
+            tableLayoutPanel1.Controls.Add(buttonChangeView, 2, 0);
+            tableLayoutPanel1.Controls.Add(buttonClose, 4, 0);
+            tableLayoutPanel1.Controls.Add(buttonRefresh, 3, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 306);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
@@ -76,35 +79,6 @@
             tableLayoutPanel1.Size = new System.Drawing.Size(900, 62);
             tableLayoutPanel1.TabIndex = 1;
             // 
-            // buttonClose
-            // 
-            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonClose.Location = new System.Drawing.Point(679, 4);
-            buttonClose.Margin = new System.Windows.Forms.Padding(4);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new System.Drawing.Size(217, 54);
-            buttonClose.TabIndex = 8;
-            buttonClose.TabStop = false;
-            buttonClose.Text = "閉じる (Esc)";
-            buttonClose.UseVisualStyleBackColor = false;
-            buttonClose.Click += ButtonClose_Click;
-            // 
-            // buttonRefresh
-            // 
-            buttonRefresh.BackColor = System.Drawing.SystemColors.Control;
-            buttonRefresh.Dock = System.Windows.Forms.DockStyle.Fill;
-            buttonRefresh.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonRefresh.Location = new System.Drawing.Point(454, 4);
-            buttonRefresh.Margin = new System.Windows.Forms.Padding(4);
-            buttonRefresh.Name = "buttonRefresh";
-            buttonRefresh.Size = new System.Drawing.Size(217, 54);
-            buttonRefresh.TabIndex = 7;
-            buttonRefresh.TabStop = false;
-            buttonRefresh.Text = "再読み込み (F5)";
-            buttonRefresh.UseVisualStyleBackColor = false;
-            // 
             // buttonAddPlan
             // 
             buttonAddPlan.BackColor = System.Drawing.Color.LightBlue;
@@ -113,7 +87,7 @@
             buttonAddPlan.Location = new System.Drawing.Point(4, 4);
             buttonAddPlan.Margin = new System.Windows.Forms.Padding(4);
             buttonAddPlan.Name = "buttonAddPlan";
-            buttonAddPlan.Size = new System.Drawing.Size(217, 54);
+            buttonAddPlan.Size = new System.Drawing.Size(172, 54);
             buttonAddPlan.TabIndex = 5;
             buttonAddPlan.TabStop = false;
             buttonAddPlan.Text = "計画へ追加 (F4)";
@@ -125,15 +99,57 @@
             buttonAddAchieve.BackColor = System.Drawing.Color.MistyRose;
             buttonAddAchieve.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonAddAchieve.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonAddAchieve.Location = new System.Drawing.Point(229, 4);
+            buttonAddAchieve.Location = new System.Drawing.Point(184, 4);
             buttonAddAchieve.Margin = new System.Windows.Forms.Padding(4);
             buttonAddAchieve.Name = "buttonAddAchieve";
-            buttonAddAchieve.Size = new System.Drawing.Size(217, 54);
+            buttonAddAchieve.Size = new System.Drawing.Size(172, 54);
             buttonAddAchieve.TabIndex = 6;
             buttonAddAchieve.TabStop = false;
             buttonAddAchieve.Text = "実績へ追加 (F6)";
             buttonAddAchieve.UseVisualStyleBackColor = false;
             buttonAddAchieve.Click += ButtonAddAchieve_Click;
+            // 
+            // buttonChangeView
+            // 
+            buttonChangeView.BackColor = System.Drawing.SystemColors.Control;
+            buttonChangeView.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            buttonChangeView.Location = new System.Drawing.Point(364, 4);
+            buttonChangeView.Margin = new System.Windows.Forms.Padding(4);
+            buttonChangeView.Name = "buttonChangeView";
+            buttonChangeView.Size = new System.Drawing.Size(172, 54);
+            buttonChangeView.TabIndex = 9;
+            buttonChangeView.TabStop = false;
+            buttonChangeView.Text = "パネル切替";
+            buttonChangeView.UseVisualStyleBackColor = false;
+            buttonChangeView.Click += ButtonChangeView_Click;
+            // 
+            // buttonClose
+            // 
+            buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            buttonClose.Location = new System.Drawing.Point(724, 4);
+            buttonClose.Margin = new System.Windows.Forms.Padding(4);
+            buttonClose.Name = "buttonClose";
+            buttonClose.Size = new System.Drawing.Size(172, 54);
+            buttonClose.TabIndex = 8;
+            buttonClose.TabStop = false;
+            buttonClose.Text = "閉じる (Esc)";
+            buttonClose.UseVisualStyleBackColor = false;
+            buttonClose.Click += ButtonClose_Click;
+            // 
+            // buttonRefresh
+            // 
+            buttonRefresh.BackColor = System.Drawing.SystemColors.Control;
+            buttonRefresh.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
+            buttonRefresh.Location = new System.Drawing.Point(544, 4);
+            buttonRefresh.Margin = new System.Windows.Forms.Padding(4);
+            buttonRefresh.Name = "buttonRefresh";
+            buttonRefresh.Size = new System.Drawing.Size(172, 54);
+            buttonRefresh.TabIndex = 7;
+            buttonRefresh.TabStop = false;
+            buttonRefresh.Text = "再読み込み (F5)";
+            buttonRefresh.UseVisualStyleBackColor = false;
+            buttonRefresh.Click += ButtonRefresh_Click;
             // 
             // panel1
             // 
@@ -358,7 +374,6 @@
             Text = "[生産計画] 手配一覧";
             FormClosing += FormOrderList_FormClosing;
             Load += FormOrderList_Load;
-            Shown += FormOrderList_Shown;
             KeyDown += FormOrderList_KeyDown;
             tableLayoutPanel1.ResumeLayout(false);
             panel1.ResumeLayout(false);
@@ -394,5 +409,6 @@
         private System.Windows.Forms.CheckBox checkBoxWKNOTE;
         private System.Windows.Forms.CheckBox checkBoxHMRNM;
         private System.Windows.Forms.CheckBox checkBoxKTSEQ;
+        private System.Windows.Forms.Button buttonChangeView;
     }
 }
