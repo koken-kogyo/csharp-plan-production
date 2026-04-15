@@ -312,11 +312,13 @@ namespace PlanProduction
             }
             if (dataGridView1.Columns[e.ColumnIndex].Name == "ColumnExcel")
             {
+                string settingFullPath = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex + 1].Value.ToString();
+                string initialPath = Path.GetDirectoryName(settingFullPath);
                 using (var dlg = new OpenFileDialog())
                 {
                     dlg.Filter = "Excel ファイル (*.xlsx)|*.xlsx";
                     dlg.Title = "Excel ファイルを選択してください";
-                    dlg.InitialDirectory = Application.StartupPath;
+                    dlg.InitialDirectory = (initialPath == "") ? Application.StartupPath : initialPath;
                     dlg.RestoreDirectory = true;
 
                     // 上の階層へ移動するボタンを無効化

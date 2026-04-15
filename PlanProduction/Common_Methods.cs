@@ -8,7 +8,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;           // Marshal.ReleaseComObject
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -179,7 +181,7 @@ namespace PlanProduction
             string json = JsonSerializer.Serialize(root, options: JsonWriteOptions);
             DataStore.OdCdSettings = records;
             string fullPath = AppSettingsFullPath();
-            File.WriteAllText(@fullPath, json);
+            File.WriteAllText(@fullPath, json, new UTF8Encoding(false)); // UTF‑8（BOM なし）
         }
         //
         // アプリケーション設定ファイルのフルパス取得
@@ -246,7 +248,8 @@ namespace PlanProduction
         //
         private static readonly JsonSerializerOptions JsonWriteOptions = new()
         {
-            WriteIndented = true
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),  // 全 Unicode をエスケープせずに UTF‑8 で書き出す
+            WriteIndented = true                                    // JSONの整形表示（見た目を整える）
         };
         private static readonly JsonSerializerOptions JsonReadOptions = new()
         {
