@@ -940,7 +940,7 @@ namespace PlanProduction
             }
             else if (!isAchieveChanged)
             {
-                Common.MessageBox2.Show("変更ありません．．", "計画と実績", 800, MessageBoxIcon.Warning);
+                Common.MessageBox2.Show("変更はありません．", "計画と実績", 800, MessageBoxIcon.Warning);
             }
             else
             {

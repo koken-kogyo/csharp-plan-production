@@ -99,6 +99,7 @@
             Controls.Add(textBoxID);
             Controls.Add(labelID);
             Name = "FormLogin";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "ログイン画面";
             FormClosing += FormLogin_FormClosing;
             Load += FormLogin_Load;

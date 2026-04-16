@@ -112,6 +112,7 @@
             // buttonChangeView
             // 
             buttonChangeView.BackColor = System.Drawing.SystemColors.Control;
+            buttonChangeView.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonChangeView.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             buttonChangeView.Location = new System.Drawing.Point(364, 4);
             buttonChangeView.Margin = new System.Windows.Forms.Padding(4);
@@ -126,6 +127,7 @@
             // buttonClose
             // 
             buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             buttonClose.Location = new System.Drawing.Point(724, 4);
             buttonClose.Margin = new System.Windows.Forms.Padding(4);
@@ -140,6 +142,7 @@
             // buttonRefresh
             // 
             buttonRefresh.BackColor = System.Drawing.SystemColors.Control;
+            buttonRefresh.Dock = System.Windows.Forms.DockStyle.Fill;
             buttonRefresh.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             buttonRefresh.Location = new System.Drawing.Point(544, 4);
             buttonRefresh.Margin = new System.Windows.Forms.Padding(4);

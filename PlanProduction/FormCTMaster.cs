@@ -202,7 +202,9 @@ namespace PlanProduction
                 newrow["VALDTF"] = DateTime.Today;
                 newrow["WKSEQ"] = Common.DEFAULT_WKSEQ;
                 newrow["CT"] = 0;
+                newrow["INSTID"] = Common.UserId;
                 newrow["INSTDT"] = DateTime.Now;
+                newrow["UPDTID"] = Common.UserId;
                 newrow["UPDTDT"] = DateTime.Now;
                 dt.Rows.Add(newrow);
                 // 未登録品番一覧から削除

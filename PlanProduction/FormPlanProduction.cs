@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -419,19 +420,26 @@ namespace PlanProduction
         }
 
         // 「手配一覧」だけをモードレスで呼び出す
-        private void ButtonOrderList_Click(object sender, EventArgs e)
+        private async void ButtonOrderList_Click(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
+            await Task.Delay(100); // この処理を入れないとマウスポインターが変化してくれない（UIは固まらない）
+
             var frm = new FormOrderList(OdCdSetting, null);
             frm.Show();
+            this.UseWaitCursor = false;
         }
 
         // 「計画入力」と「手配一覧（コールバック付き）」をモードレスで呼び出す
-        private void ButtonPlanEntry_Click(object sender, EventArgs e)
+        private async void ButtonPlanEntry_Click(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
+            await Task.Delay(100); // この処理を入れないとマウスポインターが変化してくれない（UIは固まらない）
+
             var frm = new FormPlanEntry(PlanDate, OdCdSetting);
-            // イベント登録
-            frm.IsUpdated += CallBackPlanEntry;
+            frm.IsUpdated += CallBackPlanEntry; // コールバックイベント登録
             frm.Show();
+            this.UseWaitCursor = false;
         }
         // コールバック関数（サブフォームからの戻り値を受け取る）
         private void CallBackPlanEntry(bool isupdated)
