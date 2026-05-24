@@ -39,10 +39,11 @@ namespace PlanProduction
         public static Dictionary<int, string> sortOrderMap = new()
         {
             { 1, "品番優先" },
-            { 2, "手配日優先" }
+            { 2, "手配日優先" },
+            { 3, "段取り優先" }
         };
 
-        public static readonly int DEFAULT_WKSEQ = 46;
+        public static readonly int DEFAULT_WKSEQ = 10;
 
         /// <summary>
         /// 利用者情報

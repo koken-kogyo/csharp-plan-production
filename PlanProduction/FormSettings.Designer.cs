@@ -219,7 +219,7 @@
             // 
             label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             label3.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            label3.Location = new System.Drawing.Point(441, 99);
+            label3.Location = new System.Drawing.Point(416, 99);
             label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(521, 21);
@@ -234,7 +234,7 @@
             label2.Location = new System.Drawing.Point(41, 99);
             label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(401, 21);
+            label2.Size = new System.Drawing.Size(377, 21);
             label2.TabIndex = 32;
             label2.Text = "KM5010：原価管理 「作業グループマスタ」";
             label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -243,7 +243,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Yu Gothic UI Semibold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 128);
-            label1.Location = new System.Drawing.Point(96, 9);
+            label1.Location = new System.Drawing.Point(16, 9);
             label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(899, 45);
@@ -304,7 +304,7 @@
             ColumnOdCd.HeaderText = "手配先コード";
             ColumnOdCd.MinimumWidth = 6;
             ColumnOdCd.Name = "ColumnOdCd";
-            ColumnOdCd.Width = 125;
+            ColumnOdCd.Width = 110;
             // 
             // ColumnKtCd
             // 
@@ -313,7 +313,7 @@
             ColumnKtCd.MinimumWidth = 6;
             ColumnKtCd.Name = "ColumnKtCd";
             ColumnKtCd.ToolTipText = "KM5010の作業グループコード";
-            ColumnKtCd.Width = 125;
+            ColumnKtCd.Width = 85;
             // 
             // ColumnWkGrNm
             // 
@@ -321,7 +321,7 @@
             ColumnWkGrNm.HeaderText = "作業グループ名称";
             ColumnWkGrNm.MinimumWidth = 6;
             ColumnWkGrNm.Name = "ColumnWkGrNm";
-            ColumnWkGrNm.Width = 150;
+            ColumnWkGrNm.Width = 180;
             // 
             // ColumnListOrder
             // 

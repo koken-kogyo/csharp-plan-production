@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -20,8 +21,9 @@ namespace PlanProduction
         private int 処理モード;      // 1:手配リスト, 2:CTマスタ
 
         // DataTable を保持するフィールドを作る
-        private DataTable dt = new();
-        private DataTable dtKM5030 = new();
+        private DataTable dtDataSource = new();
+        private DataTable dtKM5020GroupBy = new();
+        private DataTable dtKM5030GroupBy = new();
         private DataTable dtD0520 = new();
 
         // 複数列選択用のセルリスト
@@ -67,17 +69,23 @@ namespace PlanProduction
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
             string key = this.Name + OdCdSetting.OdCd;
-            if (settings.Forms.TryGetValue(key, out FormSettings s))
+            if (settings.Forms.TryGetValue(key, out FormSettings fs))
             {
                 this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point(s.X, s.Y);
-                this.Size = new Size(s.Width, s.Height);
+                this.Location = new Point(fs.X, fs.Y);
+                this.Size = new Size(fs.Width, fs.Height);
             }
 
+            var os = OdCdSetting;
+
+            // マスタの読み込み
+            DBAccessor.ReadKM5020GroupBy(ref dtKM5020GroupBy, os.OdCd, os.KtCd);    // 段取りマスタ取得
+            DBAccessor.ReadKM5030GroupBy(ref dtKM5030GroupBy, os.OdCd, os.KtCd);    // 標準作業時間マスタ取得
+
             // コントロールに初期値をセット
-            labelTitleOdCd.Text = $"【{OdCdSetting.OdCd}】 {DataStore.M0300Map[OdCdSetting.OdCd]}";
-            textBox可動率.Text = (string.IsNullOrEmpty(OdCdSetting.Ava)) ? "70" : OdCdSetting.Ava;
-            可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
+            labelTitleOdCd.Text = $"【{os.OdCd}】 {DataStore.M0300Map[os.OdCd]}";
+            textBox可動率.Text = (string.IsNullOrEmpty(os.Ava)) ? "70" : os.Ava;
+            可動率 = double.TryParse(os.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
 
             // 初期表示
             RefreshOrderList();
@@ -90,17 +98,35 @@ namespace PlanProduction
         {
             処理モード = 1;
             panel1.Enabled = true;
-            dt = new DataTable();
-            dtKM5030 = new DataTable();
-            dtD0520 = new DataTable();
-            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
-            DBAccessor.ReadD0410Pivot(ref dt, condition, OdCdSetting.SortOrder);    // 手配データ取得
-            DBAccessor.ReadKM5030(ref dtKM5030, condition);                         // 標準作業時間マスタ取得
-            DBAccessor.ReadD0520FromPrevious(ref dt, ref dtD0520);                  // 前工程の在庫を調べて取得
-            // 表示するデータテーブルを編集（CTをくっつける）
-            MargeDataTable(ref dt, ref dtKM5030, ref dtD0520);
+            dtDataSource = new DataTable();
+            dtD0520 = new DataTable();  // 在庫情報はリアルタイムに取得
+            var s = OdCdSetting;
+            // 手配データ取得
+            if (DBAccessor.ReadD0410Pivot(ref dtDataSource, s.OdCd, s.KtCd, s.SortOrder))
+            {
+                DBAccessor.ReadD0520FromPrevious(ref dtDataSource, ref dtD0520);  // 前工程の在庫を調べて取得
+                MargeDataTable(ref dtDataSource, ref dtD0520);                    // 手配データにマスタ情報と在庫情報を付与
 
-            dataGridView1.DataSource = dt;
+                // 完成したデータテーブルをバインディング
+                dataGridView1.DataSource = dtDataSource;
+
+                // 手配リスト順番がSQLでは難しかったので、バインディング後に並び替える
+                if (s.SortOrder == 2)
+                {
+                    //dtDataSource.DefaultView.Sort = "優先度 ASC";
+                    dataGridView1.Sort(dataGridView1.Columns["優先度"], ListSortDirection.Ascending);
+                }
+                else if (s.SortOrder == 3)
+                {
+                    //dtDataSource.DefaultView.Sort = "段取内容 DESC";
+                    dataGridView1.Sort(dataGridView1.Columns["段取内容"], ListSortDirection.Descending);
+                }
+            }
+            else
+            {
+                buttonChangeView.Enabled = false;
+                RefreshCTMaster();
+            }
         }
         // CTマスタリスト作成
         private void RefreshCTMaster()
@@ -108,38 +134,68 @@ namespace PlanProduction
             処理モード = 2;
             panel1.Enabled = false;
             var dt = new DataTable();
-            var condition = DataStore.ExtracConditions(OdCdSetting.OdCd);           // 抽出条件の作成            
-            DBAccessor.ReadKM5030Simple(ref dt, condition);                         // 標準作業時間マスタ取得
+            var s = OdCdSetting;
+            DBAccessor.ReadKM5030Simple(ref dt, s.OdCd, s.KtCd);                     // 標準作業時間マスタ取得
             dataGridView1.DataSource = dt;
         }
         // CTと前工程在庫情報と在庫情報をくっつける
-        private void MargeDataTable(ref DataTable dt, ref DataTable km5030, ref DataTable d0520)
+        private void MargeDataTable(ref DataTable dt, ref DataTable d0520)
         {
-            dt.Columns.Add("CT", typeof(double));
             dt.Columns.Add("前在", typeof(int));
             dt.Columns["前在"].SetOrdinal(7);    // 列を途中に割り込ませる
+            dt.Columns.Add("CT", typeof(double));
+            dt.Columns.Add("段取内容", typeof(string));
+            dt.Columns.Add("段取時間", typeof(double));
             foreach (DataRow row in dt.Rows)
             {
-                var findRow = km5030.AsEnumerable()
+                //
+                // LinqにはLikeが無いので、手配KTCDとマスタWKGRCDのワイルドカードを正規表現に変換してマッチングする
+                //
+                // KM5030:CT
+                var find5030Row = dtKM5030GroupBy.AsEnumerable()
                     .Where(r =>
                         r.Field<string>("ODCD") == row["ODCD"].ToString() &&
-                        r.Field<string>("WKGRCD") == row["KTCD"].ToString() &&
-                        r.Field<string>("HMCD") == row["HMCD"].ToString()
+                        System.Text.RegularExpressions.Regex.IsMatch(
+                            row["KTCD"].ToString(),
+                            r.Field<string>("WKGRCD").Replace("%", ".*").Replace("_", ".") + "$"
+                        ) &&
+                        r.Field<string>("HMCD") == row["品番"].ToString()
                     )
-                    .OrderByDescending(x => x.Field<string>("ODCD"))
                     .ToList();
-                if (findRow == null || findRow.Count == 0)
+                if (find5030Row == null || find5030Row.Count == 0)
                 {
                     row["CT"] = 0;
                 }
                 else
                 {
-                    row["CT"] = findRow[0]["CT"];
+                    row["CT"] = find5030Row[0]["CT"];
                 }
+                // KM5020:作業内容、段取時間
+                var find5020Row = dtKM5020GroupBy.AsEnumerable()
+                    .Where(r =>
+                        r.Field<string>("ODCD") == row["ODCD"].ToString() &&
+                        System.Text.RegularExpressions.Regex.IsMatch(
+                            row["KTCD"].ToString(),
+                            r.Field<string>("WKGRCD").Replace("%", ".*").Replace("_", ".") + "$"
+                        ) &&
+                        r.Field<string>("HMCD") == row["品番"].ToString()
+                    )
+                    .ToList();
+                if (find5020Row == null || find5020Row.Count == 0)
+                {
+                    row["段取内容"] = "";
+                    row["段取時間"] = 0;
+                }
+                else
+                {
+                    row["段取内容"] = find5020Row[0]["WORK"];
+                    row["段取時間"] = find5020Row[0]["SETUPTMMP"];
+                }
+                // D0520:前工程在庫
                 if (d0520.Rows.Count > 0)
                 {
                     var findZaiko = d0520.AsEnumerable()
-                        .Where(r => r.Field<string>("HMCD") == row["HMCD"].ToString())
+                        .Where(r => r.Field<string>("HMCD") == row["品番"].ToString())
                         .ToList();
                     if (findZaiko == null || findZaiko.Count == 0)
                     {
@@ -156,30 +212,52 @@ namespace PlanProduction
         // データバインド完了後に行ヘッダーを設定しないといけない
         private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
+            var dgv = dataGridView1;
+
             if (処理モード == 1)
             {
                 // 列 0〜7 と CTを行ヘッダーと同じ色にする
-                string[] colNames = ["優先度", "HMCD", "ODCD", "KTSEQ", "KTCD", "HMRNM", "WKNOTE", "前在"];
+                string[] colNames = ["優先度", "品番", "ODCD", "KTSEQ", "KTCD", "HMRNM", "作業内容", "前在", "段取内容", "段取時間"];
                 foreach (string col in colNames)
                 {
-                    dataGridView1.Columns[col].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
+                    dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
+                    //dgv.Columns[col].SortMode = DataGridViewColumnSortMode.Automatic;
                 }
-                // データ列の設定（幅、右揃え、ソート機能なし）
-                int startCol = dataGridView1.Columns["前在"].Index;
-                for (int col = startCol; col < dataGridView1.Columns.Count; col++)
+                // 手配列の設定（幅、右揃え、ソート機能なし）
+                for (int col = dgv.Columns["前在"].Index; col < dgv.Columns["CT"].Index; col++)
                 {
                     //dataGridView1.Columns[col].Width = 50;
-                    dataGridView1.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
-                    dataGridView1.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
-                    dataGridView1.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
+                    dgv.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
+                    dgv.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
+                    dgv.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
                 }
             }
-            dataGridView1.Columns["CT"].DefaultCellStyle.BackColor = dataGridView1.RowHeadersDefaultCellStyle.BackColor;
-            dataGridView1.Columns["CT"].DefaultCellStyle.Format = "N1";                                                 // CTは小数点以下1桁
-            dataGridView1.Columns["CT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;          // データの右寄せ
-            dataGridView1.Columns["CT"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;          // 列ヘッダー右寄せ
-            dataGridView1.Columns["CT"].SortMode = DataGridViewColumnSortMode.NotSortable;                              // ソート機能を無効化
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            else
+            {
+                string[] colNames = ["品番", "適用開始日", "段取回数", "段取内容", "段取時間"];
+                foreach (string col in colNames)
+                {
+                    dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
+                }
+            }
+            // Double型小数点の設定
+            var ct = dgv.Columns["CT"];
+            ct.HeaderText = "　CT";
+            ct.DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
+            ct.DefaultCellStyle.Format = "N1"; // 小数点以下1桁
+            ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            ct.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            var dt = dgv.Columns["段取時間"];
+            dt.DefaultCellStyle.Format = "N1"; // 小数点以下1桁
+            dt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dt.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            // 列ヘッダーのフォントサイズを小さくする
+            dt.HeaderCell.Style.Font = new Font(
+                dgv.ColumnHeadersDefaultCellStyle.Font.FontFamily, 9.0f);  // 小さいサイズ
+            dgv.Columns["段取内容"].HeaderCell.Style.Font = new Font(
+                dgv.ColumnHeadersDefaultCellStyle.Font.FontFamily, 9.0f);  // 小さいサイズ
+            // 列幅自動調整
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
             // チェックの状態を復元
             string key = this.Name + OdCdSetting.OdCd;
@@ -187,16 +265,17 @@ namespace PlanProduction
             {
                 if (s.Flg1 == 0 && 処理モード == 1)
                 {
-                    dataGridView1.Columns["ODCD"].Visible = false;                  // ODCDは非表示
-                    dataGridView1.Columns["KTCD"].Visible = false;                  // KTCDは非表示
+                    dgv.Columns["ODCD"].Visible = false;                  // ODCDは非表示
+                    dgv.Columns["KTCD"].Visible = false;                  // KTCDは非表示
                 }
-                if (s.Flg2 == 0 && 処理モード == 1) dataGridView1.Columns["HMRNM"].Visible = false;
-                if (s.Flg3 == 0 && 処理モード == 1) dataGridView1.Columns["WKNOTE"].Visible = false;
-                if (s.Flg4 == 0 && 処理モード == 1) dataGridView1.Columns["KTSEQ"].Visible = false;
+                if (s.Flg2 == 0 && 処理モード == 1) dgv.Columns["HMRNM"].Visible = false;
+                if (s.Flg3 == 0 && 処理モード == 1) dgv.Columns["作業内容"].Visible = false;
+                if (s.Flg4 == 0 && 処理モード == 1) dgv.Columns["KTSEQ"].Visible = false;
                 checkBoxPKey.Checked = (s.Flg1 == 1);
                 checkBoxHMRNM.Checked = (s.Flg2 == 1);
                 checkBoxWKNOTE.Checked = (s.Flg3 == 1);
                 checkBoxKTSEQ.Checked = (s.Flg4 == 1);
+                checkBoxDANDORI.Checked = (s.Flg5 == 1);
             }
         }
         // 行番号を付ける（1 から始める）
@@ -238,6 +317,7 @@ namespace PlanProduction
             s.Flg2 = (checkBoxHMRNM.Checked) ? 1 : 0;
             s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
             s.Flg4 = (checkBoxKTSEQ.Checked) ? 1 : 0;
+            s.Flg5 = (checkBoxDANDORI.Checked) ? 1 : 0;
             Common.FormSettingsSave(settings);
         }
         // キーボードショートカット
@@ -266,6 +346,7 @@ namespace PlanProduction
         // （おまけ処理）選択した作業時間を算出して表示
         private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
+            if (処理モード != 1) return;
             double sumProduct = 0;
 
             // 選択されたセルの行インデックスを取得（重複除去）
@@ -280,7 +361,7 @@ namespace PlanProduction
 
                 double ct = Convert.ToDouble(row.Cells["CT"].Value);
 
-                for (int col = 6; col < dataGridView1.ColumnCount - 1; col++)
+                for (int col = row.Cells["前在"].ColumnIndex + 1; col < row.Cells["CT"].ColumnIndex; col++)
                 {
                     if (row.Cells[col].Selected)
                     {
@@ -296,28 +377,33 @@ namespace PlanProduction
         // （おまけ処理）並び替え
         private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-
             if (e.ColumnIndex < 0) return;
-            int col = e.ColumnIndex;
-
-            bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
-
-            // Ctrl が押されていなければ選択クリア
-            if (!isCtrl)
+            if (処理モード == 1)
             {
-                selectedCells.Clear();
-                dataGridView1.ClearSelection();
-            }
+                bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
 
-            // この列のすべてのセルを追加（新規行も含む）
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                DataGridViewCell cell = row.Cells[col];
+                // Ctrl が押されていなければ選択クリア
+                if (!isCtrl)
+                {
+                    selectedCells.Clear();
+                    dataGridView1.ClearSelection();
+                }
 
-                if (!selectedCells.Contains(cell))
-                    selectedCells.Add(cell);
+                var dgv = dataGridView1;
+                if (e.ColumnIndex > dgv.Columns["前在"].Index &&
+                    e.ColumnIndex < dgv.Columns["CT"].Index)
+                {
+                    // 手配日付列のすべてのセルを選択に追加（新規行も含む）
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        DataGridViewCell cell = row.Cells[e.ColumnIndex];
 
-                cell.Selected = true;
+                        if (!selectedCells.Contains(cell))
+                            selectedCells.Add(cell);
+
+                        cell.Selected = true;
+                    }
+                }
             }
         }
         // （おまけ処理）クリップボード処理
@@ -370,13 +456,20 @@ namespace PlanProduction
         private void CheckBoxWKNOTE_CheckedChanged(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
-            dataGridView1.Columns["WKNOTE"].Visible = checkBoxWKNOTE.Checked;
+            dataGridView1.Columns["作業内容"].Visible = checkBoxWKNOTE.Checked;
         }
         // 「KTSEQ」の表示／非表示
         private void CheckBoxKTSEQ_CheckedChanged(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["KTSEQ"].Visible = checkBoxKTSEQ.Checked;
+        }
+        // 「段取」の表示／非表示
+        private void CheckBoxDANDORI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
+            dataGridView1.Columns["段取内容"].Visible = checkBoxDANDORI.Checked;
+            dataGridView1.Columns["段取時間"].Visible = checkBoxDANDORI.Checked;
         }
 
 
@@ -469,16 +562,23 @@ namespace PlanProduction
 
             foreach (DataGridViewCell c in query)
             {
-                if (c.ColumnIndex == 0 || c.ColumnIndex == dataGridView1.Columns["CT"].Index) continue; // 優先度、CT
                 if (c.Visible == false) continue;                                                       // 非表示列
                 if (c.Value == null || string.IsNullOrEmpty(c.Value.ToString())) continue;              // データなし
 
-                string hmcd = dataGridView1.Rows[c.RowIndex].Cells["HMCD"].Value.ToString();
+                string hmcd = dataGridView1.Rows[c.RowIndex].Cells["品番"].Value.ToString();
                 int qty = 0;
-                if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;
-                if (summary.ContainsKey(hmcd))
+                if (処理モード == 1)
                 {
-                    summary[hmcd] += qty;
+                    if (c.ColumnIndex == 0 || c.ColumnIndex == dataGridView1.Columns["CT"].Index) continue; // 優先度、CT
+                    if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;
+                    if (summary.ContainsKey(hmcd))
+                    {
+                        summary[hmcd] += qty;
+                    }
+                    else
+                    {
+                        summary[hmcd] = qty;
+                    }
                 }
                 else
                 {

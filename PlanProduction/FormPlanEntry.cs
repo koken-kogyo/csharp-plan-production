@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PlanProduction
@@ -50,10 +51,8 @@ namespace PlanProduction
             this.OdCdSetting = odcdsetting;
             this.PlanDate = plandate;
 
-            // 手配一覧を開く
+            // 手配一覧を準備
             formOrderList = new FormOrderList(OdCdSetting, OnSelectedList);         // ← ★ コールバックを渡す
-            formOrderList.Show();                                                   // モードレス
-            formOrderList.BringToFront();
 
             // イベント登録
             dataGridViewPlan.CellValueChanged += DataGridViewPlan_CellValueChanged;         // 列2:CTと列3:本数が変更されたら終了時刻再計算
@@ -117,7 +116,7 @@ namespace PlanProduction
             }
         }
         // 「初期化処理」（表示される直前に一度だけ）
-        private void FormPlanEntry_Load(object sender, EventArgs e)
+        private async void FormPlanEntry_Load(object sender, EventArgs e)
         {
             // フォームの状態を復元
             settings = Common.FormSettingsLoad();
@@ -218,6 +217,21 @@ namespace PlanProduction
 
             // データベースデータの初期表示
             InitialPlanProduction();
+
+            // 対象日付のデータ有無によって先に開く画面を決める
+            if (dataGridViewPlan.Rows.Count > 1 || dataGridViewAchieve.Rows.Count > 1)
+            {
+                formOrderList.Show();
+                formOrderList.BringToFront();
+                this.Show();
+            }
+            else
+            {
+                this.Show();
+                await Task.Delay(300); // 0.3秒待ってから実行
+                formOrderList.Show();
+                formOrderList.BringToFront();
+            }
         }
 
         // データベースデータの初期表示

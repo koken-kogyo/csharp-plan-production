@@ -124,61 +124,7 @@
   <data name="dataGridViewPlan.Size" type="System.Drawing.Size, System.Drawing">
     <value>355, 200</value>
   </data>
-  <data name="panelPlanResult.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 223</value>
-  </data>
-  <data name="panelPlanResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>355, 87</value>
-  </data>
-  <data name="labelPlanCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>355, 23</value>
-  </data>
-  <data name="dataGridViewAchieve.Size" type="System.Drawing.Size, System.Drawing">
-    <value>354, 200</value>
-  </data>
-  <data name="panelAchieveResult.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 223</value>
-  </data>
-  <data name="panelAchieveResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>354, 87</value>
-  </data>
-  <data name="labelAchieveCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>354, 23</value>
-  </data>
-  <data name="splitContainer計画と実績.Size" type="System.Drawing.Size, System.Drawing">
-    <value>724, 310</value>
-  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="splitContainer計画と実績.SplitterDistance" type="System.Int32, mscorlib">
-    <value>363</value>
-  </data>
-  <data name="panelTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>724, 45</value>
-  </data>
-  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>719, 103</value>
-  </data>
-  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="splitContainer上下.Size" type="System.Drawing.Size, System.Drawing">
-    <value>724, 487</value>
-  </data>
-  <data name="splitContainer上下.SplitterDistance" type="System.Int32, mscorlib">
-    <value>360</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>724, 0</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 487</value>
-  </data>
-  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1100, 487</value>
-  </data>
-  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
-    <value>155</value>
-  </data>
   <data name="textBoxPlanQty.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -201,14 +147,8 @@
   <data name="labelPlanQty.Font" type="System.Drawing.Font, System.Drawing">
     <value>Yu Gothic UI, 10pt</value>
   </data>
-  <data name="labelPlanQty.Location" type="System.Drawing.Point, System.Drawing">
-    <value>71, 45</value>
-  </data>
   <data name="labelPlanQty.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelPlanQty.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
   </data>
   <data name="labelPlanQty.Text" xml:space="preserve">
     <value>本</value>
@@ -249,14 +189,8 @@
   <data name="labelPlanTime.Font" type="System.Drawing.Font, System.Drawing">
     <value>Yu Gothic UI, 10pt</value>
   </data>
-  <data name="labelPlanTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 45</value>
-  </data>
   <data name="labelPlanTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelPlanTime.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
   </data>
   <data name="labelPlanTime.Text" xml:space="preserve">
     <value>～</value>
@@ -265,7 +199,7 @@
     <value>Right</value>
   </data>
   <data name="textBoxPlan可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>272, 33</value>
+    <value>270, 32</value>
   </data>
   <data name="labelPlanAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Right</value>
@@ -277,13 +211,10 @@
     <value>Yu Gothic UI, 10pt</value>
   </data>
   <data name="labelPlanAva.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 43</value>
+    <value>319, 42</value>
   </data>
   <data name="labelPlanAva.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelPlanAva.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
   </data>
   <data name="labelPlanAva.Text" xml:space="preserve">
     <value>％</value>
@@ -327,6 +258,18 @@
   <data name="checkBoxPlanお昼稼働.Text" xml:space="preserve">
     <value>お昼稼働</value>
   </data>
+  <data name="panelPlanResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 223</value>
+  </data>
+  <data name="panelPlanResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 87</value>
+  </data>
+  <data name="labelPlanCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 23</value>
+  </data>
+  <data name="dataGridViewAchieve.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 200</value>
+  </data>
   <data name="textBoxAchieveQty.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -348,14 +291,8 @@
   <data name="labelAchieveQty.Font" type="System.Drawing.Font, System.Drawing">
     <value>Yu Gothic UI, 10pt</value>
   </data>
-  <data name="labelAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 45</value>
-  </data>
   <data name="labelAchieveQty.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelAchieveQty.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
   </data>
   <data name="labelAchieveQty.Text" xml:space="preserve">
     <value>本</value>
@@ -396,14 +333,8 @@
   <data name="labelAchieveTime.Font" type="System.Drawing.Font, System.Drawing">
     <value>Yu Gothic UI, 10pt</value>
   </data>
-  <data name="labelAchieveTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 44</value>
-  </data>
   <data name="labelAchieveTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelAchieveTime.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
   </data>
   <data name="labelAchieveTime.Text" xml:space="preserve">
     <value>～</value>
@@ -412,7 +343,7 @@
     <value>Right</value>
   </data>
   <data name="textBoxAchieve可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>280, 33</value>
+    <value>281, 32</value>
   </data>
   <data name="labelAchieveAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Right</value>
@@ -424,13 +355,10 @@
     <value>Yu Gothic UI, 10pt</value>
   </data>
   <data name="labelAchieveAva.Location" type="System.Drawing.Point, System.Drawing">
-    <value>329, 42</value>
+    <value>330, 41</value>
   </data>
   <data name="labelAchieveAva.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
-  </data>
-  <data name="labelAchieveAva.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
   </data>
   <data name="labelAchieveAva.Text" xml:space="preserve">
     <value>％</value>
@@ -474,11 +402,53 @@
   <data name="checkBoxAchieveお昼稼働.Text" xml:space="preserve">
     <value>お昼稼働</value>
   </data>
+  <data name="panelAchieveResult.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 223</value>
+  </data>
+  <data name="panelAchieveResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 87</value>
+  </data>
+  <data name="labelAchieveCaption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>354, 23</value>
+  </data>
+  <data name="splitContainer計画と実績.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 310</value>
+  </data>
+  <data name="splitContainer計画と実績.SplitterDistance" type="System.Int32, mscorlib">
+    <value>363</value>
+  </data>
   <data name="labelTitle.Size" type="System.Drawing.Size, System.Drawing">
     <value>719, 35</value>
   </data>
+  <data name="panelTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 45</value>
+  </data>
+  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>719, 103</value>
+  </data>
+  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="splitContainer上下.Size" type="System.Drawing.Size, System.Drawing">
+    <value>724, 487</value>
+  </data>
+  <data name="splitContainer上下.SplitterDistance" type="System.Int32, mscorlib">
+    <value>360</value>
+  </data>
   <data name="buttonExit.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 423</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>724, 0</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>217, 487</value>
+  </data>
+  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1100, 487</value>
+  </data>
+  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
+    <value>155</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>1100, 487</value>

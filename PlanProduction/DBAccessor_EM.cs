@@ -195,19 +195,48 @@ namespace PlanProduction
         }
 
         /// <summary>
-        /// EM マスタ読み込み (KM5030 標準作業時間マスタ)
+        /// EM マスタ読み込み (KM5020 段取りマスタ)
         /// </summary>
-        public static bool ReadKM5030(ref DataTable dt, string condition)
+        public static bool ReadKM5020(ref DataTable dt, string odcd, string wkgrcd)
         {
             bool ret = false;
             try
             {
                 if (oraCnn is null) OpenOraSchema();
                 string sql = "SELECT * FROM "
-                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
-                    + "WHERE ODCD||WKGRCD in " + condition + " "
-                    + "and WKSEQ=" + Common.DEF_WKSEQ + " "
-                    + "ORDER BY HMCD";
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020 "
+                    + $"WHERE ODCD = '{odcd}' and WKGRCD like '{wkgrcd}' "
+                    + "ORDER BY HMCD, WKSEQ";
+                using OracleCommand myCmd = new(sql, oraCnn);
+                using OracleDataAdapter myDa = new(myCmd);
+                myDa.Fill(dt);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM マスタ読み込み (KM5020 標準作業時間マスタ)（品番でグルーピングし受注リストで使用）
+        /// </summary>
+        public static bool ReadKM5020GroupBy(ref DataTable dt, string odcd, string wkgrcd)
+        {
+            bool ret = false;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                string sql = "SELECT ODCD, WKGRCD, HMCD"
+                    + ", LISTAGG(WORK, ',') WITHIN GROUP (ORDER BY WKSEQ) as WORK "
+                    + ", sum(SETUPTMMP) as SETUPTMMP "
+                    + "FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020 "
+                    + $"WHERE ODCD = '{odcd}' and WKGRCD like '{wkgrcd}' "
+                    + "GROUP BY ODCD, WKGRCD, HMCD";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
                 myDa.Fill(dt);
@@ -225,17 +254,16 @@ namespace PlanProduction
         /// <summary>
         /// EM マスタ読み込み (KM5030 標準作業時間マスタ)
         /// </summary>
-        public static bool ReadKM5030Simple(ref DataTable dt, string condition)
+        public static bool ReadKM5030(ref DataTable dt, string odcd, string wkgrcd)
         {
             bool ret = false;
             try
             {
                 if (oraCnn is null) OpenOraSchema();
-                string sql = "SELECT WKGRCD, HMCD, CT FROM "
+                string sql = "SELECT * FROM "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
-                    + "WHERE ODCD||WKGRCD in " + condition + " "
-                    + "and WKSEQ=" + Common.DEF_WKSEQ + " "
-                    + "ORDER BY HMCD";
+                    + $"WHERE ODCD = '{odcd}' and WKGRCD like '{wkgrcd}' "
+                    + "ORDER BY HMCD, WKSEQ";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
                 myDa.Fill(dt);
@@ -246,6 +274,102 @@ namespace PlanProduction
                 // エラー
                 string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
                 MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM マスタ読み込み (KM5030 標準作業時間マスタ)（品番でグルーピングし受注リストで使用）
+        /// </summary>
+        public static bool ReadKM5030GroupBy(ref DataTable dt, string odcd, string wkgrcd)
+        {
+            bool ret = false;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                string sql = "SELECT ODCD, WKGRCD, HMCD"
+                    + ", sum(CT) as CT "
+                    + "FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 "
+                    + $"WHERE ODCD = '{odcd}' and WKGRCD like '{wkgrcd}' "
+                    + "GROUP BY ODCD, WKGRCD, HMCD";
+                using OracleCommand myCmd = new(sql, oraCnn);
+                using OracleDataAdapter myDa = new(myCmd);
+                myDa.Fill(dt);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM マスタ読み込み (KM5030 標準作業時間マスタ、KM5020 段取りマスタ)
+        /// </summary>
+        public static bool ReadKM5030Simple(ref DataTable dt, string odcd, string wkgrcd)
+        {
+            bool ret = false;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                string sql = "SELECT a.HMCD as \"品番\", a.VALDTF as \"適用開始日\" "
+                    + ", sum(a.CT) as CT "
+                    + ", count(b.WORK) as \"段取回数\" "
+                    + ",LISTAGG(b.WORK, ',') WITHIN GROUP (ORDER BY b.WKSEQ) as \"段取内容\" "
+                    + ", nvl(sum(b.SETUPTMMP),0) as \"段取時間\" "
+                    + "FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 a left outer join "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020 b on "
+                    + "a.ODCD=b.ODCD and a.WKGRCD=b.WKGRCD and a.HMCD=b.HMCD and a.VALDTF=b.VALDTF and a.WKSEQ=b.WKSEQ "
+                    + $"WHERE a.ODCD = '{odcd}' and a.WKGRCD like '{wkgrcd}' "
+                    + "GROUP BY a.ODCD,a.WKGRCD,a.HMCD,a.VALDTF ORDER BY a.HMCD,a.VALDTF";
+                using OracleCommand myCmd = new(sql, oraCnn);
+                using OracleDataAdapter myDa = new(myCmd);
+                myDa.Fill(dt);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM マスタ更新 (KM5020 段取りマスタ)
+        /// </summary>
+        public static bool SaveKM5020(ref DataTable dt)
+        {
+            bool ret = false;
+            using OracleTransaction txn = oraCnn.BeginTransaction();
+            try
+            {
+                DataTable dtUpdate = new();
+                using (OracleDataAdapter adapter = new())
+                {
+                    string sql = "SELECT * FROM "
+                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020" + " "
+                        + "WHERE ROWNUM < 1";
+                    adapter.SelectCommand = new OracleCommand(sql, oraCnn);
+                    using var buider = new OracleCommandBuilder(adapter);
+                    // 全件読み込み
+                    adapter.Fill(dtUpdate);
+                    adapter.Update(dt);
+                }
+                txn.Commit();
+                dt.AcceptChanges();
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                txn.Rollback();
+                MessageBox.Show("更新に失敗しました．\n" + ex.Message);
             }
             return ret;
         }
@@ -275,7 +399,7 @@ namespace PlanProduction
                 dt.AcceptChanges();
                 ret = true;
             }
-            catch (Exception　ex)
+            catch (Exception ex)
             {
                 txn.Rollback();
                 MessageBox.Show("更新に失敗しました．\n" + ex.Message);
@@ -320,7 +444,7 @@ namespace PlanProduction
         /// EM 手配ファイルを読み込み作業標準マスタにない品番を返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410ConvertToMaster(ref DataTable dt, string condition)
+        public static bool ReadD0410ConvertToMaster(ref DataTable dt, string odcd, string ktcd)
         {
             bool ret = false;
             string sql = string.Empty;
@@ -329,8 +453,8 @@ namespace PlanProduction
                 string s = DateTime.Now.AddMonths(-3).ToString("yyMM");
                 sql = "select HMCD from "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a "
-                    + $"WHERE ODRNO > '{s}000000' and ODCD||KTCD in {condition} "
-                    + $"and not exists(select * from KM5030 m where ODCD||KTCD in {condition} and m.HMCD=a.HMCD) "
+                    + $"WHERE ODRNO > '{s}000000' and ODCD = '{odcd}' and KTCD like '{ktcd}' "
+                    + $"and not exists(select 1 from KM5030 m where ODCD='{odcd}' and KTCD like '{ktcd}' and m.HMCD=a.HMCD) "
                     + "group by HMCD order by HMCD";
                 using (OracleCommand myCmd = new(sql, oraCnn))
                 {
@@ -350,7 +474,7 @@ namespace PlanProduction
         /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410Pivot(ref DataTable dt, string condition, int sortorder)
+        public static bool ReadD0410Pivot(ref DataTable dt, string odcd, string ktcd, int sortorder)
         {
             bool ret = false;
             string sql = string.Empty;
@@ -391,7 +515,7 @@ namespace PlanProduction
                         + "select EDDT from "
                         + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 "
                         + $"where EDDT between '{from}' and '{to}' "
-                        + "and ODCD || KTCD in " + condition + " and ODRSTS in ('2', '3') "
+                        + $"and ODCD = '{odcd}' and KTCD like '{ktcd}' and ODRSTS in ('2', '3') "
                         + "and ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                     + "group by EDDT)";
                 using (OracleCommand myCmd = new(sql, oraCnn))
@@ -410,6 +534,7 @@ namespace PlanProduction
                     conditions.Add(cond);
                 }
                 string pivotList = string.Join(",", conditions);
+                if (conditions.Count == 0) pivotList = "DATE '2999-12-31' AS \"12/31\" ";
 
                 // Case When 句の作成
                 // 例）when '3/18' is not null then 1
@@ -420,10 +545,7 @@ namespace PlanProduction
                     conditions.Add(cond);
                 }
                 string casewhenList = string.Join(" ", conditions) + " ";
-
-                // SortOrder 句の作成 (Common.sortOrderMap)
-                string orderbyList = (sortorder == 1) ? "pivot.HMCD" :
-                                     (sortorder == 2) ? "優先度, pivot.HMCD" : "pivot.HMCD";
+                if (conditions.Count == 0) casewhenList = "when \"12/31\" is not null then 1 ";
 
                 // 実際の取得
                 sql =
@@ -431,7 +553,7 @@ namespace PlanProduction
                         + "SELECT * "
                         + "FROM ( "
                             + "SELECT "
-                                + "a.HMCD, a.ODCD, m51.KTSEQ, a.KTCD, m50.HMRNM, m51.WKNOTE, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
+                                + "a.HMCD as 品番, a.ODCD, m51.KTSEQ, a.KTCD, m50.HMRNM, m51.WKNOTE as 作業内容, TRUNC(a.EDDT) AS 手配日, a.ODRQTY "
                             + "FROM "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a, "
                                 + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0500 m50, "
@@ -442,7 +564,7 @@ namespace PlanProduction
                                 + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
                                     + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
                                 + "and a.EDDT between sysdate - 30 and sysdate + 30 "
-                                + "and a.ODCD || a.KTCD in " + condition + " and a.ODRSTS in ('2', '3') "
+                                + $"and a.ODCD = '{odcd}' and a.KTCD like '{ktcd}' and a.ODRSTS in ('2', '3') "
                                 + "and a.ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                         + ") src "
                         + "PIVOT ( "
@@ -458,7 +580,7 @@ namespace PlanProduction
                         + "else 9 end as 優先度 "
                         + ", pivot.* "
                     + "from pivot "
-                    + "ORDER BY " + orderbyList;
+                    + "ORDER BY pivot.品番";
                 using (OracleCommand myCmd = new(sql, oraCnn))
                 {
                     using OracleDataAdapter myDa = new(myCmd);
@@ -499,11 +621,11 @@ namespace PlanProduction
                 {
                     if (dr["KTSEQ"].ToIntOrDefault() == 10)
                     {
-                        s10.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                        s10.Add(string.Concat("'", dr["品番"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
                     }
                     else
                     {
-                        s20.Add(string.Concat("'", dr["HMCD"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                        s20.Add(string.Concat("'", dr["品番"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
                     }
                 }
                 string conditions10 = string.Concat("(", string.Join(",", s10), ")");

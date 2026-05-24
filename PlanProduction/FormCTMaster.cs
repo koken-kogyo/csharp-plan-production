@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,11 +11,17 @@ namespace PlanProduction
     {
         private FormConfig settings;
         private readonly OdCdSetting OdCdSetting;
-        private DataTable dt = new();           // KM5030
-        private DataTable dtMaster = new();     // D0410
+        private DataTable dtKM5020 = new();         // KM5020
+        private DataTable dtKM5030 = new();         // KM5030
+        private DataTable dtD0410 = new();          // D0410
+
+        // イベント制御フラグ
+        private bool _syncing = false;  // Scrollイベントの同期制御フラグ
+        private bool _changing = false; // CurrentCellChangedイベントの同期制御フラグ
 
         // --- 変更された行を記録するセット ---
-        private readonly HashSet<int> changedRows = [];
+        private readonly HashSet<int> changedCTRows = [];
+        private readonly HashSet<int> changedDTRows = [];
 
         public FormCTMaster(OdCdSetting OdCdSetting)
         {
@@ -27,7 +34,14 @@ namespace PlanProduction
             // イベント登録
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
             dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete;
-            dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
+            dataGridView1.RowPostPaint += DataGridView_RowPostPaint;
+            dataGridView1.Scroll += DataGridView1_Scroll;
+            dataGridView1.CurrentCellChanged += DataGridView1_CurrentCellChanged;
+            dataGridView3.CellValueChanged += DataGridView3_CellValueChanged;
+            dataGridView3.DataBindingComplete += dataGridView3_DataBindingComplete;
+            dataGridView3.RowPostPaint += DataGridView_RowPostPaint;
+            dataGridView3.Scroll += DataGridView3_Scroll;
+            dataGridView3.CurrentCellChanged += DataGridView3_CurrentCellChanged;
         }
 
         private void FormCTMasterMainte_Load(object sender, EventArgs e)
@@ -41,62 +55,137 @@ namespace PlanProduction
                 this.Location = new Point(s.X, s.Y);
                 this.Size = new Size(s.Width, s.Height);
                 this.splitContainer1.SplitterDistance = s.SplitterMainDistance;
+                this.splitContainer2.SplitterDistance = s.SplitterSubVerticalDistance;
             }
 
-            labelMasterTitle.Text = " [KM5030] 標準作業時間マスタ ";
-            labelMasterTitle.Text += $"【{OdCdSetting.OdCd}】 {DataStore.M0300Map[OdCdSetting.OdCd]} ／ {OdCdSetting.KtCd}";
+            this.Text = $"[生産計画] CTマスタメンテナンス - 【{OdCdSetting.OdCd}】 {DataStore.M0300Map[OdCdSetting.OdCd]} - {OdCdSetting.KtCd}";
+            labelCTMasterTitle.Text = " [KM5030] 標準作業時間マスタ ";
+            labelDTMasterTitle.Text = " [KM5020] 段取りマスタ ";
             labelReadTitle.Text = "未登録品番一覧";
 
             // 抽出条件を生成
             var condition = "('" + OdCdSetting.OdCd + OdCdSetting.KtCd + "')";
             // 標準作業時間マスタ取得
-            DBAccessor.ReadKM5030(ref dt, condition);
+            DBAccessor.ReadKM5030(ref dtKM5030, OdCdSetting.OdCd, OdCdSetting.KtCd);
+            // 段取りマスタ取得
+            DBAccessor.ReadKM5020(ref dtKM5020, OdCdSetting.OdCd, OdCdSetting.KtCd);
             // 手配品番マスタ取得
-            DBAccessor.ReadD0410ConvertToMaster(ref dtMaster, condition);
+            DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            dataGridView1.DataSource = dt;
+            dataGridView1.DataSource = dtKM5030;
+
+            dataGridView3.AllowUserToAddRows = false;
+            dataGridView3.EnableHeadersVisualStyles = false;
+            dataGridView3.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+            dataGridView3.DataSource = dtKM5020;
 
             dataGridView2.AllowUserToAddRows = false;
             dataGridView2.EnableHeadersVisualStyles = false;
             dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            dataGridView2.DataSource = dtMaster;
-            if (dtMaster.Rows.Count > 0)
+            dataGridView2.DataSource = dtD0410;
+            if (dtD0410.Rows.Count > 0)
             {
                 dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                 foreach (DataGridViewColumn col in dataGridView2.Columns) col.ReadOnly = true;
             }
-            toolStripStatusLabel1.Text = string.Empty;
+            toolStripStatusLabel1.Text = $"標準作業時間マスタ {dtKM5030.Rows.Count}件 / 段取りマスタ {dtKM5020.Rows.Count}件";
         }
+
+        private void FormCTMaster_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+            string key = this.Name;
+            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
+            var s = settings.Forms[key];
+            s.X = this.Location.X;
+            s.Y = this.Location.Y;
+            s.Width = this.Width;
+            s.Height = this.Height;
+            s.SplitterMainDistance = this.splitContainer1.SplitterDistance;
+            s.SplitterSubVerticalDistance = this.splitContainer2.SplitterDistance;
+            Common.FormSettingsSave(settings);
+        }
+
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            if (dt.Rows.Count > 0)
+            if (dtKM5030.Rows.Count > 0)
             {
+                foreach (DataGridViewColumn col in dataGridView1.Columns) col.ReadOnly = true;
+                dataGridView1.Columns["ODCD"].Visible = false;
+                dataGridView1.Columns["WKGRCD"].Visible = false;
+                dataGridView1.Columns["HMCD"].HeaderText = "品番";
                 dataGridView1.Columns["VALDTF"].Visible = false;
-                dataGridView1.Columns["WKSEQ"].Visible = false;
-                dataGridView1.Columns["VALDTF"].Visible = false;
+                dataGridView1.Columns["WKSEQ"].HeaderText = "順序";
+                var ct = dataGridView1.Columns["CT"];
+                ct.HeaderText = "　　CT";                                                   // 列幅自動調整に対抗
+                ct.ReadOnly = false;                                                        // （変更可）
+                ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
+                ct.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
+                ct.SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
+                ct.DefaultCellStyle.Format = "N1";                                          // 小数点以下1桁
+                dataGridView1.Columns["NOTE"].ReadOnly = false;                             // （変更可）
                 dataGridView1.Columns["INSTID"].Visible = false;
                 dataGridView1.Columns["INSTDT"].Visible = false;
                 dataGridView1.Columns["UPDTID"].Visible = false;
                 dataGridView1.Columns["UPDTDT"].Visible = false;
+
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                foreach (DataGridViewColumn col in dataGridView1.Columns) col.ReadOnly = true;
-                var ct = dataGridView1.Columns["CT"];
+            }
+            foreach (DataGridViewRow r in dataGridView1.Rows)
+            {
+                int.TryParse(r.Cells["WKSEQ"].Value?.ToString(), out int wkseq);
+                if (wkseq > 10)
+                {
+                    r.Cells["HMCD"].Style.BackColor = Color.WhiteSmoke;
+                    r.Cells["WKSEQ"].Style.BackColor = Color.WhiteSmoke;
+                }
+            }
+        }
+        private void dataGridView3_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            if (dtKM5020.Rows.Count > 0)
+            {
+                foreach (DataGridViewColumn col in dataGridView3.Columns) col.ReadOnly = true;
+                dataGridView3.Columns["ODCD"].Visible = false;
+                dataGridView3.Columns["WKGRCD"].Visible = false;
+                dataGridView3.Columns["HMCD"].HeaderText = "品番";
+                dataGridView3.Columns["VALDTF"].Visible = false;
+                dataGridView3.Columns["WKSEQ"].HeaderText = "順序";
+                dataGridView3.Columns["WORK"].ReadOnly = false;
+                dataGridView3.Columns["WORK"].HeaderText = "段取内容";
+                var ct = dataGridView3.Columns["SETUPTMMP"];
+                ct.HeaderText = "段取り時間";
                 ct.ReadOnly = false;                                                        // 変更可能
-                ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;  // データの右寄せ
+                ct.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
                 ct.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
                 ct.SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
                 ct.DefaultCellStyle.Format = "N1";                                          // 小数点以下1桁
-                dataGridView1.Columns["NOTE"].ReadOnly = false;                             // 変更可能
+                dataGridView3.Columns["SETUPTMSP"].Visible = false;
+                dataGridView3.Columns["NOTE"].ReadOnly = false;                             // 変更可能
+                dataGridView3.Columns["INSTID"].Visible = false;
+                dataGridView3.Columns["INSTDT"].Visible = false;
+                dataGridView3.Columns["UPDTID"].Visible = false;
+                dataGridView3.Columns["UPDTDT"].Visible = false;
 
+                dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            }
+            foreach (DataGridViewRow r in dataGridView3.Rows)
+            {
+                int.TryParse(r.Cells["WKSEQ"].Value?.ToString(), out int wkseq);
+                if (wkseq > 10)
+                {
+                    r.Cells["HMCD"].Style.BackColor = Color.WhiteSmoke;
+                    r.Cells["WKSEQ"].Style.BackColor = Color.WhiteSmoke;
+                }
             }
         }
 
 
-        // 行番号を付ける
-        private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        // （おまけ処理）行番号を付ける
+        private void DataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             string rowNumber = (e.RowIndex + 1).ToString();
             // 行ヘッダーの描画範囲
@@ -113,29 +202,59 @@ namespace PlanProduction
                 headerBounds,
                 Color.Black,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
-
         }
-        // 行番号を付ける
-        private void DataGridView2_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+
+        // （おまけ処理）同期スクロール
+        private void DataGridView1_Scroll(object sender, ScrollEventArgs e)
         {
-            string rowNumber = (e.RowIndex + 1).ToString();
-            // 行ヘッダーの描画範囲
-            var headerBounds = new Rectangle(
-                e.RowBounds.Left,
-                e.RowBounds.Top,
-                dataGridView1.RowHeadersWidth,
-                e.RowBounds.Height);
-            // 行番号を描画
-            TextRenderer.DrawText(
-                e.Graphics,
-                rowNumber,
-                dataGridView1.Font,
-                headerBounds,
-                Color.Black,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+            if (_syncing) return;
+            _syncing = true;
 
+            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+            {
+                dataGridView3.FirstDisplayedScrollingRowIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
+            }
+
+            _syncing = false;
         }
-        // キーボードショートカット
+        private void DataGridView3_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (_syncing) return;
+            _syncing = true;
+
+            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+            {
+                dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView3.FirstDisplayedScrollingRowIndex;
+            }
+
+            _syncing = false;
+        }
+
+        // （おまけ処理）セル選択の同期
+        private void DataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (_changing) return;
+            int row = dataGridView1.CurrentCell?.RowIndex ?? -1;
+            if (row >= 0 && dataGridView3.Rows.Count > row)
+            {
+                _changing = true;
+                dataGridView3.CurrentCell = dataGridView3.Rows[row].Cells["HMCD"];
+            }
+            _changing = false;
+        }
+        private void DataGridView3_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (_changing) return;
+            int row = dataGridView3.CurrentCell?.RowIndex ?? -1;
+            if (row >= 0 && dataGridView1.Rows.Count > row)
+            {
+                _changing = true;
+                dataGridView1.CurrentCell = dataGridView1.Rows[row].Cells["HMCD"];
+            }
+            _changing = false;
+        }
+
+        // （おまけ処理）キーボードショートカット
         private void FormCTMaster_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -143,48 +262,36 @@ namespace PlanProduction
                 Close();
             }
         }
-        // 変更された行数をステータスに表示
+
+        // （おまけ処理）品番フィルタリング
+        private void textBoxHmCd_TextChanged(object sender, EventArgs e)
+        {
+            dtKM5030.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd.Text}%'";
+            dtKM5020.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd.Text}%'";
+        }
+        private void ButtonFilterClear_Click(object sender, EventArgs e)
+        {
+            textBoxHmCd.Text = "";
+        }
+
+        // （おまけ処理）変更されたセルに対し ①行番号の保存、②背景色ハイライトを行い、ステータスへの変更件数表示を行う
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-
-            // 行番号を記録（重複なし）
-            changedRows.Add(e.RowIndex);
-
-            // StatusStripに表示
-            toolStripStatusLabel1.Text = $"変更された行数：{changedRows.Count}";
+            changedCTRows.Add(e.RowIndex);  // 行番号を記録（HashSetで重複なし）
+            dataGridView1.CurrentCell.Style.BackColor = Color.LightYellow; // 変更があったことを視覚的に示す
+            toolStripStatusLabel1.Text = $"変更された行 KM5030:{changedCTRows.Count}件 / KM5020:{changedDTRows.Count}件";
         }
-
-        // 「閉じる」ボタン
-        private void ButtonClose_Click(object sender, EventArgs e)
+        private void DataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            this.Close();
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            changedDTRows.Add(e.RowIndex); // 行番号を記録（HashSetで重複なし）
+            dataGridView3.CurrentCell.Style.BackColor = Color.LightYellow; // 変更があったことを視覚的に示す
+            toolStripStatusLabel1.Text = $"変更された行 KM5030:{changedCTRows.Count}件 / KM5020:{changedDTRows.Count}件";
         }
 
-        // 「保存」ボタン
-        private void ButtonSaveClose_Click(object sender, EventArgs e)
-        {
-            // 標準作業時間マスタ更新
-            if (DBAccessor.SaveKM5030(ref dt))
-            {
-                toolStripStatusLabel1.Text = "マスタを更新しました．";
-                // 変更行数カウンタのリセット
-                changedRows.Clear();
-
-                // データソースの再読み込み
-                dt.Rows.Clear();
-                var condition = "('" + OdCdSetting.OdCd + OdCdSetting.KtCd + "')";
-                DBAccessor.ReadKM5030(ref dt, condition);
-                dataGridView1.DataSource = dt;
-                //// 登録が完了したら一旦「品番」列でソート
-                //dataGridView1.Sort(dataGridView1.Columns["HMCD"], ListSortDirection.Ascending);
-                //// そして「品番」列の自動ソートは解除
-                //dataGridView1.Columns["HMCD"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-        }
-
-        // 「追加」ボタン（未登録品番一覧から標準作業時間マスタに品番を移動）
-        private void ButtonAdd_Click(object sender, EventArgs e)
+        // 「品番追加」ボタン（未登録品番一覧から標準作業時間マスタに品番を移動）
+        private void ButtonAddHMCD_Click(object sender, EventArgs e)
         {
             if (dataGridView2.SelectedCells.Count <= 0)
             {
@@ -194,21 +301,37 @@ namespace PlanProduction
             int insertCnt = 0;
             foreach (DataGridViewCell cel in dataGridView2.SelectedCells)
             {
-                // マスタ側に登録
-                var newrow = dt.NewRow();
-                newrow["ODCD"] = OdCdSetting.OdCd;
-                newrow["WKGRCD"] = OdCdSetting.KtCd;
-                newrow["HMCD"] = cel.Value;
-                newrow["VALDTF"] = DateTime.Today;
-                newrow["WKSEQ"] = Common.DEFAULT_WKSEQ;
-                newrow["CT"] = 0;
-                newrow["INSTID"] = Common.UserId;
-                newrow["INSTDT"] = DateTime.Now;
-                newrow["UPDTID"] = Common.UserId;
-                newrow["UPDTDT"] = DateTime.Now;
-                dt.Rows.Add(newrow);
+                // 標準作業時間マスタに登録
+                var newct = dtKM5030.NewRow();
+                newct["ODCD"] = OdCdSetting.OdCd;
+                newct["WKGRCD"] = OdCdSetting.KtCd;
+                newct["HMCD"] = cel.Value;
+                newct["VALDTF"] = DateTime.Today;
+                newct["WKSEQ"] = Common.DEFAULT_WKSEQ;
+                newct["CT"] = 0;
+                newct["INSTID"] = Common.UserId;
+                newct["INSTDT"] = DateTime.Now;
+                newct["UPDTID"] = Common.UserId;
+                newct["UPDTDT"] = DateTime.Now;
+                dtKM5030.Rows.Add(newct);
+                changedCTRows.Add(dtKM5030.Rows.Count - 1);
+                // 段取りマスタに登録
+                var newdt = dtKM5020.NewRow();
+                newdt["ODCD"] = OdCdSetting.OdCd;
+                newdt["WKGRCD"] = OdCdSetting.KtCd;
+                newdt["HMCD"] = cel.Value;
+                newdt["VALDTF"] = DateTime.Today;
+                newdt["WKSEQ"] = Common.DEFAULT_WKSEQ;
+                newdt["SETUPTMMP"] = 0;
+                newdt["SETUPTMSP"] = 0;
+                newdt["INSTID"] = Common.UserId;
+                newdt["INSTDT"] = DateTime.Now;
+                newdt["UPDTID"] = Common.UserId;
+                newdt["UPDTDT"] = DateTime.Now;
+                dtKM5020.Rows.Add(newdt);
+                changedDTRows.Add(dtKM5020.Rows.Count - 1);
                 // 未登録品番一覧から削除
-                DataRow[] rows = dtMaster.Select($"HMCD='{cel.Value}'");
+                DataRow[] rows = dtD0410.Select($"HMCD='{cel.Value}'");
                 if (rows.Length > 0) rows[0].Delete();
                 insertCnt++;
             }
@@ -223,19 +346,80 @@ namespace PlanProduction
             toolStripStatusLabel1.Text = $"{insertCnt} 件を追加しました（まだ保存はされていません）";
         }
 
-        private void FormCTMaster_FormClosing(object sender, FormClosingEventArgs e)
+        // 「順序追加」ボタン
+        private void buttonAddWKSEQ_Click(object sender, EventArgs e)
         {
-            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
-            string key = this.Name;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
-            var s = settings.Forms[key];
-            s.X = this.Location.X;
-            s.Y = this.Location.Y;
-            s.Width = this.Width;
-            s.Height = this.Height;
-            s.SplitterMainDistance = this.splitContainer1.SplitterDistance;
-            Common.FormSettingsSave(settings);
+            if (dataGridView1.SelectedCells.Count <= 0)
+            {
+                MessageBox.Show("追加対象の品番を選択してください．");
+                return;
+            }
+            int rowIndex = dataGridView1.CurrentCell.RowIndex;
+            // 標準作業時間マスタに追加
+            var src5030 = dtKM5030.Rows[rowIndex];
+            var newRow5030 = dtKM5030.NewRow();
+            newRow5030.ItemArray = src5030.ItemArray.Clone() as object[];
+            string hmcd = newRow5030["HMCD"].ToString();
+            int seq = Convert.ToInt32(src5030["WKSEQ"]) + 10;
+            while (dtKM5030.Select($"HMCD='{hmcd}' and WKSEQ={seq}").Length != 0)
+            {
+                seq += 10;
+            }
+            newRow5030["WKSEQ"] = seq;
+            newRow5030["INSTID"] = Common.UserId;
+            newRow5030["INSTDT"] = DateTime.Now;
+            newRow5030["UPDTID"] = Common.UserId;
+            newRow5030["UPDTDT"] = DateTime.Now;
+            dtKM5030.Rows.Add(newRow5030);
+            changedCTRows.Add(dtKM5030.Rows.Count - 1);
+            // 段取りマスタに追加
+            var src5020 = dtKM5020.Rows[rowIndex];
+            var newRow5020 = dtKM5020.NewRow();
+            newRow5020.ItemArray = src5020.ItemArray.Clone() as object[];
+            newRow5020["WKSEQ"] = seq;
+            newRow5020["INSTID"] = Common.UserId;
+            newRow5020["INSTDT"] = DateTime.Now;
+            newRow5020["UPDTID"] = Common.UserId;
+            newRow5020["UPDTDT"] = DateTime.Now;
+            dtKM5020.Rows.Add(newRow5020);
+            changedDTRows.Add(dtKM5020.Rows.Count - 1);
+            // 追加した行の最後のセルにフォーカス
+            int last = dataGridView1.Rows.Count - 1;
+            dataGridView1.FirstDisplayedScrollingRowIndex = last;
+            dataGridView1.Rows[last].Cells["WKSEQ"].Selected = true;
         }
+
+        // 「保存」ボタン
+        private void ButtonSaveClose_Click(object sender, EventArgs e)
+        {
+            // 標準作業時間マスタ更新
+            if (changedCTRows.Count > 0 && DBAccessor.SaveKM5030(ref dtKM5030))
+            {
+                changedCTRows.Clear();
+                dtKM5030.Rows.Clear();
+                // データソースの再読み込み
+                DBAccessor.ReadKM5030(ref dtKM5030, OdCdSetting.OdCd, OdCdSetting.KtCd);
+                dataGridView1.DataSource = dtKM5030;
+                toolStripStatusLabel1.Text = "マスタを更新しました．";
+            }
+            // 段取りマスタ更新
+            if (changedDTRows.Count > 0 && DBAccessor.SaveKM5020(ref dtKM5020))
+            {
+                changedDTRows.Clear();
+                dtKM5020.Rows.Clear();
+                // データソースの再読み込み
+                DBAccessor.ReadKM5020(ref dtKM5020, OdCdSetting.OdCd, OdCdSetting.KtCd);
+                dataGridView3.DataSource = dtKM5020;
+                toolStripStatusLabel1.Text = "マスタを更新しました．";
+            }
+        }
+
+        // 「閉じる」ボタン
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
 
     }
 }

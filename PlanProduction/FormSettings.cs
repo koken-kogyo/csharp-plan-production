@@ -33,6 +33,7 @@ namespace PlanProduction
             {
                 settings.Forms[key] = new FormSettings();
             }
+            label1.Text = $"{Common.UserName}さんが使用する「手配先コード（工程コード）」を選択してください";
             dataGridView1.Rows.Clear();
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Font = new Font("Yu Gothic UI", 12);
@@ -43,6 +44,13 @@ namespace PlanProduction
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
             dataGridView1.DataSource = DataStore.dtKM5010kai;
+
+            // データブリッドコンボボックスをCommonPropatyのsortOrderMapから取得し設定
+            var col = (DataGridViewComboBoxColumn)dataGridView1.Columns["ColumnListOrder"]; // Name:ColumnListOrder / DataName:SORTORDER
+            col.Items.Clear();
+            col.Items.AddRange(Common.sortOrderMap.Values.ToArray());
+
+            // デフォルト手配先コードコンボボックスの再作成
             ReCreateComboBox();
         }
         // 初回起動表示
@@ -86,10 +94,9 @@ namespace PlanProduction
             }
         }
 
-        // コンボボックスの再作成
+        // デフォルト手配先コードコンボボックスの再作成
         private void ReCreateComboBox()
         {
-            // 初期表示を行う手配先コードを設定
             var grouped = DataStore.dtKM5010kai.AsEnumerable()
                 .Where(r => r.Field<bool>("CHECKED") == true)
                 .GroupBy(r => new
@@ -384,6 +391,8 @@ namespace PlanProduction
                 };
                 FormCTMaster frm = new(setting);
                 frm.ShowDialog();
+                // CTMasterのフォームの状態を読み直し
+                settings = Common.FormSettingsLoad();
             }
         }
 

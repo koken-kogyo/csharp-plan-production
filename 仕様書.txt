@@ -1,0 +1,136 @@
+〇プログラム詳細
+
+
+１．Program.cs
+
+		データベース定義ファイル
+			<!-- [0] EM 定義 (Oracle) -->						ConfigDB.xml
+			<!-- [1] 社内システム定義 (MySQL)) -->
+		ファイル定義ファイル
+			<!-- アプリケーション設定ファイル保存先 [0] --> 	ConfigFS.xml
+		共有フォルダ存在チェック								\\サーバー名\可動率計画と実績
+		EMデータベース接続確認
+		２へ
+
+２．FormLogin.cs
+
+		従業員マスタチェック									KM0010
+		作業グループマスタ取得									KM5010
+		手配先マスタ取得										M0300
+		アプリケーション設定ファイル読み込み					<従業員番号>_AppSettings.json
+																\\サーバー名\可動率計画と実績\Applications\設定ファイル
+		３へ
+
+３．メインフォーム [FormPlanProduction.cs]
+
+		フォーム設定ファイル読み込み							<従業員番号>_FormSettings.json
+				画面サイズ復元
+				手配先ボタンの生成
+		カレンダーに当日にセット
+		初期表示												RefreshPlanProduction
+				// 登録された計画日のカレンダーをBoldにする 	KD8020GroupBy
+				// 計画入力データの設定 						GetKD8020基本読み込み
+																GetKD8030明細読み込み
+				// 実績入力データの設定 						GetKD8020基本読み込み
+																GetKD8030明細読み込み
+				// Chartデータの更新							GetKD8020Chart
+		「設定変更」ボタン
+				４へ
+		「計画入力」ボタン
+				６へ
+		「手配一覧参照」ボタン
+				７へ
+
+４．設定画面 [FormSettings.cs]
+
+		初期設定
+				作業グループマスタ読込							KM5010
+				ローカル設定ファイル読込						<従業員番号>_FormSettings.json
+		「CT編集」ボタン
+				５へ
+		ローカル設定ファイル保存
+
+５．CTマスタメンテナンス画面 [FormCTMaster.cs]
+
+		初期設定
+				標準作業時間マスタ取得
+				段取りマスタ取得
+				マスタ未登録品番を手配データから取得
+		保存ボタン
+				標準作業時間マスタの変更点を保存
+				段取りマスタの変更点を保存
+
+６．計画と実績入力画面 [FormPlanEntry.cs]
+
+		初期設定
+				手配一覧画面 [FormOrderList.cs] の呼出（コールバックを渡す）
+				(mysql)製造部計画ファイルの読込 				kd8020
+				(mysql)製造部計画明細ファイルの読込 			kd8030
+		※ドラッグアンドドロップ処理実装
+		※Undoアクション実装
+		※時刻入力小細工実装
+		計画印刷保存ボタン
+				Excel出力										可動率_計画と実績_6031B_20260524.xlsx
+				データ書き込み
+				親フォームの再描画イベント発火					IsUpdated?.Invoke(true);
+		「実績登録」ボタン
+				データ書き込み
+				親フォームの再描画イベント発火					IsUpdated?.Invoke(true);
+		終了時刻計算ビジネスロジック							CalculatePlan
+		実績より可動率を算出するビジネスロジック				CalculateAchieve
+		※休憩時間算出共通関数									休憩時間算出
+		※フォーム間連携実装
+				①メインフォーム（呼び出し側）
+						var frm = new FormPlanEntry(PlanDate, OdCdSetting);
+						frm.IsUpdated += CallBackPlanEntry; // コールバックイベント登録
+						frm.Show();
+				②サブフォーム側定義
+						// メインフォームへ値を返すイベント
+						public event Action<bool> IsUpdated;
+				③サブフォーム側イベント発火
+						IsUpdated?.Invoke(true);
+				④メインフォーム側コールバック関数
+						private void CallBackPlanEntry(bool isupdated)
+						{
+							if (isupdated) RefreshPlanProduction();
+						}
+
+７．手配一覧画面 [FormOrderList.cs]
+
+		初期設定
+				段取りマスタ									KM5020
+				標準作業時間マスタ								KM5030
+				手配データ取得									ReadD0410Pivot
+				前工程の在庫情報取得							ReadD0520FromPrevious
+				※手配がない場合は標準作業時間マスタ一覧に切り替え
+		※選択セルの作業時間算出機能実装
+		※右クリックでクリップボード処理実装
+		「パネル切替」ボタン
+		「計画へ追加 (F4)」ボタン
+				「計画リスト」にDTO（データ転送オブジェクト）を渡す
+		「実績へ追加 (F6)」ボタン
+				「実績リスト」にDTO（データ転送オブジェクト）を渡す
+		※フォーム間データ連携実装
+				①共通クラス（DTO）
+						/// <summary>
+						/// フォーム間データ連携クラス
+						/// </summary>
+						public class SelectedItem
+						{
+							public string HmCd { get; set; }
+							public int SumQty { get; set; }
+							public double CT { get; set; }
+						}
+				②呼び出し側 [FormPlanEntry.cs]
+						// 手配一覧を準備
+						formOrderList = new FormOrderList(OdCdSetting, OnSelectedList); 		// ← ★ コールバックを渡す
+				③ポップアップ側 [FormOrderList.cs] 定義
+						// フォーム間連携アクションコールバック
+						private readonly Action<string, List<SelectedItem>> callback;
+				④ポップアップ側 [FormOrderList.cs] コンストラクタ
+						public FormOrderList(OdCdSetting OdCdSetting, Action<string, List<SelectedItem>> callback)
+				⑤ポップアップ側 [FormOrderList.cs] 実行
+						var list = MakeSelectedItemList();
+						callback("Plan", list);
+				⑥呼び出し側 [FormPlanEntry.cs] コールバック関数
+						private void OnSelectedList(string mode, List<SelectedItem> list)

@@ -35,6 +35,7 @@
             buttonClose = new System.Windows.Forms.Button();
             buttonRefresh = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
+            checkBoxDANDORI = new System.Windows.Forms.CheckBox();
             checkBoxKTSEQ = new System.Windows.Forms.CheckBox();
             checkBoxWKNOTE = new System.Windows.Forms.CheckBox();
             checkBoxHMRNM = new System.Windows.Forms.CheckBox();
@@ -156,6 +157,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(checkBoxDANDORI);
             panel1.Controls.Add(checkBoxKTSEQ);
             panel1.Controls.Add(checkBoxWKNOTE);
             panel1.Controls.Add(checkBoxHMRNM);
@@ -169,6 +171,22 @@
             panel1.Size = new System.Drawing.Size(900, 61);
             panel1.TabIndex = 3;
             // 
+            // checkBoxDANDORI
+            // 
+            checkBoxDANDORI.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            checkBoxDANDORI.AutoSize = true;
+            checkBoxDANDORI.Checked = true;
+            checkBoxDANDORI.CheckState = System.Windows.Forms.CheckState.Checked;
+            checkBoxDANDORI.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            checkBoxDANDORI.ForeColor = System.Drawing.SystemColors.ControlDark;
+            checkBoxDANDORI.Location = new System.Drawing.Point(537, 39);
+            checkBoxDANDORI.Name = "checkBoxDANDORI";
+            checkBoxDANDORI.Size = new System.Drawing.Size(50, 19);
+            checkBoxDANDORI.TabIndex = 8;
+            checkBoxDANDORI.Text = "段取";
+            checkBoxDANDORI.UseVisualStyleBackColor = true;
+            checkBoxDANDORI.CheckedChanged += CheckBoxDANDORI_CheckedChanged;
+            // 
             // checkBoxKTSEQ
             // 
             checkBoxKTSEQ.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
@@ -177,7 +195,7 @@
             checkBoxKTSEQ.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxKTSEQ.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxKTSEQ.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxKTSEQ.Location = new System.Drawing.Point(376, 39);
+            checkBoxKTSEQ.Location = new System.Drawing.Point(313, 39);
             checkBoxKTSEQ.Name = "checkBoxKTSEQ";
             checkBoxKTSEQ.Size = new System.Drawing.Size(60, 19);
             checkBoxKTSEQ.TabIndex = 7;
@@ -193,7 +211,7 @@
             checkBoxWKNOTE.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxWKNOTE.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxWKNOTE.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxWKNOTE.Location = new System.Drawing.Point(520, 39);
+            checkBoxWKNOTE.Location = new System.Drawing.Point(457, 39);
             checkBoxWKNOTE.Name = "checkBoxWKNOTE";
             checkBoxWKNOTE.Size = new System.Drawing.Size(74, 19);
             checkBoxWKNOTE.TabIndex = 2;
@@ -209,7 +227,7 @@
             checkBoxHMRNM.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxHMRNM.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxHMRNM.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxHMRNM.Location = new System.Drawing.Point(442, 39);
+            checkBoxHMRNM.Location = new System.Drawing.Point(379, 39);
             checkBoxHMRNM.Name = "checkBoxHMRNM";
             checkBoxHMRNM.Size = new System.Drawing.Size(73, 19);
             checkBoxHMRNM.TabIndex = 1;
@@ -236,7 +254,7 @@
             checkBoxPKey.CheckState = System.Windows.Forms.CheckState.Checked;
             checkBoxPKey.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             checkBoxPKey.ForeColor = System.Drawing.SystemColors.ControlDark;
-            checkBoxPKey.Location = new System.Drawing.Point(315, 39);
+            checkBoxPKey.Location = new System.Drawing.Point(252, 39);
             checkBoxPKey.Name = "checkBoxPKey";
             checkBoxPKey.Size = new System.Drawing.Size(55, 19);
             checkBoxPKey.TabIndex = 0;
@@ -413,5 +431,6 @@
         private System.Windows.Forms.CheckBox checkBoxHMRNM;
         private System.Windows.Forms.CheckBox checkBoxKTSEQ;
         private System.Windows.Forms.Button buttonChangeView;
+        private System.Windows.Forms.CheckBox checkBoxDANDORI;
     }
 }
