@@ -132,7 +132,7 @@
     <value>Yu Gothic UI, 16pt, style=Bold</value>
   </data>
   <data name="textBoxPlanQty.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 34</value>
+    <value>18, 35</value>
   </data>
   <data name="textBoxPlanQty.Size" type="System.Drawing.Size, System.Drawing">
     <value>51, 36</value>
@@ -199,7 +199,7 @@
     <value>Right</value>
   </data>
   <data name="textBoxPlan可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>270, 32</value>
+    <value>268, 34</value>
   </data>
   <data name="labelPlanAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Right</value>
@@ -211,7 +211,7 @@
     <value>Yu Gothic UI, 10pt</value>
   </data>
   <data name="labelPlanAva.Location" type="System.Drawing.Point, System.Drawing">
-    <value>319, 42</value>
+    <value>317, 44</value>
   </data>
   <data name="labelPlanAva.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>
@@ -277,7 +277,7 @@
     <value>Yu Gothic UI, 16pt, style=Bold</value>
   </data>
   <data name="textBoxAchieveQty.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 34</value>
+    <value>19, 35</value>
   </data>
   <data name="textBoxAchieveQty.Size" type="System.Drawing.Size, System.Drawing">
     <value>52, 36</value>
@@ -343,7 +343,7 @@
     <value>Right</value>
   </data>
   <data name="textBoxAchieve可動率.Location" type="System.Drawing.Point, System.Drawing">
-    <value>281, 32</value>
+    <value>282, 34</value>
   </data>
   <data name="labelAchieveAva.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Right</value>
@@ -355,7 +355,7 @@
     <value>Yu Gothic UI, 10pt</value>
   </data>
   <data name="labelAchieveAva.Location" type="System.Drawing.Point, System.Drawing">
-    <value>330, 41</value>
+    <value>331, 43</value>
   </data>
   <data name="labelAchieveAva.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 19</value>

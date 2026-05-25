@@ -73,6 +73,9 @@ namespace PlanProduction
 
             // 初期表示
             RefreshPlanProduction();
+
+            // チャートイベント登録
+            chart1.MouseClick += chart1_MouseClick;
         }
 
         // 初期表示
@@ -255,6 +258,24 @@ namespace PlanProduction
             area.AxisY2.Enabled = AxisEnabled.True;
         }
 
+        // チャート縦棒クリックイベント
+        private void chart1_MouseClick(object sender, MouseEventArgs e)
+        {
+            HitTestResult result = chart1.HitTest(e.X, e.Y);
+
+            if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                Series series = result.Series;
+                int pointIndex = result.PointIndex;
+                DataPoint point = series.Points[pointIndex];
+
+                string dateLabel = point.AxisLabel;   // 例: "6/12"
+                PlanDate = Common.HeaderTextToDateTime(dateLabel);
+                monthCalendar1.SetDate(PlanDate);
+                RefreshPlanProduction();
+            }
+        }
+        
         // フォームの状態を保存
         private void FormPlanProduction_FormClosing(object sender, FormClosingEventArgs e)
         {

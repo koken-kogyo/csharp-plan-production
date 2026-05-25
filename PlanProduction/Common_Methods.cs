@@ -329,6 +329,18 @@ namespace PlanProduction
             return 0.0;
         }
 
+        public static DateTime HeaderTextToDateTime(string headertext)
+        {
+            string[] dateFormats = ["M/d", "M/d/yy", "M/d/yyyy", "MM/dd", "MM/dd/yy", "MM/dd/yyyy"];
+            if (DateTime.TryParseExact(
+                headertext
+                , dateFormats
+                , CultureInfo.InvariantCulture
+                , DateTimeStyles.None
+                , out var dt))
+                return dt.Date;
+            throw new FormatException($"列名 '{headertext}' を日付として解釈できませんでした。");
+        }
 
 
 
