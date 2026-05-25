@@ -141,7 +141,7 @@ namespace PlanProduction
         private void MargeDataTable(ref DataTable dt, ref DataTable d0520)
         {
             dt.Columns.Add("前在", typeof(int));
-            dt.Columns["前在"].SetOrdinal(7);    // 列を途中に割り込ませる
+            dt.Columns["前在"].SetOrdinal(8);    // 列を途中に割り込ませる
             dt.Columns.Add("CT", typeof(double));
             dt.Columns.Add("段取内容", typeof(string));
             dt.Columns.Add("段取時間", typeof(double));
@@ -216,7 +216,7 @@ namespace PlanProduction
             if (処理モード == 1)
             {
                 // 列 0〜7 と CTを行ヘッダーと同じ色にする
-                string[] colNames = ["優先度", "品番", "ODCD", "KTSEQ", "KTCD", "HMRNM", "作業内容", "前在", "段取内容", "段取時間"];
+                string[] colNames = ["優先度", "品番", "ODCD", "KTSEQ", "KTCD", "品目略称", "作業内容", "作業注釈", "前在", "段取内容", "段取時間"];
                 foreach (string col in colNames)
                 {
                     dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
@@ -271,14 +271,16 @@ namespace PlanProduction
                     dgv.Columns["ODCD"].Visible = false;                  // ODCDは非表示
                     dgv.Columns["KTCD"].Visible = false;                  // KTCDは非表示
                 }
-                if (s.Flg2 == 0 && 処理モード == 1) dgv.Columns["HMRNM"].Visible = false;
+                if (s.Flg2 == 0 && 処理モード == 1) dgv.Columns["品目略称"].Visible = false;
                 if (s.Flg3 == 0 && 処理モード == 1) dgv.Columns["作業内容"].Visible = false;
                 if (s.Flg4 == 0 && 処理モード == 1) dgv.Columns["KTSEQ"].Visible = false;
+                if (s.Flg6 == 0 && 処理モード == 1) dgv.Columns["作業注釈"].Visible = false;
                 checkBoxPKey.Checked = (s.Flg1 == 1);
                 checkBoxHMRNM.Checked = (s.Flg2 == 1);
                 checkBoxWKNOTE.Checked = (s.Flg3 == 1);
                 checkBoxKTSEQ.Checked = (s.Flg4 == 1);
                 checkBoxDANDORI.Checked = (s.Flg5 == 1);
+                checkBoxWKCOMMENT.Checked = (s.Flg6 == 1);
             }
         }
         // 行番号を付ける（1 から始める）
@@ -321,6 +323,7 @@ namespace PlanProduction
             s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
             s.Flg4 = (checkBoxKTSEQ.Checked) ? 1 : 0;
             s.Flg5 = (checkBoxDANDORI.Checked) ? 1 : 0;
+            s.Flg6 = (checkBoxWKCOMMENT.Checked) ? 1 : 0;
             Common.FormSettingsSave(settings);
         }
         // キーボードショートカット
@@ -453,7 +456,7 @@ namespace PlanProduction
         private void CheckBoxHMRNM_CheckedChanged(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
-            dataGridView1.Columns["HMRNM"].Visible = checkBoxHMRNM.Checked;
+            dataGridView1.Columns["品目略称"].Visible = checkBoxHMRNM.Checked;
         }
         // 「作業内容」の表示／非表示
         private void CheckBoxWKNOTE_CheckedChanged(object sender, EventArgs e)
@@ -473,6 +476,12 @@ namespace PlanProduction
             if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
             dataGridView1.Columns["段取内容"].Visible = checkBoxDANDORI.Checked;
             dataGridView1.Columns["段取時間"].Visible = checkBoxDANDORI.Checked;
+        }
+        // 「作業注釈」の表示／非表示
+        private void CheckBoxWKCOMMENT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 0 || 処理モード != 1) return;
+            dataGridView1.Columns["作業注釈"].Visible = checkBoxWKCOMMENT.Checked;
         }
 
 
@@ -578,10 +587,9 @@ namespace PlanProduction
                     if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;
                     string hmcd = dataGridView1.Rows[c.RowIndex].Cells["品番"].Value.ToString();
                     DataRow[] result = dtCTMaster.Select($"品番='{hmcd}'");
-                    // 順序で品番分割
-                    foreach (DataRow row in result)
+                    if (result.Length == 0)
                     {
-                        int wkseq = row["順序"].ToIntOrDefault();
+                        int wkseq = Common.DEFAULT_WKSEQ;
                         if (summary.ContainsKey((hmcd, wkseq)))
                         {
                             summary[(hmcd, wkseq)] += qty;
@@ -591,15 +599,30 @@ namespace PlanProduction
                             summary[(hmcd, wkseq)] = qty;
                         }
                     }
+                    else
+                    {
+                        // CTMasterの順序で分割
+                        foreach (DataRow row in result)
+                        {
+                            int wkseq = row["順序"].ToIntOrDefault();
+                            if (summary.ContainsKey((hmcd, wkseq)))
+                            {
+                                summary[(hmcd, wkseq)] += qty;
+                            }
+                            else
+                            {
+                                summary[(hmcd, wkseq)] = qty;
+                            }
+                        }
+                    }
                 }
                 //// DTO（データ転送オブジェクト）の生成
                 foreach (var ((hmcd, wkseq), sumqty) in summary)
                 {
                     DataRow[] rows = dtCTMaster.Select($"品番='{hmcd}' AND 順序={wkseq}");
-                    if (rows.Length == 0) continue;   // マスタに無い場合はスキップ
-                    double ct = rows[0]["CT"].ToDoubleOrDefault();
-                    double dt = rows[0]["段取時間"].ToDoubleOrDefault();
-                    string work = rows[0]["段取内容"].ToString();
+                    double ct = (rows.Length == 0) ? 0 : rows[0]["CT"].ToDoubleOrDefault();
+                    double dt = (rows.Length == 0) ? 0 : rows[0]["段取時間"].ToDoubleOrDefault();
+                    string work = (rows.Length == 0) ? "" : rows[0]["段取内容"].ToString();
                     list.Add(new SelectedItem
                     {
                         HmCd = hmcd,

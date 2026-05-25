@@ -114,6 +114,7 @@ namespace PlanProduction
                 }
                 isAchieveChanged = true;
             }
+            dgv.Focus();
         }
         // 「初期化処理」（表示される直前に一度だけ）
         private async void FormPlanEntry_Load(object sender, EventArgs e)

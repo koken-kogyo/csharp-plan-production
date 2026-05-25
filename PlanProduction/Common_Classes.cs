@@ -81,6 +81,7 @@ namespace PlanProduction
         public int Flg3 { get; set; }
         public int Flg4 { get; set; }
         public int Flg5 { get; set; }
+        public int Flg6 { get; set; }
     }
     /// <summary>
     // 画面情報設定ファイル
