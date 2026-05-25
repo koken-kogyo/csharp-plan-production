@@ -92,7 +92,7 @@ namespace PlanProduction
             {
                 foreach (var item in list)
                 {
-                    dgv.Rows.Add(item.HmCd, item.CT, item.SumQty);
+                    dgv.Rows.Add(item.HmCd, item.CT, item.SumQty, null, null, null, null, null, item.Work);
                 }
                 CalculatePlan(); // 「計画リスト」に追加された場合のみ終了時刻を再計算
                 isPlanChanged = true;
@@ -101,7 +101,7 @@ namespace PlanProduction
             {
                 foreach (var item in list)
                 {
-                    dgv.Rows.Add(item.HmCd, item.CT, item.SumQty, null, null, null, null, OdCdSetting.TanName);
+                    dgv.Rows.Add(item.HmCd, item.CT, item.SumQty, null, null, null, null, OdCdSetting.TanName, item.Work);
                     dgv.Rows[^2].Cells["AchieveCT"].Style.BackColor = 
                         (item.CT.ToDoubleOrDefault() == 0.0) ? Color.LightCoral : Color.White;
                     dgv.Rows[^2].Cells["Achieve本数"].Style.BackColor = 

@@ -310,23 +310,35 @@ namespace PlanProduction
         /// <summary>
         /// EM マスタ読み込み (KM5030 標準作業時間マスタ、KM5020 段取りマスタ)
         /// </summary>
-        public static bool ReadKM5030Simple(ref DataTable dt, string odcd, string wkgrcd)
+        public static bool ReadKM502030(ref DataTable dt, string odcd, string wkgrcd)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// EM マスタ読み込み (KM5030 標準作業時間マスタ、KM5020 段取りマスタ)
+        /// </summary>
+        public static bool ReadKM50305020(ref DataTable dt, string odcd, string wkgrcd)
         {
             bool ret = false;
             try
             {
                 if (oraCnn is null) OpenOraSchema();
+
+                // Oracle版の string.Join サンプルを取っておく
+                //   LISTAGG(b.WORK, ',') WITHIN GROUP (ORDER BY b.WKSEQ) as \"段取内容\" "
+
                 string sql = "SELECT a.HMCD as \"品番\", a.VALDTF as \"適用開始日\" "
-                    + ", sum(a.CT) as CT "
-                    + ", count(b.WORK) as \"段取回数\" "
-                    + ",LISTAGG(b.WORK, ',') WITHIN GROUP (ORDER BY b.WKSEQ) as \"段取内容\" "
-                    + ", nvl(sum(b.SETUPTMMP),0) as \"段取時間\" "
+                    + ", a.WKSEQ \"順序\" "
+                    + ", a.CT "
+                    + ", b.WORK as \"段取内容\" "
+                    + ", nvl(b.SETUPTMMP,0) as \"段取時間\" "
                     + "FROM "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5030 a left outer join "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020 b on "
                     + "a.ODCD=b.ODCD and a.WKGRCD=b.WKGRCD and a.HMCD=b.HMCD and a.VALDTF=b.VALDTF and a.WKSEQ=b.WKSEQ "
                     + $"WHERE a.ODCD = '{odcd}' and a.WKGRCD like '{wkgrcd}' "
-                    + "GROUP BY a.ODCD,a.WKGRCD,a.HMCD,a.VALDTF ORDER BY a.HMCD,a.VALDTF";
+                    + "ORDER BY a.HMCD,a.VALDTF";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
                 myDa.Fill(dt);

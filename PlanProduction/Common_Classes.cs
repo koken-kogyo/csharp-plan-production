@@ -96,8 +96,11 @@ namespace PlanProduction
     public class SelectedItem
     {
         public string HmCd { get; set; }
+        public int WkSeq { get; set; }
         public int SumQty { get; set; }
         public double CT { get; set; }
+        public double DT { get; set; }
+        public string Work { get; set; }
     }
 
     // 元に戻すアクション種類

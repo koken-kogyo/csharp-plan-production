@@ -21,10 +21,11 @@ namespace PlanProduction
         private int 処理モード;      // 1:手配リスト, 2:CTマスタ
 
         // DataTable を保持するフィールドを作る
-        private DataTable dtDataSource = new();
+        private DataTable dtDataSource = new();     // 手配一覧
         private DataTable dtKM5020GroupBy = new();
         private DataTable dtKM5030GroupBy = new();
-        private DataTable dtD0520 = new();
+        private DataTable dtCTMaster = new();
+        private DataTable dtD0520 = new();          // 前工程在庫情報
 
         // 複数列選択用のセルリスト
         private readonly List<DataGridViewCell> selectedCells = [];
@@ -81,6 +82,7 @@ namespace PlanProduction
             // マスタの読み込み
             DBAccessor.ReadKM5020GroupBy(ref dtKM5020GroupBy, os.OdCd, os.KtCd);    // 段取りマスタ取得
             DBAccessor.ReadKM5030GroupBy(ref dtKM5030GroupBy, os.OdCd, os.KtCd);    // 標準作業時間マスタ取得
+            DBAccessor.ReadKM50305020(ref dtCTMaster, os.OdCd, os.KtCd);            // CTマスター取得
 
             // コントロールに初期値をセット
             labelTitleOdCd.Text = $"【{os.OdCd}】 {DataStore.M0300Map[os.OdCd]}";
@@ -133,10 +135,7 @@ namespace PlanProduction
         {
             処理モード = 2;
             panel1.Enabled = false;
-            var dt = new DataTable();
-            var s = OdCdSetting;
-            DBAccessor.ReadKM5030Simple(ref dt, s.OdCd, s.KtCd);                     // 標準作業時間マスタ取得
-            dataGridView1.DataSource = dt;
+            dataGridView1.DataSource = dtCTMaster;
         }
         // CTと前工程在庫情報と在庫情報をくっつける
         private void MargeDataTable(ref DataTable dt, ref DataTable d0520)
@@ -238,7 +237,7 @@ namespace PlanProduction
             }
             else
             {
-                string[] colNames = ["品番", "適用開始日", "段取回数", "段取内容", "段取時間"];
+                string[] colNames = ["品番", "適用開始日", "順序", "段取内容", "段取時間"];
                 foreach (string col in colNames)
                 {
                     dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
@@ -552,55 +551,91 @@ namespace PlanProduction
             var list = MakeSelectedItemList();
             callback("Achieve", list);
         }
-        // DTO（データ転送オブジェクト）を作成
+        // DTO（データ転送オブジェクト）の生成
         private List<SelectedItem> MakeSelectedItemList()
         {
-            // 品番ごとの合計結果を保存する辞書
-            Dictionary<string, int> summary = [];
-            Dictionary<string, double> ct = [];
+            var dgv = dataGridView1;
+            List<SelectedItem> list = [];
 
-            // 選択セルの並び替え
-            var query = from DataGridViewCell c in dataGridView1.SelectedCells
-                        orderby c.RowIndex, c.ColumnIndex
-                        select c;
-
-            foreach (DataGridViewCell c in query)
+            if (処理モード == 1)
             {
-                if (c.Visible == false) continue;                                                       // 非表示列
-                if (c.Value == null || string.IsNullOrEmpty(c.Value.ToString())) continue;              // データなし
+                // 品番＋順序ごとの合計結果を保存する辞書
+                Dictionary<(string, int), int> summary = [];
 
-                string hmcd = dataGridView1.Rows[c.RowIndex].Cells["品番"].Value.ToString();
-                int qty = 0;
-                if (処理モード == 1)
+                // 選択セルの並び替え
+                var query = from DataGridViewCell c in dgv.SelectedCells
+                            orderby c.RowIndex, c.ColumnIndex
+                            select c;
+                // 手配数をサマリー
+                foreach (DataGridViewCell c in query)
                 {
-                    if (c.ColumnIndex == 0 || c.ColumnIndex == dataGridView1.Columns["CT"].Index) continue; // 優先度、CT
+                    if (c.Visible == false) continue;                                               // 非表示列
+                    if (c.Value == null || string.IsNullOrEmpty(c.Value.ToString())) continue;      // データなし
+                    if (c.ColumnIndex <= dataGridView1.Columns["前在"].Index ||
+                        c.ColumnIndex >= dataGridView1.Columns["CT"].Index) continue;               // 手配日以外を無視
+
+                    int qty = 0;
                     if (c.Value != null && int.TryParse(c.Value.ToString(), out int v)) qty = v;
-                    if (summary.ContainsKey(hmcd))
+                    string hmcd = dataGridView1.Rows[c.RowIndex].Cells["品番"].Value.ToString();
+                    DataRow[] result = dtCTMaster.Select($"品番='{hmcd}'");
+                    // 順序で品番分割
+                    foreach (DataRow row in result)
                     {
-                        summary[hmcd] += qty;
-                    }
-                    else
-                    {
-                        summary[hmcd] = qty;
+                        int wkseq = row["順序"].ToIntOrDefault();
+                        if (summary.ContainsKey((hmcd, wkseq)))
+                        {
+                            summary[(hmcd, wkseq)] += qty;
+                        }
+                        else
+                        {
+                            summary[(hmcd, wkseq)] = qty;
+                        }
                     }
                 }
-                else
+                //// DTO（データ転送オブジェクト）の生成
+                foreach (var ((hmcd, wkseq), sumqty) in summary)
                 {
-                    summary[hmcd] = qty;
-                }
-                if (!ct.ContainsKey(hmcd))
-                {
-                    ct[hmcd] = 0.0;
-                    if (double.TryParse(dataGridView1.Rows[c.RowIndex].Cells["CT"].Value.ToString(), out double d)) ct[hmcd] = d;
+                    DataRow[] rows = dtCTMaster.Select($"品番='{hmcd}' AND 順序={wkseq}");
+                    if (rows.Length == 0) continue;   // マスタに無い場合はスキップ
+                    double ct = rows[0]["CT"].ToDoubleOrDefault();
+                    double dt = rows[0]["段取時間"].ToDoubleOrDefault();
+                    string work = rows[0]["段取内容"].ToString();
+                    list.Add(new SelectedItem
+                    {
+                        HmCd = hmcd,
+                        WkSeq = wkseq,
+                        SumQty = sumqty,
+                        CT = ct,
+                        DT = dt,
+                        Work = work
+                    });
                 }
             }
-            // DTO（データ転送オブジェクト）に変換
-            var list = summary.Select(kv => new SelectedItem
+            else
             {
-                HmCd = kv.Key,
-                SumQty = kv.Value,
-                CT = ct[kv.Key]
-            }).ToList();
+                var selectedRows = dgv.SelectedCells
+                    .Cast<DataGridViewCell>()
+                    .Select(c => c.RowIndex)
+                    .Distinct()
+                    .OrderBy(r => r);
+                foreach (int rowIndex in selectedRows)
+                {
+                    string hmcd = dgv.Rows[rowIndex].Cells["品番"].Value.ToString();
+                    int seq = dgv.Rows[rowIndex].Cells["順序"].Value.ToIntOrDefault();
+                    double ct = dgv.Rows[rowIndex].Cells["CT"].Value.ToDoubleOrDefault();
+                    double dt = dgv.Rows[rowIndex].Cells["段取時間"].Value.ToDoubleOrDefault();
+                    string work = dgv.Rows[rowIndex].Cells["段取内容"].Value.ToString();
+                    list.Add(new SelectedItem
+                    {
+                        HmCd = hmcd,
+                        WkSeq = seq,
+                        SumQty = 0,
+                        CT = ct,
+                        DT = dt,
+                        Work = work
+                    });
+                }
+            }
             return list;
         }
 
