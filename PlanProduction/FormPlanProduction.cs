@@ -372,6 +372,12 @@ namespace PlanProduction
         {
             FormSrttings fm = new();
             fm.ShowDialog();
+            if (DataStore.dtKM5010kai == null)
+            {
+                MessageBox.Show("異常が発生しました。\n再度アプリケーションを実行して下さい。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
             // アプリケーション設定が変更されているかを判定
             if (!DataTableEquals_MultiKey(DataStore.originalKM5010kai, DataStore.dtKM5010kai, "ODCD", "WKGRCD"))
             {

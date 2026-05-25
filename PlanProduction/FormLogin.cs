@@ -73,11 +73,8 @@ namespace PlanProduction
                 // 初回起動のがキャンセルされたら終了
                 if (!File.Exists(@fullPath)) return;
             }
-            else
-            {
-                // アプリケーション設定ファイルの読込
-                Common.DeserializeAppSettings();
-            }
+            // アプリケーション設定ファイルの読込
+            Common.DeserializeAppSettings();
 
             // メイン画面起動
             this.Hide();
