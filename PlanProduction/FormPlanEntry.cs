@@ -769,25 +769,28 @@ namespace PlanProduction
             var tb = sender as TextBox;
             if (beforeEditValue?.ToString() == tb.Text) return;
 
-            // 入力中にカーソルが飛ばないようにする
-            //int pos = tb.SelectionStart;
-
+            // 1文字入力したら自動的に「0」を挿入
+            if (tb.Text.Length == 1 && !tb.Text.Contains('0') && !tb.Text.Contains('1') && !tb.Text.Contains('2') && !backspacePressed)
+            {
+                tb.Text = "0" + tb.Text + ":";
+                tb.SelectionStart = tb.Text.Length;
+            }
             // 2文字入力したら ":" を自動挿入
-            if (tb.Text.Length == 2 && !tb.Text.Contains(':') && !backspacePressed)
+            else if (tb.Text.Length == 2 && !tb.Text.Contains(':') && !backspacePressed)
             {
                 tb.Text += ":";
-                tb.SelectionStart = tb.Text.Length; // カーソルを末尾へ
+                tb.SelectionStart = tb.Text.Length;
             }
-            // 3文字中に ":" が無かったらを自動挿入（バックスペース後）
-            if (tb.Text.Length == 3 && !tb.Text.Contains(':') && !backspacePressed)
+            // 3文字中に ":" が無かったらを自動挿入（バックスペース後に入力するとここに来る）
+            else if (tb.Text.Length == 3 && !tb.Text.Contains(':') && !backspacePressed)
             {
                 tb.Text = string.Concat(tb.Text.AsSpan(0, 2), ":", tb.Text.AsSpan(2, 1));
-                tb.SelectionStart = tb.Text.Length; // カーソルを末尾へ
+                tb.SelectionStart = tb.Text.Length;
             }
-            if (tb.Text.Length > 5)
+            else if (tb.Text.Length > 5)
             {
                 tb.Text = tb.Text[..5];
-                tb.SelectionStart = tb.Text.Length; // カーソルを末尾へ
+                tb.SelectionStart = tb.Text.Length;
             }
         }
         // データグリッド上のコントロールの中でEnterキーを押したときに
@@ -1068,19 +1071,26 @@ namespace PlanProduction
                 e.Handled = true;
                 return;
             }
-            // 2文字入力した時点で自動的に「:」を挿入
-            if (tb.Text.Length == 1)
+            // 1文字入力した時点で自動的に「0」を挿入
+            if (tb.Text.Length - tb.SelectionLength == 0 && e.KeyChar != '0' && e.KeyChar != '1' && e.KeyChar != '2')
             {
-                tb.Text += e.KeyChar + ":";
-                tb.SelectionStart = tb.Text.Length;   // カーソルを末尾へ移動
-                e.Handled = true;                    // 入力済みなので処理完了
+                tb.Text = "0" + e.KeyChar.ToString() + ":";
+                tb.SelectionStart = tb.Text.Length;
+                e.Handled = true;
             }
             // 2文字入力した時点で自動的に「:」を挿入
-            if (tb.Text.Length == 2 && e.KeyChar != ':')
+            else if (tb.Text.Length - tb.SelectionLength == 1)
+            {
+                tb.Text += e.KeyChar + ":";
+                tb.SelectionStart = tb.Text.Length;
+                e.Handled = true;
+            }
+            // 3文字入力した時点で自動的に「:」を挿入
+            else if (tb.Text.Length - tb.SelectionLength == 2 && e.KeyChar != ':')
             {
                 tb.Text += ":" + e.KeyChar;
-                tb.SelectionStart = tb.Text.Length;   // カーソルを末尾へ移動
-                e.Handled = true;                    // 入力済みなので処理完了
+                tb.SelectionStart = tb.Text.Length;
+                e.Handled = true;
             }
         }
 

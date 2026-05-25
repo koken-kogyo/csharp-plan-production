@@ -221,7 +221,6 @@ namespace PlanProduction
                 foreach (string col in colNames)
                 {
                     dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
-                    //dgv.Columns[col].SortMode = DataGridViewColumnSortMode.Automatic;
                 }
                 // 手配列の設定（幅、右揃え、ソート機能なし）
                 for (int col = dgv.Columns["前在"].Index; col < dgv.Columns["CT"].Index; col++)
@@ -230,6 +229,11 @@ namespace PlanProduction
                     dgv.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;   // データの右寄せ
                     dgv.Columns[col].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;   // 列ヘッダー右寄せ
                     dgv.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;                       // ソート機能を無効化
+                    // 当日背景色の設定
+                    if (dgv.Columns[col].HeaderText == DateTime.Today.ToString("MM/dd"))
+                    {
+                        dgv.Columns[col].DefaultCellStyle.BackColor = Color.FromArgb(235, 255, 235);
+                    }
                 }
             }
             else
