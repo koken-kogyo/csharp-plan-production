@@ -142,6 +142,7 @@ namespace PlanProduction
                 findRow["TANNAME"] = odcd.TanName;
                 findRow["AVA"] = odcd.Ava;
                 findRow["STARTTIME"] = odcd.StartTime;
+                findRow["DANDORI"] = odcd.Dandori;
                 findRow["EXCELNAME"] = odcd.ExcelName;
                 findRow["FULLPATH"] = odcd.FullPath;
             }
@@ -164,25 +165,26 @@ namespace PlanProduction
                 if (!isChecked) continue;
 
                 // 選択バリューからキーを検索
-                string val1 = row[5].ToString();
+                string val1 = row["SORTORDER1"].ToString();
                 var key1 = sortOrderMap.FirstOrDefault(x => x.Value == val1).Key;
                 if (key1 == 0) key1 = 1; // Default値
 
-                string val2 = row[6].ToString();
+                string val2 = row["SORTORDER2"].ToString();
                 var key2 = sortOrderMap.FirstOrDefault(x => x.Value == val2).Key;
                 if (key2 == 0) key2 = -1; // Default値
 
                 var config = new OdCdSetting
                 {
-                    OdCd = row[0]?.ToString(),
-                    KtCd = row[1]?.ToString(),
+                    OdCd = row["ODCD"]?.ToString(),
+                    KtCd = row["WKGRCD"]?.ToString(),
                     SortOrder1 = key1,
                     SortOrder2 = key2,
-                    TanName = row[7]?.ToString(),
-                    Ava = row[8]?.ToString(),
-                    StartTime = row[9]?.ToString(),
-                    ExcelName = row[10]?.ToString(),
-                    FullPath = row[11]?.ToString()
+                    TanName = row["TANNAME"]?.ToString(),
+                    Ava = row["AVA"]?.ToString(),
+                    StartTime = row["STARTTIME"]?.ToString(),
+                    Dandori = int.Parse(row["DANDORI"]?.ToString()),
+                    ExcelName = row["EXCELNAME"]?.ToString(),
+                    FullPath = row["FULLPATH"]?.ToString()
                 };
                 records.Add(config);
             }

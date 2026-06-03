@@ -102,7 +102,7 @@ namespace PlanProduction
             checkBoxPlan早昼.Checked = paramPlan.早昼;
             textBoxPlanStartTime.Text = paramPlan.開始時刻;
             textBoxPlanEndTime.Text = paramPlan.終了時刻;
-            textBoxPlanQty.Text = (paramPlan.合計本数 != 0) ? paramPlan.合計本数.ToString() : "";
+            textBoxPlanQty.Text = (paramPlan.合計本数 != 0) ? paramPlan.合計本数.ToString("N0") : "";
             textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
             planDt.Rows.Clear(); // ここから明細
             if (!DBAccessor.GetKD8030(ref planDt, paramPlan)) return;
@@ -122,7 +122,7 @@ namespace PlanProduction
             checkBoxAchieve早昼.Checked = paramA.早昼;
             textBoxAchieveStartTime.Text = paramA.開始時刻;
             textBoxAchieveEndTime.Text = paramA.終了時刻;
-            textBoxAchieveQty.Text = (paramA.合計本数 != 0) ? paramA.合計本数.ToString() : "";
+            textBoxAchieveQty.Text = (paramA.合計本数 != 0) ? paramA.合計本数.ToString("N0") : "";
             textBoxAchieve可動率.Text = (paramA.可動率 != 0) ? paramA.可動率.ToString("F0") : "";
             achieveDt.Rows.Clear(); // ここから明細
             if (!DBAccessor.GetKD8030(ref achieveDt, paramA)) return;

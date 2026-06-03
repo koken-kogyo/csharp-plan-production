@@ -165,6 +165,7 @@ namespace PlanProduction
                 DataStore.dtKM5010kai.Columns.Add("TANNAME", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("AVA", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("STARTTIME", typeof(string));
+                DataStore.dtKM5010kai.Columns.Add("DANDORI", typeof(int));
                 DataStore.dtKM5010kai.Columns.Add("EXCELNAME", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("FULLPATH", typeof(string));
                 // 主キーを設定して検索に使用
@@ -180,6 +181,7 @@ namespace PlanProduction
                     row["TANNAME"] = string.Empty;
                     row["AVA"] = string.Empty;
                     row["STARTTIME"] = string.Empty;
+                    row["DANDORI"] = 0;
                     row["EXCELNAME"] = string.Empty;
                     row["FULLPATH"] = string.Empty;
                 }

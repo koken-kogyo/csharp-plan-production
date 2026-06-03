@@ -252,7 +252,7 @@ namespace PlanProduction
                 checkBoxPlan休憩稼働.Checked = paramPlan.休憩稼働;
                 checkBoxPlanピカピカ.Checked = paramPlan.ピカピカ;
                 checkBoxPlan早昼.Checked = paramPlan.早昼;
-                textBoxPlanQty.Text = paramPlan.合計本数.ToString();
+                textBoxPlanQty.Text = paramPlan.合計本数.ToString("N0");
                 textBoxPlanCT.Text = paramPlan.CT合計時間.ToString("N2");
                 textBoxPlanOpe.Text = paramPlan.合計稼働時間.ToString("N2");
                 textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
@@ -291,7 +291,7 @@ namespace PlanProduction
                 checkBoxAchieve休憩稼働.Checked = paramAchieve.休憩稼働;
                 checkBoxAchieveピカピカ.Checked = paramAchieve.ピカピカ;
                 checkBoxAchieve早昼.Checked = paramAchieve.早昼;
-                textBoxAchieveQty.Text = paramAchieve.合計本数.ToString();
+                textBoxAchieveQty.Text = paramAchieve.合計本数.ToString("N0");
                 textBoxAchieveCT.Text = paramAchieve.CT合計時間.ToString("N2");
                 textBoxAchieveOpe.Text = paramAchieve.合計稼働時間.ToString("N2");
                 textBoxAchieve可動率.Text = (paramAchieve.可動率 != 0) ? paramAchieve.可動率.ToString("F0") : "";
@@ -922,7 +922,7 @@ namespace PlanProduction
             // 計画登録更新
             if (isPlanChanged && dataGridViewPlan.Rows.Count > 1)
             {
-                int totalQty = int.TryParse(textBoxPlanQty.Text, out int v) ? v : 0;
+                int totalQty = int.TryParse(textBoxPlanQty.Text.Replace(",", ""), out int v) ? v : 0;
                 double totalCT = double.TryParse(textBoxPlanCT.Text, out double w) ? w : 0.0;
                 double totalOpe = double.TryParse(textBoxPlanOpe.Text, out double x) ? x : 0.0;
                 double ava = double.TryParse(textBoxPlan可動率.Text, out double y) ? y : 0.0;
@@ -962,7 +962,7 @@ namespace PlanProduction
             }
             else
             {
-                int totalQty = int.TryParse(textBoxAchieveQty.Text, out int v) ? v : 0;
+                int totalQty = int.TryParse(textBoxAchieveQty.Text.Replace(",", ""), out int v) ? v : 0;
                 double totalCT = double.TryParse(textBoxAchieveCT.Text, out double w) ? w : 0.0;
                 double totalOpe = double.TryParse(textBoxAchieveOpe.Text, out double x) ? x : 0.0;
                 double ava = double.TryParse(textBoxAchieve可動率.Text, out double y) ? y : 0.0;
@@ -1130,6 +1130,8 @@ namespace PlanProduction
             double 合計本数 = 0.0;
             double CT稼働時間 = 0.0;
             double 計画稼働時間 = 0.0;
+            double 合計休憩時間 = 0.0;
+            int 標準段取時間 = OdCdSetting.Dandori;
             for (int i = 0; i < dataGridViewPlan.Rows.Count; i++)
             {
                 var row = dataGridViewPlan.Rows[i]; // ここで通常処理
@@ -1137,11 +1139,15 @@ namespace PlanProduction
                 if (row.IsNewRow) continue;         // 新規行はスキップ
 
                 // 計画開始時刻を取得（1行目はテキストボックスの開始時刻、2行目以降は前行の終了時刻）
-                row.Cells["Plan開始時刻"].Value = (i == 0) ?
+                string startTimeStr = (i == 0) ?
                     textBoxPlanStartTime.Text :
                     dataGridViewPlan.Rows[i - 1].Cells["Plan終了時刻"].Value?.ToString();
-                string startTimeStr = row.Cells["Plan開始時刻"].Value?.ToString();
-                if (!DateTime.TryParse(startTimeStr, out DateTime startTime))
+                if (DateTime.TryParse(startTimeStr, out DateTime startTime))
+                {
+                    if (i != 0 && 標準段取時間 > 0) startTime = startTime.AddMinutes(標準段取時間); // 標準段取時間（分）を加算
+                    row.Cells["Plan開始時刻"].Value = startTime.ToString("HH:mm");
+                }
+                else
                 {
                     row.Cells["Plan終了時刻"].Value = startTimeStr; // 無効な開始時刻の場合
                     continue;
@@ -1157,7 +1163,7 @@ namespace PlanProduction
 
                 // 一旦計画終了時刻を計算
                 double 本数 = (row.Cells["Plan本数"].Value != null) ? Convert.ToDouble(row.Cells["Plan本数"].Value) : 0.0;
-                double adjustedCt = ct * 本数 * 可動率; // 可動率を考慮してCTを調整
+                double adjustedCt = (ct * 本数 * 可動率); // + (標準段取時間 * 60); // 可動率を考慮してCTを調整
                 DateTime endTime = startTime.AddSeconds(adjustedCt);
 
                 // CT、本数がゼロの場合に背景に赤色を設定
@@ -1186,10 +1192,11 @@ namespace PlanProduction
                 合計本数 += 本数;
                 CT稼働時間 += ct * 本数;
                 計画稼働時間 += adjustedCt;
+                合計休憩時間 += 休憩;
             }
             textBoxPlanQty.Text = 合計本数.ToString("#,0");
             textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N2");
-            textBoxPlanOpe.Text = (計画稼働時間 / 3600).ToString("N2");
+            textBoxPlanOpe.Text = ((計画稼働時間 + 合計休憩時間) / 3600).ToString("N2");
             textBoxPlanEndTime.Text = (dataGridViewPlan.Rows.Count > 1) ?
                 dataGridViewPlan.Rows[^2].Cells["Plan終了時刻"].Value?.ToString() :
                 textBoxPlanStartTime.Text;
@@ -1246,9 +1253,12 @@ namespace PlanProduction
                 if (textBoxAchieveStartTime.Text != startTimeStr) textBoxAchieveStartTime.Text = startTimeStr;
             }
             // 次行の開始時刻を今回の終了時刻にセット
+            int 標準段取時間 = OdCdSetting.Dandori;
             if (!dataGridViewAchieve.Rows[rowindex + 1].IsNewRow)
             {
-                dataGridViewAchieve[targetRow.Cells["Achieve開始時刻"].ColumnIndex, rowindex + 1].Value = targetRow.Cells["Achieve終了時刻"].Value;
+                dataGridViewAchieve[targetRow.Cells["Achieve開始時刻"].ColumnIndex, rowindex + 1].Value = (標準段取時間 > 0) ?
+                    endTime.AddMinutes(標準段取時間).ToString("HH:mm") :
+                    targetRow.Cells["Achieve終了時刻"].Value;
             }
             // 開始終了時刻から可動率を算出
             TimeSpan span = endTime.TimeOfDay - startTime.TimeOfDay;
@@ -1284,7 +1294,7 @@ namespace PlanProduction
             textBoxAchieveEndTime.Text = 最終終了時刻;
             DateTime 開始時刻 = textBoxAchieveStartTime.Text.ToDateTimeOrDefaultToday();
             DateTime 終了時刻 = textBoxAchieveEndTime.Text.ToDateTimeOrDefaultToday();
-            double 実際稼働時間 = (終了時刻 - 開始時刻).TotalSeconds;
+            double 実際稼働時間 = (終了時刻 - 開始時刻).TotalSeconds - 合計休憩時間;
 
             textBoxAchieveQty.Text = 合計本数.ToString("#,0");
             textBoxAchieveCT.Text = (CT稼働時間 / 3600).ToString("N2");

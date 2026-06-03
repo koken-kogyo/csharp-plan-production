@@ -175,6 +175,8 @@ namespace PlanProduction
                         row.Cells["Column可動率"].Value = "80";
                     if (string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
                         row.Cells["Column開始時刻"].Value = "08:15";
+                    if (string.IsNullOrEmpty(row.Cells["ColumnDandori"].Value.ToString()))
+                        row.Cells["ColumnDandori"].Value = 0;
                     if (string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
                         row.Cells["ColumnExcel"].Value = "雛形_Default.xlsx";
                     if (string.IsNullOrEmpty(row.Cells["ColumnFullPath"].Value?.ToString()))
@@ -230,29 +232,51 @@ namespace PlanProduction
                     {
                         errmsg = "雛形ファイルを選択してください．";
                     }
+                    if (string.IsNullOrEmpty(row.Cells["ColumnDandori"].Value?.ToString()))
+                    {
+                        row.Cells["ColumnDandori"].Selected = true;
+                        errmsg = "段取時間を入力して下さい．";
+                    }
+                    else if (int.TryParse(row.Cells["ColumnDandori"].Value?.ToString(), out int dandori))
+                    {
+                        if (dandori < 0 || dandori > 36000)
+                        {
+                            row.Cells["ColumnDandori"].Selected = true;
+                            errmsg = "数値(0～36000)を入力して下さい．";
+                        }
+                    }
+                    else
+                    {
+                        row.Cells["ColumnDandori"].Selected = true;
+                        errmsg = "数値(0～36000)を入力して下さい．";
+                    }
                 }
                 else
                 {
                     // データテーブルに残っている値を初期化
-                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value?.ToString()))
                     {
                         row.Cells["ColumnListOrder1"].Value = "";
                     }
-                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder2"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder2"].Value?.ToString()))
                     {
                         row.Cells["ColumnListOrder2"].Value = "";
                     }
-                    if (!string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value?.ToString()))
                     {
                         row.Cells["ColumnTanName"].Value = "";
                     }
-                    if (!string.IsNullOrEmpty(row.Cells["Column可動率"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["Column可動率"].Value?.ToString()))
                     {
                         row.Cells["Column可動率"].Value = "";
                     }
-                    if (!string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["Column開始時刻"].Value?.ToString()))
                     {
                         row.Cells["Column開始時刻"].Value = "";
+                    }
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnDandori"].Value?.ToString()))
+                    {
+                        row.Cells["ColumnDandori"].Value = 0;
                     }
                     if (!string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
                     {

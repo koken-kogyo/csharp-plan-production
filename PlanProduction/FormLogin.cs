@@ -25,24 +25,10 @@ namespace PlanProduction
             this.UserID = textBoxID.Text;
         }
 
-        private void FormLogin_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // 設定に保存
-            if (MemUser != checkBoxMem.Checked || UserID != textBoxID.Text)
-            {
-                Properties.Settings.Default.MemUser = checkBoxMem.Checked;
-                Properties.Settings.Default.UserID = (checkBoxMem.Checked) ? textBoxID.Text : "";
-                Properties.Settings.Default.Save();
-            }
-        }
-
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            // 従業員番号セット
-            this.UserID = textBoxID.Text;
-
             // 従業員番号チェック
-            if (!DBAccessor.IsAuthrizedEMPUser(this.UserID))
+            if (!DBAccessor.IsAuthrizedEMPUser(textBoxID.Text))
             {
                 textBoxID.SelectionStart = 0;
                 textBoxID.SelectionLength = textBoxID.Text.Length;
@@ -51,11 +37,21 @@ namespace PlanProduction
             }
             else
             {
+                // 設定に保存
+                if (MemUser != checkBoxMem.Checked || UserID != textBoxID.Text)
+                {
+                    Properties.Settings.Default.MemUser = checkBoxMem.Checked;
+                    Properties.Settings.Default.UserID = (checkBoxMem.Checked) ? textBoxID.Text : "";
+                    Properties.Settings.Default.Save();
+                    // メンバ変数セット
+                    UserID = textBoxID.Text;
+                    MemUser = checkBoxMem.Checked;
+                }
                 Common.UserId = textBoxID.Text;
             }
 
             // 作業グループマスタと手配先マスタを読み込んでおく（※重要）
-            DBAccessor.ReadKM5010(); // DataStore.dtKM5010kai をここで構築（KM5010 + M0300 + 追加項目あり）
+            DBAccessor.ReadKM5010(); // DataStore.dtKM5010kai をここで構築（KM5010 + M0300 + 列のみ追加）
             DBAccessor.ReadM300();
 
             // 一旦Oracleコネクションを削除（コネクションプールなしで細かな制御をしたい場合に必要）
@@ -73,7 +69,7 @@ namespace PlanProduction
                 // 初回起動のがキャンセルされたら終了
                 if (!File.Exists(@fullPath)) return;
             }
-            // アプリケーション設定ファイルの読込
+            // アプリケーション設定ファイルの読込（列のみ追加にデータをセット）
             Common.DeserializeAppSettings();
 
             // メイン画面起動
