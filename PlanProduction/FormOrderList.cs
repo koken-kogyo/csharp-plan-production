@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -30,6 +29,9 @@ namespace PlanProduction
         // 複数列選択用のセルリスト
         private readonly List<DataGridViewCell> selectedCells = [];
 
+        // DataGridViewの並び替え第２キー
+        private int? lastClickedColumnIndex = null;
+        private bool lastSortAscending = true;   // true = ASC, false = DESC
 
         public FormOrderList(OdCdSetting OdCdSetting, Action<string, List<SelectedItem>> callback)
         {
@@ -60,6 +62,8 @@ namespace PlanProduction
             dataGridView1.RowPostPaint += DataGridView1_RowPostPaint;
             dataGridView1.SelectionChanged += DataGridView1_SelectionChanged;
             dataGridView1.CellMouseDown += DataGridView1_CellMouseDown;
+            dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
+            //dataGridView1.SortCompare += DataGridView1_SortCompare;
             buttonRefresh.Click += ButtonRefresh_Click;
 
             // コントロールの初期化
@@ -103,8 +107,19 @@ namespace PlanProduction
             dtDataSource = new DataTable();
             dtD0520 = new DataTable();  // 在庫情報はリアルタイムに取得
             var s = OdCdSetting;
-            // 手配データ取得
-            if (DBAccessor.ReadD0410Pivot(ref dtDataSource, s.OdCd, s.KtCd, s.SortOrder))
+
+            bool ret;
+            if (s.OdCd.Substring(0, 3) == "603")
+            {
+                // ベンダーは手配日程データから＋５営業日分を取得
+                ret = DBAccessor.ReadD0440Pivot(ref dtDataSource, OdCdSetting);
+            }
+            else
+            {
+                // 手配データ取得
+                ret = DBAccessor.ReadD0410Pivot(ref dtDataSource, OdCdSetting);
+            }
+            if (ret)
             {
                 DBAccessor.ReadD0520FromPrevious(ref dtDataSource, ref dtD0520);  // 前工程の在庫を調べて取得
                 MargeDataTable(ref dtDataSource, ref dtD0520);                    // 手配データにマスタ情報と在庫情報を付与
@@ -113,16 +128,28 @@ namespace PlanProduction
                 dataGridView1.DataSource = dtDataSource;
 
                 // 手配リスト順番がSQLでは難しかったので、バインディング後に並び替える
-                if (s.SortOrder == 2)
+                int key1 = (s.SortOrder1 == 1) ? dataGridView1.Columns["品番"].Index :
+                           (s.SortOrder1 == 2) ? dataGridView1.Columns["優先度"].Index :
+                           (s.SortOrder1 == 3) ? dataGridView1.Columns["段取内容"].Index : dataGridView1.Columns["品番"].Index;
+                int key2 = (s.SortOrder2 == 1) ? dataGridView1.Columns["品番"].Index :
+                           (s.SortOrder2 == 2) ? dataGridView1.Columns["優先度"].Index :
+                           (s.SortOrder2 == 3) ? dataGridView1.Columns["段取内容"].Index : -1;
+                string col1 = dataGridView1.Columns[key1].DataPropertyName;
+                string sortExpression;
+                if (key2 >= 0 && key2 < dataGridView1.Columns.Count)
                 {
-                    //dtDataSource.DefaultView.Sort = "優先度 ASC";
-                    dataGridView1.Sort(dataGridView1.Columns["優先度"], ListSortDirection.Ascending);
+                    string col2 = dataGridView1.Columns[key2].DataPropertyName;
+                    sortExpression = $"{col1} ASC, {col2} ASC";
                 }
-                else if (s.SortOrder == 3)
+                else
                 {
-                    //dtDataSource.DefaultView.Sort = "段取内容 DESC";
-                    dataGridView1.Sort(dataGridView1.Columns["段取内容"], ListSortDirection.Descending);
+                    sortExpression = $"{col1} ASC";
                 }
+                dtDataSource.DefaultView.Sort = sortExpression;
+
+                // 初期状態として「前回クリック列」を設定しておく
+                lastClickedColumnIndex = key1;
+                lastSortAscending = true;
             }
             else
             {
@@ -220,6 +247,7 @@ namespace PlanProduction
                 foreach (string col in colNames)
                 {
                     dgv.Columns[col].DefaultCellStyle.BackColor = dgv.RowHeadersDefaultCellStyle.BackColor;
+                    dgv.Columns[col].SortMode = DataGridViewColumnSortMode.Programmatic; // ソート機能を自前
                 }
                 // 手配列の設定（幅、右揃え、ソート機能なし）
                 for (int col = dgv.Columns["前在"].Index; col < dgv.Columns["CT"].Index; col++)
@@ -386,19 +414,18 @@ namespace PlanProduction
             if (e.ColumnIndex < 0) return;
             if (処理モード == 1)
             {
-                bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
-
-                // Ctrl が押されていなければ選択クリア
-                if (!isCtrl)
-                {
-                    selectedCells.Clear();
-                    dataGridView1.ClearSelection();
-                }
-
                 var dgv = dataGridView1;
                 if (e.ColumnIndex > dgv.Columns["前在"].Index &&
                     e.ColumnIndex < dgv.Columns["CT"].Index)
                 {
+                    // Ctrl が押されていなければ選択クリア
+                    bool isCtrl = (ModifierKeys & Keys.Control) == Keys.Control;
+                    if (!isCtrl)
+                    {
+                        selectedCells.Clear();
+                        dataGridView1.ClearSelection();
+                    }
+
                     // 手配日付列のすべてのセルを選択に追加（新規行も含む）
                     foreach (DataGridViewRow row in dataGridView1.Rows)
                     {
@@ -409,6 +436,50 @@ namespace PlanProduction
 
                         cell.Selected = true;
                     }
+                }
+                else
+                {
+                    var dt = (DataTable)dataGridView1.DataSource;
+                    int current = e.ColumnIndex;
+                    string colCurrent = dataGridView1.Columns[current].DataPropertyName;
+
+                    string sortExpression;
+
+                    // 同じ列をクリックした場合 → 昇順／降順を反転
+                    if (lastClickedColumnIndex == current)
+                    {
+                        lastSortAscending = !lastSortAscending;
+                        string dir = lastSortAscending ? "ASC" : "DESC";
+                        sortExpression = $"{colCurrent} {dir}";
+                    }
+                    else
+                    {
+                        // 別の列をクリックした場合 → 複合キーソート
+                        string colPrevious = null;
+
+                        if (lastClickedColumnIndex != null)
+                        {
+                            colPrevious = dataGridView1.Columns[lastClickedColumnIndex.Value].DataPropertyName;
+                        }
+
+                        // 今回列は ASC 固定（初回クリック時）
+                        if (colPrevious != null)
+                        {
+                            sortExpression = $"{colCurrent} ASC, {colPrevious} ASC";
+                        }
+                        else
+                        {
+                            sortExpression = $"{colCurrent} ASC";
+                        }
+
+                        // 新しい列をクリックしたので昇順にリセット
+                        lastSortAscending = true;
+                    }
+                    // ソート実行
+                    dt.DefaultView.Sort = sortExpression;
+
+                    // 今回の列を保持
+                    lastClickedColumnIndex = current;
                 }
             }
         }

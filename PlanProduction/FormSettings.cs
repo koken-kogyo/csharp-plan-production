@@ -43,12 +43,21 @@ namespace PlanProduction
             dataGridView1.Columns["ColumnExcel"].ReadOnly = true;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
+
+            // 初期表示
+            //  FormLogin.buttonOK_Click.DBAccessor.ReadKM5010()と
+            //  Common.DeserializeAppSettings()で読み込みと編集した DataStore.dtKM5010kai
+            //
             dataGridView1.DataSource = DataStore.dtKM5010kai;
 
             // データブリッドコンボボックスをCommonPropatyのsortOrderMapから取得し設定
-            var col = (DataGridViewComboBoxColumn)dataGridView1.Columns["ColumnListOrder"]; // Name:ColumnListOrder / DataName:SORTORDER
+            var col = (DataGridViewComboBoxColumn)dataGridView1.Columns["ColumnListOrder1"]; // Name:ColumnListOrder1 / DataName:SORTORDER1
             col.Items.Clear();
             col.Items.AddRange(Common.sortOrderMap.Values.ToArray());
+            var col2 = (DataGridViewComboBoxColumn)dataGridView1.Columns["ColumnListOrder2"]; // Name:ColumnListOrder2 / DataName:SORTORDER2
+            col2.Items.Clear();
+            col2.Items.Add("");
+            col2.Items.AddRange(Common.sortOrderMap.Values.ToArray());
 
             // デフォルト手配先コードコンボボックスの再作成
             ReCreateComboBox();
@@ -158,8 +167,8 @@ namespace PlanProduction
                 {
                     string exeDir = Application.StartupPath;
 
-                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString())) 
-                        row.Cells["ColumnListOrder"].Value = Common.sortOrderMap[2];
+                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString())) 
+                        row.Cells["ColumnListOrder1"].Value = Common.sortOrderMap[2];
                     if (string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
                         row.Cells["ColumnTanName"].Value = "鈴木";
                     if (string.IsNullOrEmpty(row.Cells["Column可動率"].Value.ToString()))
@@ -193,7 +202,7 @@ namespace PlanProduction
                     //
                     // 項目チェック
                     //
-                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString()))
+                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString()))
                     {
                         errmsg = "手配リスト順番を選択して下さい．";
                     }
@@ -225,9 +234,13 @@ namespace PlanProduction
                 else
                 {
                     // データテーブルに残っている値を初期化
-                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder"].Value.ToString()))
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString()))
                     {
-                        row.Cells["ColumnListOrder"].Value = "";
+                        row.Cells["ColumnListOrder1"].Value = "";
+                    }
+                    if (!string.IsNullOrEmpty(row.Cells["ColumnListOrder2"].Value.ToString()))
+                    {
+                        row.Cells["ColumnListOrder2"].Value = "";
                     }
                     if (!string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
                     {

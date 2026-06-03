@@ -123,13 +123,21 @@ namespace PlanProduction
                 DataRow findRow = DataStore.dtKM5010kai.Rows.Find([odcd.OdCd , odcd.KtCd]);
                 if (findRow == null) continue;
                 findRow["CHECKED"] = true;
-                if (sortOrderMap.TryGetValue(odcd.SortOrder, out string value))
+                if (sortOrderMap.TryGetValue(odcd.SortOrder1, out string value1))
                 {
-                    findRow["SORTORDER"] = value;
+                    findRow["SORTORDER1"] = value1;
                 }
                 else
                 {
-                    findRow["SORTORDER"] = sortOrderMap[1];
+                    findRow["SORTORDER1"] = sortOrderMap[1];
+                }
+                if (sortOrderMap.TryGetValue(odcd.SortOrder2, out string value2))
+                {
+                    findRow["SORTORDER2"] = value2;
+                }
+                else
+                {
+                    findRow["SORTORDER2"] = "";
                 }
                 findRow["TANNAME"] = odcd.TanName;
                 findRow["AVA"] = odcd.Ava;
@@ -156,20 +164,25 @@ namespace PlanProduction
                 if (!isChecked) continue;
 
                 // 選択バリューからキーを検索
-                string val = row[5].ToString();
-                var key = sortOrderMap.FirstOrDefault(x => x.Value == val).Key;
-                if (key == 0) key = 1; // Default値
+                string val1 = row[5].ToString();
+                var key1 = sortOrderMap.FirstOrDefault(x => x.Value == val1).Key;
+                if (key1 == 0) key1 = 1; // Default値
+
+                string val2 = row[6].ToString();
+                var key2 = sortOrderMap.FirstOrDefault(x => x.Value == val2).Key;
+                if (key2 == 0) key2 = -1; // Default値
 
                 var config = new OdCdSetting
                 {
                     OdCd = row[0]?.ToString(),
                     KtCd = row[1]?.ToString(),
-                    SortOrder = key,
-                    TanName = row[6]?.ToString(),
-                    Ava = row[7]?.ToString(),
-                    StartTime = row[8]?.ToString(),
-                    ExcelName = row[9]?.ToString(),
-                    FullPath = row[10]?.ToString()
+                    SortOrder1 = key1,
+                    SortOrder2 = key2,
+                    TanName = row[7]?.ToString(),
+                    Ava = row[8]?.ToString(),
+                    StartTime = row[9]?.ToString(),
+                    ExcelName = row[10]?.ToString(),
+                    FullPath = row[11]?.ToString()
                 };
                 records.Add(config);
             }

@@ -3,7 +3,6 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -161,7 +160,8 @@ namespace PlanProduction
                 myDa.Fill(DataStore.dtKM5010kai);
                 // 列の追加
                 DataStore.dtKM5010kai.Columns.Add("CHECKED", typeof(bool));
-                DataStore.dtKM5010kai.Columns.Add("SORTORDER", typeof(string));
+                DataStore.dtKM5010kai.Columns.Add("SORTORDER1", typeof(string));
+                DataStore.dtKM5010kai.Columns.Add("SORTORDER2", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("TANNAME", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("AVA", typeof(string));
                 DataStore.dtKM5010kai.Columns.Add("STARTTIME", typeof(string));
@@ -483,10 +483,39 @@ namespace PlanProduction
         }
 
         /// <summary>
+        /// EM 手配日程ファイルを読み込み作業標準マスタにない品番を返却
+        /// </summary>
+        /// <returns>DataTable</returns>
+        public static bool ReadD0440ConvertToMaster(ref DataTable dt, string odcd, string ktcd)
+        {
+            bool ret = false;
+            string sql = string.Empty;
+            try
+            {
+                sql = "select HMCD from "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0440 a "
+                    + $"WHERE ODCD = '{odcd}' and KTCD like '{ktcd}' "
+                    + $"and not exists(select 1 from KM5030 m where ODCD='{odcd}' and KTCD like '{ktcd}' and m.HMCD=a.HMCD) "
+                    + "group by HMCD order by HMCD";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(dt);
+                }
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(sql + "\n" + ex.Message);
+            }
+            return ret;
+        }
+
+        /// <summary>
         /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410Pivot(ref DataTable dt, string odcd, string ktcd, int sortorder)
+        public static bool ReadD0410Pivot(ref DataTable dt, OdCdSetting s)
         {
             bool ret = false;
             string sql = string.Empty;
@@ -527,7 +556,7 @@ namespace PlanProduction
                         + "select EDDT from "
                         + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 "
                         + $"where EDDT between '{from}' and '{to}' "
-                        + $"and ODCD = '{odcd}' and KTCD like '{ktcd}' and ODRSTS in ('2', '3') "
+                        + $"and ODCD = '{s.OdCd}' and KTCD like '{s.KtCd}' and ODRSTS in ('2', '3') "
                         + "and ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                     + "group by EDDT)";
                 using (OracleCommand myCmd = new(sql, oraCnn))
@@ -578,8 +607,135 @@ namespace PlanProduction
                                 + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
                                     + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
                                 + "and a.EDDT between sysdate - 30 and sysdate + 30 "
-                                + $"and a.ODCD = '{odcd}' and a.KTCD like '{ktcd}' and a.ODRSTS in ('2', '3') "
+                                + $"and a.ODCD = '{s.OdCd}' and a.KTCD like '{s.KtCd}' and a.ODRSTS in ('2', '3') "
                                 + "and a.ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
+                        + ") src "
+                        + "PIVOT ( "
+                            + "SUM(ODRQTY) "
+                            + "FOR 手配日 IN ( "
+                                + pivotList
+                            + ") "
+                        + ") "
+                    + ") "
+                    + "select "
+                        + "case "
+                        + casewhenList
+                        + "else 9 end as 優先度 "
+                        + ", pivot.* "
+                    + "from pivot "
+                    + "ORDER BY pivot.品番";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(dt);
+                    ret = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                // エラー
+                string msg = "Exception Source = " + ex.Source + ", Message = " + ex.Message;
+                MessageBox.Show(msg + "\n" + sql);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// EM 手配日程ファイルを読み込みPivotテーブルを作成し返却
+        /// </summary>
+        /// <returns>DataTable</returns>
+        public static bool ReadD0440Pivot(ref DataTable dt, OdCdSetting s)
+        {
+            bool ret = false;
+            string sql = string.Empty;
+            try
+            {
+                if (oraCnn is null) OpenOraSchema();
+                // trunc(sysdate)前7～後5営業日を取得して FROM ～ TO を決める
+                DataTable fromtoDt = new();
+                sql = "with plusrec as ( "
+                        + "select YMD from s0820 where caltyp='00001' and wkkbn='1' "
+                        + "and ymd between trunc(sysdate) and sysdate + 30 order by YMD asc "
+                    + "), "
+                    + "minusrec as ( "
+                        + "select YMD from s0820 where caltyp='00001' and wkkbn='1' "
+                        + "and ymd between sysdate - 30 and trunc(sysdate) order by YMD desc "
+                    + ") "
+                    + "select to_char(min(YMD),'YYYY-MM-DD') as FROMDT "
+                    + ", to_char(max(YMD),'YYYY-MM-DD') as TODT from "
+                    + "( "
+                        + "select YMD from minusrec where rownum <= 8 "
+                        + "union  "
+                        + "select YMD from plusrec where rownum <= 6 "
+                    + ")";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(fromtoDt);
+                }
+                string from = fromtoDt.Rows[0]["FROMDT"].ToString();
+                string to = fromtoDt.Rows[0]["TODT"].ToString();
+
+                // Pivotテーブル用の列ヘッダーを取得
+                // 「行番号、YMD(YYYY-MM-DD)、MD(MM/DD)」
+                DataTable headerDt = new();
+                sql = "select ROW_NUMBER() OVER(ORDER BY EDDT) AS 行番号 "
+                    + ", to_char(eddt, 'yyyy-MM-dd') as YMD, to_char(eddt, 'mm/dd') as MD "
+                    + "from ( "
+                        + "select EDDT from "
+                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0440 "
+                        + $"where EDDT between '{from}' and '{to}' "
+                        + $"and ODCD = '{s.OdCd}' and KTCD like '{s.KtCd}' and ODRSTS in ('2', '3') "
+                    + "group by EDDT)";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(headerDt);
+                }
+
+
+                // Pivot IN 句の作成
+                // 例）DATE '2026-03-18' AS '3/18' 
+                var conditions = new List<string>();
+                foreach (DataRow row in headerDt.Rows)
+                {
+                    string cond = $"DATE '{row["YMD"]}' as \"{row["MD"]}\"";
+                    conditions.Add(cond);
+                }
+                string pivotList = string.Join(",", conditions);
+                if (conditions.Count == 0) pivotList = "DATE '2999-12-31' AS \"12/31\" ";
+
+                // Case When 句の作成
+                // 例）when '3/18' is not null then 1
+                conditions = [];
+                foreach (DataRow row in headerDt.Rows)
+                {
+                    string cond = $"when \"{row["MD"]}\" is not null then {row["行番号"]}";
+                    conditions.Add(cond);
+                }
+                string casewhenList = string.Join(" ", conditions) + " ";
+                if (conditions.Count == 0) casewhenList = "when \"12/31\" is not null then 1 ";
+
+                // 実際の取得
+                sql =
+                    "WITH pivot as ( "
+                        + "SELECT * "
+                        + "FROM ( "
+                            + "SELECT "
+                                + "a.HMCD as 品番, a.ODCD, a.KTCD, m50.HMRNM as 品目略称, m51.KTSEQ"
+                                + ", m51.WKNOTE as 作業内容, m51.WKCOMMENT as 作業注釈"
+                                + ", TRUNC(a.EDDT) AS 手配日, a.ODRQTY - a.JIQTY as ODRQTY "
+                            + "FROM "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0440 a, "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0500 m50, "
+                                + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0510 m51 "
+                            + "WHERE "
+                                + "m50.HMCD = a.HMCD "
+                                + "and m51.HMCD = a.HMCD "
+                                + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
+                                    + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
+                                + "and a.EDDT between sysdate - 30 and sysdate + 30 "
+                                + $"and a.ODCD = '{s.OdCd}' and a.KTCD like '{s.KtCd}' and a.ODRSTS in ('2', '3') "
                         + ") src "
                         + "PIVOT ( "
                             + "SUM(ODRQTY) "

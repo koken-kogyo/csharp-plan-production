@@ -54,8 +54,8 @@ namespace PlanProduction
                 Common.UserId = textBoxID.Text;
             }
 
-            // 作業グループマスタと手配先マスタを読み込んでおく
-            DBAccessor.ReadKM5010();
+            // 作業グループマスタと手配先マスタを読み込んでおく（※重要）
+            DBAccessor.ReadKM5010(); // DataStore.dtKM5010kai をここで構築（KM5010 + M0300 + 追加項目あり）
             DBAccessor.ReadM300();
 
             // 一旦Oracleコネクションを削除（コネクションプールなしで細かな制御をしたい場合に必要）

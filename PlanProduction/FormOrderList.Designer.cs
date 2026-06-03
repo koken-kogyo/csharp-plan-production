@@ -397,7 +397,6 @@
             dataGridView1.RowTemplate.Height = 36;
             dataGridView1.Size = new System.Drawing.Size(900, 245);
             dataGridView1.TabIndex = 4;
-            dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
             // 
             // FormOrderList
             // 

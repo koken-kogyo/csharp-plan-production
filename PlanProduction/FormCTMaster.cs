@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -69,8 +68,15 @@ namespace PlanProduction
             DBAccessor.ReadKM5030(ref dtKM5030, OdCdSetting.OdCd, OdCdSetting.KtCd);
             // 段取りマスタ取得
             DBAccessor.ReadKM5020(ref dtKM5020, OdCdSetting.OdCd, OdCdSetting.KtCd);
-            // 手配品番マスタ取得
-            DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+            if (OdCdSetting.OdCd.Substring(0, 3) != "603")
+            {
+                // 手配品番マスタ取得
+                DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+            } else
+            {
+                // 手配品番マスタ取得
+                DBAccessor.ReadD0440ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+            }
 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.EnableHeadersVisualStyles = false;
