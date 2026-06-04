@@ -1215,22 +1215,23 @@ namespace PlanProduction
                 計画稼働時間 += adjustedCt;
             }
             // 明細プール後に最終計算
-            textBoxPlanEndTime.Text = (dataGridViewPlan.Rows.Count > 1) ?
-                dataGridViewPlan.Rows[^2].Cells["Plan終了時刻"].Value?.ToString() :
-                textBoxPlanStartTime.Text;
-            DateTime s = Common.ToDateTimeFromHHmm(textBoxPlanStartTime.Text);
-            DateTime e = Common.ToDateTimeFromHHmm(textBoxPlanEndTime.Text);
-            if (e < s) e = e.AddDays(1);
-            double 最終就業時間 = (e - s).TotalSeconds;
-            double 最終休憩時間 = 休憩時間算出(s, e, checkBoxPlanお昼稼働.Checked, checkBoxPlan休憩稼働.Checked, checkBoxPlanピカピカ.Checked, checkBoxPlan早昼.Checked);
-            double 最終稼働時間 = 最終就業時間 - 最終休憩時間;
-            textBoxPlanQty.Text = 合計本数.ToString("#,0");
-            textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N2");          // (時)double
-            textBoxPlanOpe.Text = (最終稼働時間 / 3600).ToString("N2");       // (時)double
-            double ans = CT稼働時間 / 最終稼働時間 * 100;
-            textBoxPlan稼働率.Text = ans.ToString("N0");                      // (％)int
-            textBoxPlan就業時間.Text = (最終就業時間 / 3600).ToString("N2");  // (時)double visible=false
-            textBoxPlan休憩時間.Text = (最終休憩時間 / 60).ToString("N0");    // (分)int visible=false
+            if (dataGridViewPlan.Rows.Count > 1)
+            {
+                textBoxPlanEndTime.Text = dataGridViewPlan.Rows[^2].Cells["Plan終了時刻"].Value?.ToString();
+                DateTime s = Common.ToDateTimeFromHHmm(textBoxPlanStartTime.Text);
+                DateTime e = Common.ToDateTimeFromHHmm(textBoxPlanEndTime.Text);
+                if (e < s) e = e.AddDays(1);
+                double 最終就業時間 = (e - s).TotalSeconds;
+                double 最終休憩時間 = 休憩時間算出(s, e, checkBoxPlanお昼稼働.Checked, checkBoxPlan休憩稼働.Checked, checkBoxPlanピカピカ.Checked, checkBoxPlan早昼.Checked);
+                double 最終稼働時間 = 最終就業時間 - 最終休憩時間;
+                textBoxPlanQty.Text = 合計本数.ToString("#,0");
+                textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N2");          // (時)double
+                textBoxPlanOpe.Text = (最終稼働時間 / 3600).ToString("N2");       // (時)double
+                double ans = (CT稼働時間 > 0) ? CT稼働時間 / 最終稼働時間 * 100 : 0;
+                textBoxPlan稼働率.Text = ans.ToString("N0");                      // (％)int
+                textBoxPlan就業時間.Text = (最終就業時間 / 3600).ToString("N2");  // (時)double visible=false
+                textBoxPlan休憩時間.Text = (最終休憩時間 / 60).ToString("N0");    // (分)int visible=false
+            }
         }
 
         /// <summary>
@@ -1338,7 +1339,7 @@ namespace PlanProduction
             textBoxAchieveCT.Text = (CT稼働時間 / 3600).ToString("N2");           // (時)double
             textBoxAchieveOpe.Text = ((最終稼働時間) / 3600).ToString("N2");      // (時)double
             textBoxAchieve可動率.Text = (合計可動率 / 明細数).ToString("N0");     // (％)int
-            double ans = CT稼働時間 / 最終稼働時間 * 100;
+            double ans = (CT稼働時間 > 0) ? CT稼働時間 / 最終稼働時間 * 100 : 0;
             textBoxAchieve稼働率.Text = ans.ToString("N0");                       // (％)int
             textBoxAchieve就業時間.Text = (最終就業時間 / 3600).ToString("N2");   // (時)double visible=false
             textBoxAchieve休憩時間.Text = (最終休憩時間 / 60).ToString("N0");     // (分)int visible=false
