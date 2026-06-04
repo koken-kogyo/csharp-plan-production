@@ -139,6 +139,8 @@ namespace PlanProduction
             textBoxPlanCT.Text = "0.0";
             textBoxPlanOpe.Text = "0.0";
             textBoxPlan可動率.Text = (string.IsNullOrEmpty(OdCdSetting.Ava)) ? "70" : OdCdSetting.Ava;
+            textBoxPlan稼働率.Text = "";
+            textBoxPlan休憩時間.Text = "";
             可動率 = double.TryParse(OdCdSetting.Ava, out double result) ? 1 / result * 100 : 1.4286; // デフォルトは70%で1.4286倍
             checkBoxPlanお昼稼働.Checked = false;
             checkBoxPlan休憩稼働.Checked = false;
@@ -151,6 +153,8 @@ namespace PlanProduction
             textBoxAchieveCT.Text = "0.0";
             textBoxAchieveOpe.Text = "0.0";
             textBoxAchieve可動率.Text = "";
+            textBoxAchieve稼働率.Text = "";
+            textBoxAchieve休憩時間.Text = "";
             checkBoxAchieveお昼稼働.Checked = false;
             checkBoxAchieve休憩稼働.Checked = false;
             checkBoxAchieveピカピカ.Checked = false;
@@ -254,8 +258,11 @@ namespace PlanProduction
                 checkBoxPlan早昼.Checked = paramPlan.早昼;
                 textBoxPlanQty.Text = paramPlan.合計本数.ToString("N0");
                 textBoxPlanCT.Text = paramPlan.CT合計時間.ToString("N2");
-                textBoxPlanOpe.Text = paramPlan.合計稼働時間.ToString("N2");
-                textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
+                textBoxPlan就業時間.Text = paramPlan.就業時間.ToString("N2");
+                textBoxPlanOpe.Text = paramPlan.稼働時間.ToString("N2");
+                textBoxPlan休憩時間.Text = paramPlan.休憩時間.ToString();
+                textBoxPlan稼働率.Text = (paramPlan.設備稼働率 == 0) ? "" : paramPlan.設備稼働率.ToString();
+                textBoxPlan可動率.Text = (paramPlan.明細可動率 == 0) ? "" : paramPlan.明細可動率.ToString();
                 textBoxPlanStartTime.Text = paramPlan.開始時刻.ToString();
                 textBoxPlanEndTime.Text = paramPlan.終了時刻.ToString();
             }
@@ -293,8 +300,11 @@ namespace PlanProduction
                 checkBoxAchieve早昼.Checked = paramAchieve.早昼;
                 textBoxAchieveQty.Text = paramAchieve.合計本数.ToString("N0");
                 textBoxAchieveCT.Text = paramAchieve.CT合計時間.ToString("N2");
-                textBoxAchieveOpe.Text = paramAchieve.合計稼働時間.ToString("N2");
-                textBoxAchieve可動率.Text = (paramAchieve.可動率 != 0) ? paramAchieve.可動率.ToString("F0") : "";
+                textBoxAchieve就業時間.Text = paramAchieve.就業時間.ToString("N2");
+                textBoxAchieveOpe.Text = paramAchieve.稼働時間.ToString("N2");
+                textBoxAchieve休憩時間.Text = paramAchieve.休憩稼働.ToString();
+                textBoxAchieve稼働率.Text = (paramAchieve.設備稼働率 == 0) ? "" : paramAchieve.設備稼働率.ToString();
+                textBoxAchieve可動率.Text = (paramAchieve.明細可動率 == 0) ? "" : paramAchieve.明細可動率.ToString();
                 textBoxAchieveStartTime.Text = paramAchieve.開始時刻.ToString();
                 textBoxAchieveEndTime.Text = paramAchieve.終了時刻.ToString();
             }
@@ -922,10 +932,13 @@ namespace PlanProduction
             // 計画登録更新
             if (isPlanChanged && dataGridViewPlan.Rows.Count > 1)
             {
-                int totalQty = int.TryParse(textBoxPlanQty.Text.Replace(",", ""), out int v) ? v : 0;
-                double totalCT = double.TryParse(textBoxPlanCT.Text, out double w) ? w : 0.0;
-                double totalOpe = double.TryParse(textBoxPlanOpe.Text, out double x) ? x : 0.0;
-                double ava = double.TryParse(textBoxPlan可動率.Text, out double y) ? y : 0.0;
+                int 合計本数 = int.TryParse(textBoxPlanQty.Text.Replace(",", ""), out int v) ? v : 0;
+                double CT合計時間 = textBoxPlanCT.Text.ToDoubleOrDefault();
+                double 就業時間 = textBoxPlan就業時間.Text.ToDoubleOrDefault();
+                double 稼働時間 = textBoxPlanOpe.Text.ToDoubleOrDefault();
+                int 休憩時間 = textBoxPlan休憩時間.Text.ToIntOrDefault();
+                int 設備稼働率 = textBoxPlan稼働率.Text.ToIntOrDefault();
+                int 明細可動率 = textBoxPlan可動率.Text.ToIntOrDefault();
                 var opt = new SaveOptions
                 {
                     OdCd = OdCdSetting.OdCd,
@@ -938,10 +951,13 @@ namespace PlanProduction
                     ピカピカ = checkBoxPlanピカピカ.Checked,
                     早昼 = checkBoxPlan早昼.Checked,
                     所感 = "",
-                    合計本数 = totalQty,
-                    CT合計時間 = totalCT,
-                    合計稼働時間 = totalOpe,
-                    可動率 = ava
+                    合計本数 = 合計本数,
+                    CT合計時間 = CT合計時間,
+                    就業時間 = 就業時間,
+                    稼働時間 = 稼働時間,
+                    休憩時間 = 休憩時間,
+                    設備稼働率 = 設備稼働率,
+                    明細可動率 = 明細可動率
                 };
                 DBAccessor.SaveDataGridView(ref dataGridViewPlan, opt);
 
@@ -962,10 +978,13 @@ namespace PlanProduction
             }
             else
             {
-                int totalQty = int.TryParse(textBoxAchieveQty.Text.Replace(",", ""), out int v) ? v : 0;
-                double totalCT = double.TryParse(textBoxAchieveCT.Text, out double w) ? w : 0.0;
-                double totalOpe = double.TryParse(textBoxAchieveOpe.Text, out double x) ? x : 0.0;
-                double ava = double.TryParse(textBoxAchieve可動率.Text, out double y) ? y : 0.0;
+                int 合計本数 = int.TryParse(textBoxAchieveQty.Text.Replace(",", ""), out int v) ? v : 0;
+                double CT合計時間 = double.TryParse(textBoxAchieveCT.Text, out double w) ? w : 0.0;
+                double 就業時間 = textBoxAchieve就業時間.Text.ToDoubleOrDefault();
+                double 稼働時間 = textBoxAchieveOpe.Text.ToDoubleOrDefault();
+                int 休憩時間 = textBoxAchieve休憩時間.Text.ToIntOrDefault();
+                int 設備稼働率 = textBoxAchieve稼働率.Text.ToIntOrDefault();
+                int 明細可動率 = textBoxAchieve可動率.Text.ToIntOrDefault();
                 var opt = new SaveOptions
                 {
                     OdCd = OdCdSetting.OdCd,
@@ -978,10 +997,13 @@ namespace PlanProduction
                     ピカピカ = checkBoxAchieveピカピカ.Checked,
                     早昼 = checkBoxAchieve早昼.Checked,
                     所感 = "",
-                    合計本数 = totalQty,
-                    CT合計時間 = totalCT,
-                    合計稼働時間 = totalOpe,
-                    可動率 = ava
+                    合計本数 = 合計本数,
+                    CT合計時間 = CT合計時間,
+                    就業時間 = 就業時間,
+                    稼働時間 = 稼働時間,
+                    休憩時間 = 休憩時間,
+                    設備稼働率 = 設備稼働率,
+                    明細可動率 = 明細可動率
                 };
                 if (DBAccessor.SaveDataGridView(ref dataGridViewAchieve, opt))
                 {
@@ -1130,7 +1152,6 @@ namespace PlanProduction
             double 合計本数 = 0.0;
             double CT稼働時間 = 0.0;
             double 計画稼働時間 = 0.0;
-            double 合計休憩時間 = 0.0;
             int 標準段取時間 = OdCdSetting.Dandori;
             for (int i = 0; i < dataGridViewPlan.Rows.Count; i++)
             {
@@ -1192,14 +1213,24 @@ namespace PlanProduction
                 合計本数 += 本数;
                 CT稼働時間 += ct * 本数;
                 計画稼働時間 += adjustedCt;
-                合計休憩時間 += 休憩;
             }
-            textBoxPlanQty.Text = 合計本数.ToString("#,0");
-            textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N2");
-            textBoxPlanOpe.Text = ((計画稼働時間 + 合計休憩時間) / 3600).ToString("N2");
+            // 明細プール後に最終計算
             textBoxPlanEndTime.Text = (dataGridViewPlan.Rows.Count > 1) ?
                 dataGridViewPlan.Rows[^2].Cells["Plan終了時刻"].Value?.ToString() :
                 textBoxPlanStartTime.Text;
+            DateTime s = Common.ToDateTimeFromHHmm(textBoxPlanStartTime.Text);
+            DateTime e = Common.ToDateTimeFromHHmm(textBoxPlanEndTime.Text);
+            if (e < s) e = e.AddDays(1);
+            double 最終就業時間 = (e - s).TotalSeconds;
+            double 最終休憩時間 = 休憩時間算出(s, e, checkBoxPlanお昼稼働.Checked, checkBoxPlan休憩稼働.Checked, checkBoxPlanピカピカ.Checked, checkBoxPlan早昼.Checked);
+            double 最終稼働時間 = 最終就業時間 - 最終休憩時間;
+            textBoxPlanQty.Text = 合計本数.ToString("#,0");
+            textBoxPlanCT.Text = (CT稼働時間 / 3600).ToString("N2");          // (時)double
+            textBoxPlanOpe.Text = (最終稼働時間 / 3600).ToString("N2");       // (時)double
+            double ans = CT稼働時間 / 最終稼働時間 * 100;
+            textBoxPlan稼働率.Text = ans.ToString("N0");                      // (％)int
+            textBoxPlan就業時間.Text = (最終就業時間 / 3600).ToString("N2");  // (時)double visible=false
+            textBoxPlan休憩時間.Text = (最終休憩時間 / 60).ToString("N0");    // (分)int visible=false
         }
 
         /// <summary>
@@ -1266,9 +1297,11 @@ namespace PlanProduction
             targetRow.Cells["Achieve可動率"].Value = 今回可動率.ToString("N0");
 
             // ループしてトータル時間を算出（開始時刻・終了時刻が入力された行まで）
+            int 明細数 = 0;
             double 合計本数 = 0.0;
             double CT稼働時間 = 0.0;
             double 合計休憩時間 = 0.0;
+            double 合計可動率 = 0.0;
             string 最終終了時刻 = string.Empty;
             for (int i = 0; i < dataGridViewAchieve.Rows.Count; i++)
             {
@@ -1287,19 +1320,28 @@ namespace PlanProduction
                 double ct = row.Cells["AchieveCT"].Value.ToDoubleOrDefault();
                 int 本数 = row.Cells["Achieve本数"].Value.ToIntOrDefault();
                 double 休憩時間 = row.Cells["Achieve休憩時間"].Value.ToDoubleOrDefault();
+                double 可動率 = row.Cells["Achieve可動率"].Value.ToIntOrDefault();
                 合計本数 += 本数;
                 CT稼働時間 += ct * 本数;
                 合計休憩時間 += 休憩時間;
+                合計可動率 += 可動率;
+                明細数++;
             }
+            // 明細プール後に最終計算
             textBoxAchieveEndTime.Text = 最終終了時刻;
-            DateTime 開始時刻 = textBoxAchieveStartTime.Text.ToDateTimeOrDefaultToday();
-            DateTime 終了時刻 = textBoxAchieveEndTime.Text.ToDateTimeOrDefaultToday();
-            double 実際稼働時間 = (終了時刻 - 開始時刻).TotalSeconds - 合計休憩時間;
-
+            DateTime s = Common.ToDateTimeFromHHmm(textBoxAchieveStartTime.Text);
+            DateTime e = Common.ToDateTimeFromHHmm(textBoxAchieveEndTime.Text);
+            double 最終就業時間 = (e - s).TotalSeconds;
+            double 最終休憩時間 = 休憩時間算出(s, e, checkBoxAchieveお昼稼働.Checked, checkBoxAchieve休憩稼働.Checked, checkBoxAchieveピカピカ.Checked, checkBoxAchieve早昼.Checked);
+            double 最終稼働時間 = 最終就業時間 - 最終休憩時間;
             textBoxAchieveQty.Text = 合計本数.ToString("#,0");
-            textBoxAchieveCT.Text = (CT稼働時間 / 3600).ToString("N2");
-            textBoxAchieveOpe.Text = ((実際稼働時間) / 3600).ToString("N2");
-            textBoxAchieve可動率.Text = (CT稼働時間 / (実際稼働時間) * 100).ToString("N0");
+            textBoxAchieveCT.Text = (CT稼働時間 / 3600).ToString("N2");           // (時)double
+            textBoxAchieveOpe.Text = ((最終稼働時間) / 3600).ToString("N2");      // (時)double
+            textBoxAchieve可動率.Text = (合計可動率 / 明細数).ToString("N0");     // (％)int
+            double ans = CT稼働時間 / 最終稼働時間 * 100;
+            textBoxAchieve稼働率.Text = ans.ToString("N0");                       // (％)int
+            textBoxAchieve就業時間.Text = (最終就業時間 / 3600).ToString("N2");   // (時)double visible=false
+            textBoxAchieve休憩時間.Text = (最終休憩時間 / 60).ToString("N0");     // (分)int visible=false
         }
 
         /// <summary>

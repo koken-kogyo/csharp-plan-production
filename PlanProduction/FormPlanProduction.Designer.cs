@@ -29,17 +29,23 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPlanProduction));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainerMain = new System.Windows.Forms.SplitContainer();
             button3 = new System.Windows.Forms.Button();
             splitContainer上下 = new System.Windows.Forms.SplitContainer();
             splitContainer計画と実績 = new System.Windows.Forms.SplitContainer();
             dataGridViewPlan = new System.Windows.Forms.DataGridView();
             panelPlanResult = new System.Windows.Forms.Panel();
+            labelPlanQtyTtl = new System.Windows.Forms.Label();
+            labelPlanEndTtl = new System.Windows.Forms.Label();
+            labelPlanStartTtl = new System.Windows.Forms.Label();
+            labelPlanEquTtl = new System.Windows.Forms.Label();
+            textBoxPlan稼働率 = new System.Windows.Forms.TextBox();
+            labelPlanEqu = new System.Windows.Forms.Label();
             textBoxPlanQty = new System.Windows.Forms.TextBox();
             labelPlanQty = new System.Windows.Forms.Label();
             textBoxPlanEndTime = new System.Windows.Forms.TextBox();
@@ -51,9 +57,17 @@
             checkBoxPlanピカピカ = new System.Windows.Forms.CheckBox();
             checkBoxPlan休憩稼働 = new System.Windows.Forms.CheckBox();
             checkBoxPlanお昼稼働 = new System.Windows.Forms.CheckBox();
+            labelPlanAvaTtl = new System.Windows.Forms.Label();
             labelPlanCaption = new System.Windows.Forms.Label();
             dataGridViewAchieve = new System.Windows.Forms.DataGridView();
             panelAchieveResult = new System.Windows.Forms.Panel();
+            labelAchieveQtyTtl = new System.Windows.Forms.Label();
+            labelAchieveEndTtl = new System.Windows.Forms.Label();
+            labelAchieveStartTtl = new System.Windows.Forms.Label();
+            labelAchieveEquTtl = new System.Windows.Forms.Label();
+            labelAchieveAvaTtl = new System.Windows.Forms.Label();
+            textBoxAchieve稼働率 = new System.Windows.Forms.TextBox();
+            labelAchieveEqu = new System.Windows.Forms.Label();
             textBoxAchieveQty = new System.Windows.Forms.TextBox();
             labelAchieveQty = new System.Windows.Forms.Label();
             textBoxAchieveEndTime = new System.Windows.Forms.TextBox();
@@ -157,14 +171,14 @@
             // 
             resources.ApplyResources(dataGridViewPlan, "dataGridViewPlan");
             dataGridViewPlan.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dataGridViewPlan.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewPlan.DefaultCellStyle = dataGridViewCellStyle3;
             dataGridViewPlan.Name = "dataGridViewPlan";
             dataGridViewPlan.RowTemplate.Height = 21;
             // 
@@ -172,6 +186,12 @@
             // 
             resources.ApplyResources(panelPlanResult, "panelPlanResult");
             panelPlanResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            panelPlanResult.Controls.Add(labelPlanQtyTtl);
+            panelPlanResult.Controls.Add(labelPlanEndTtl);
+            panelPlanResult.Controls.Add(labelPlanStartTtl);
+            panelPlanResult.Controls.Add(labelPlanEquTtl);
+            panelPlanResult.Controls.Add(textBoxPlan稼働率);
+            panelPlanResult.Controls.Add(labelPlanEqu);
             panelPlanResult.Controls.Add(textBoxPlanQty);
             panelPlanResult.Controls.Add(labelPlanQty);
             panelPlanResult.Controls.Add(textBoxPlanEndTime);
@@ -183,7 +203,43 @@
             panelPlanResult.Controls.Add(checkBoxPlanピカピカ);
             panelPlanResult.Controls.Add(checkBoxPlan休憩稼働);
             panelPlanResult.Controls.Add(checkBoxPlanお昼稼働);
+            panelPlanResult.Controls.Add(labelPlanAvaTtl);
             panelPlanResult.Name = "panelPlanResult";
+            // 
+            // labelPlanQtyTtl
+            // 
+            resources.ApplyResources(labelPlanQtyTtl, "labelPlanQtyTtl");
+            labelPlanQtyTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelPlanQtyTtl.Name = "labelPlanQtyTtl";
+            // 
+            // labelPlanEndTtl
+            // 
+            resources.ApplyResources(labelPlanEndTtl, "labelPlanEndTtl");
+            labelPlanEndTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelPlanEndTtl.Name = "labelPlanEndTtl";
+            // 
+            // labelPlanStartTtl
+            // 
+            resources.ApplyResources(labelPlanStartTtl, "labelPlanStartTtl");
+            labelPlanStartTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelPlanStartTtl.Name = "labelPlanStartTtl";
+            // 
+            // labelPlanEquTtl
+            // 
+            resources.ApplyResources(labelPlanEquTtl, "labelPlanEquTtl");
+            labelPlanEquTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelPlanEquTtl.Name = "labelPlanEquTtl";
+            // 
+            // textBoxPlan稼働率
+            // 
+            resources.ApplyResources(textBoxPlan稼働率, "textBoxPlan稼働率");
+            textBoxPlan稼働率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxPlan稼働率.Name = "textBoxPlan稼働率";
+            // 
+            // labelPlanEqu
+            // 
+            resources.ApplyResources(labelPlanEqu, "labelPlanEqu");
+            labelPlanEqu.Name = "labelPlanEqu";
             // 
             // textBoxPlanQty
             // 
@@ -248,6 +304,12 @@
             checkBoxPlanお昼稼働.Name = "checkBoxPlanお昼稼働";
             checkBoxPlanお昼稼働.UseVisualStyleBackColor = true;
             // 
+            // labelPlanAvaTtl
+            // 
+            resources.ApplyResources(labelPlanAvaTtl, "labelPlanAvaTtl");
+            labelPlanAvaTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelPlanAvaTtl.Name = "labelPlanAvaTtl";
+            // 
             // labelPlanCaption
             // 
             resources.ApplyResources(labelPlanCaption, "labelPlanCaption");
@@ -259,14 +321,14 @@
             // 
             resources.ApplyResources(dataGridViewAchieve, "dataGridViewAchieve");
             dataGridViewAchieve.AllowUserToAddRows = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dataGridViewAchieve.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewAchieve.DefaultCellStyle = dataGridViewCellStyle4;
             dataGridViewAchieve.Name = "dataGridViewAchieve";
             dataGridViewAchieve.RowTemplate.Height = 21;
             // 
@@ -274,6 +336,13 @@
             // 
             resources.ApplyResources(panelAchieveResult, "panelAchieveResult");
             panelAchieveResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            panelAchieveResult.Controls.Add(labelAchieveQtyTtl);
+            panelAchieveResult.Controls.Add(labelAchieveEndTtl);
+            panelAchieveResult.Controls.Add(labelAchieveStartTtl);
+            panelAchieveResult.Controls.Add(labelAchieveEquTtl);
+            panelAchieveResult.Controls.Add(labelAchieveAvaTtl);
+            panelAchieveResult.Controls.Add(textBoxAchieve稼働率);
+            panelAchieveResult.Controls.Add(labelAchieveEqu);
             panelAchieveResult.Controls.Add(textBoxAchieveQty);
             panelAchieveResult.Controls.Add(labelAchieveQty);
             panelAchieveResult.Controls.Add(textBoxAchieveEndTime);
@@ -286,6 +355,47 @@
             panelAchieveResult.Controls.Add(checkBoxAchieve休憩稼働);
             panelAchieveResult.Controls.Add(checkBoxAchieveお昼稼働);
             panelAchieveResult.Name = "panelAchieveResult";
+            // 
+            // labelAchieveQtyTtl
+            // 
+            resources.ApplyResources(labelAchieveQtyTtl, "labelAchieveQtyTtl");
+            labelAchieveQtyTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelAchieveQtyTtl.Name = "labelAchieveQtyTtl";
+            // 
+            // labelAchieveEndTtl
+            // 
+            resources.ApplyResources(labelAchieveEndTtl, "labelAchieveEndTtl");
+            labelAchieveEndTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelAchieveEndTtl.Name = "labelAchieveEndTtl";
+            // 
+            // labelAchieveStartTtl
+            // 
+            resources.ApplyResources(labelAchieveStartTtl, "labelAchieveStartTtl");
+            labelAchieveStartTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelAchieveStartTtl.Name = "labelAchieveStartTtl";
+            // 
+            // labelAchieveEquTtl
+            // 
+            resources.ApplyResources(labelAchieveEquTtl, "labelAchieveEquTtl");
+            labelAchieveEquTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelAchieveEquTtl.Name = "labelAchieveEquTtl";
+            // 
+            // labelAchieveAvaTtl
+            // 
+            resources.ApplyResources(labelAchieveAvaTtl, "labelAchieveAvaTtl");
+            labelAchieveAvaTtl.ForeColor = System.Drawing.SystemColors.GrayText;
+            labelAchieveAvaTtl.Name = "labelAchieveAvaTtl";
+            // 
+            // textBoxAchieve稼働率
+            // 
+            resources.ApplyResources(textBoxAchieve稼働率, "textBoxAchieve稼働率");
+            textBoxAchieve稼働率.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBoxAchieve稼働率.Name = "textBoxAchieve稼働率";
+            // 
+            // labelAchieveEqu
+            // 
+            resources.ApplyResources(labelAchieveEqu, "labelAchieveEqu");
+            labelAchieveEqu.Name = "labelAchieveEqu";
             // 
             // textBoxAchieveQty
             // 
@@ -372,15 +482,15 @@
             // chart1
             // 
             resources.ApplyResources(chart1, "chart1");
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            chart1.Legends.Add(legend2);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            chart1.Series.Add(series2);
             // 
             // panel1
             // 
@@ -503,6 +613,20 @@
         private System.Windows.Forms.TextBox textBoxAchieveEndTime;
         private System.Windows.Forms.TextBox textBoxAchieveStartTime;
         private System.Windows.Forms.Label labelAchieveTime;
+        private System.Windows.Forms.TextBox textBoxPlan稼働率;
+        private System.Windows.Forms.Label labelPlanEqu;
+        private System.Windows.Forms.Label labelPlanAvaTtl;
+        private System.Windows.Forms.TextBox textBoxAchieve稼働率;
+        private System.Windows.Forms.Label labelAchieveEqu;
+        private System.Windows.Forms.Label labelAchieveAvaTtl;
+        private System.Windows.Forms.Label labelPlanEquTtl;
+        private System.Windows.Forms.Label labelAchieveEquTtl;
+        private System.Windows.Forms.Label labelPlanEndTtl;
+        private System.Windows.Forms.Label labelPlanStartTtl;
+        private System.Windows.Forms.Label labelAchieveEndTtl;
+        private System.Windows.Forms.Label labelAchieveStartTtl;
+        private System.Windows.Forms.Label labelPlanQtyTtl;
+        private System.Windows.Forms.Label labelAchieveQtyTtl;
     }
 }
 

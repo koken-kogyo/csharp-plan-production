@@ -127,10 +127,10 @@ namespace PlanProduction
                 string sql = @"
                     INSERT INTO KD8020
                         (ODCD, PLANDT, TYPE, STARTTIME, ENDTIME, HIRUKADO, KYUKEIKADO, PIKAPIKA, HAYAHIRU, NOTE, 
-                         TTLQTY, CTHOUR, OPEHOUR, AVA)
+                         TTLQTY, CTHOUR, WORKHOUR, OPEHOUR, BREAKTIME, EQURATE, AVA)
                     VALUES
                         (@手配先コード, @計画日, @計画種別, @開始時刻, @終了時刻, @昼稼働, @休憩稼働, @ピカピカ, @早昼, @所感, 
-                         @合計本数, @CT合計時間, @合計稼働時間, @可動率)
+                         @合計本数, @CT合計時間, @就業時間, @稼働時間, @休憩時間, @設備稼働率, @明細可動率)
                     ON DUPLICATE KEY UPDATE
                         ODCD = VALUES(ODCD),
                         PLANDT = VALUES(PLANDT),
@@ -144,7 +144,10 @@ namespace PlanProduction
                         NOTE = VALUES(NOTE),
                         TTLQTY = VALUES(TTLQTY),
                         CTHOUR = VALUES(CTHOUR),
+                        WORKHOUR = VALUES(WORKHOUR),
                         OPEHOUR = VALUES(OPEHOUR),
+                        BREAKTIME = VALUES(BREAKTIME),
+                        EQURATE = VALUES(EQURATE),
                         AVA = VALUES(AVA);
                 ";
                 using (var cmd = new MySqlCommand(sql, kkCnn))
@@ -172,8 +175,11 @@ namespace PlanProduction
                     cmd.Parameters.AddWithValue("@所感", opt.所感);
                     cmd.Parameters.AddWithValue("@合計本数", opt.合計本数);
                     cmd.Parameters.AddWithValue("@CT合計時間", opt.CT合計時間);
-                    cmd.Parameters.AddWithValue("@合計稼働時間", opt.合計稼働時間);
-                    cmd.Parameters.AddWithValue("@可動率", opt.可動率);
+                    cmd.Parameters.AddWithValue("@就業時間", opt.就業時間);
+                    cmd.Parameters.AddWithValue("@稼働時間", opt.稼働時間);
+                    cmd.Parameters.AddWithValue("@休憩時間", opt.休憩時間);
+                    cmd.Parameters.AddWithValue("@設備稼働率", opt.設備稼働率);
+                    cmd.Parameters.AddWithValue("@明細可動率", opt.明細可動率);
 
                     int insupdCount = cmd.ExecuteNonQuery();
                 }
@@ -224,7 +230,7 @@ namespace PlanProduction
                         cmd.Parameters.AddWithValue("@開始時刻", (startDateTime == opt.PlanDate.Date) ? null : startDateTime);
                         cmd.Parameters.AddWithValue("@終了時刻", (endDateTime == opt.PlanDate.Date) ? null : endDateTime);
                         cmd.Parameters.AddWithValue("@休憩時間", row.Cells[5].Value);
-                        cmd.Parameters.AddWithValue("@可動率", (opt.Type == "P") ? opt.可動率 : row.Cells[6].Value);
+                        cmd.Parameters.AddWithValue("@可動率", (opt.Type == "P") ? opt.明細可動率 : row.Cells[6].Value);
                         cmd.Parameters.AddWithValue("@作業者", row.Cells[7].Value);
                         cmd.Parameters.AddWithValue("@備考", row.Cells[8].Value);
 
@@ -299,8 +305,11 @@ namespace PlanProduction
                         opt.所感 = dt.Rows[0]["NOTE"].ToString();
                         opt.合計本数 = dt.Rows[0]["TTLQTY"].ToIntOrDefault();
                         opt.CT合計時間 = dt.Rows[0]["CTHOUR"].ToDoubleOrDefault();
-                        opt.合計稼働時間 = dt.Rows[0]["OPEHOUR"].ToDoubleOrDefault();
-                        opt.可動率 = dt.Rows[0]["AVA"].ToDoubleOrDefault();
+                        opt.就業時間 = dt.Rows[0]["WORKHOUR"].ToDoubleOrDefault();
+                        opt.稼働時間 = dt.Rows[0]["OPEHOUR"].ToDoubleOrDefault();
+                        opt.休憩時間 = dt.Rows[0]["BREAKTIME"].ToIntOrDefault();
+                        opt.設備稼働率 = dt.Rows[0]["EQURATE"].ToIntOrDefault();
+                        opt.明細可動率 = dt.Rows[0]["AVA"].ToIntOrDefault();
                     }
                 }
                 CloseMySqlSchema();
@@ -318,7 +327,7 @@ namespace PlanProduction
             if (!IsConnectMySqlSchema()) return false;
             try
             {
-                string sql = "SELECT * FROM (SELECT PLANDT, TTLQTY, AVA FROM KD8020 "
+                string sql = "SELECT * FROM (SELECT PLANDT, TTLQTY, AVA, ifnull(EQURATE,0) as EQU FROM KD8020 "
                     + $"WHERE ODCD='{odcd}' and TYPE = 'J' and "
                     + "PLANDT <= SYSDATE() ORDER BY PLANDT desc limit 20"
                     +") AS t ORDER BY PLANDT asc";

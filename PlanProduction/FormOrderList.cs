@@ -76,9 +76,12 @@ namespace PlanProduction
             string key = this.Name + OdCdSetting.OdCd;
             if (settings.Forms.TryGetValue(key, out FormSettings fs))
             {
-                this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point(fs.X, fs.Y);
-                this.Size = new Size(fs.Width, fs.Height);
+                if (fs.X >= 0 && fs.Y >= 0)
+                {
+                    this.StartPosition = FormStartPosition.Manual;
+                    this.Location = new Point(fs.X, fs.Y);
+                    this.Size = new Size(fs.Width, fs.Height);
+                }
             }
 
             var os = OdCdSetting;

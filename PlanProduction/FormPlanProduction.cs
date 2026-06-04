@@ -39,12 +39,15 @@ namespace PlanProduction
             string key = this.Name;
             if (settings.Forms.TryGetValue(key, out FormSettings s))
             {
-                this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point(s.X, s.Y);
-                this.Size = new Size(s.Width, s.Height);
-                this.splitContainerMain.SplitterDistance = s.SplitterMainDistance;
-                this.splitContainer上下.SplitterDistance = s.SplitterSubVerticalDistance;
-                this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
+                if (s.X >= 0 && s.Y >= 0)
+                {
+                    this.StartPosition = FormStartPosition.Manual;
+                    this.Location = new Point(s.X, s.Y);
+                    this.Size = new Size(s.Width, s.Height);
+                    this.splitContainerMain.SplitterDistance = s.SplitterMainDistance;
+                    this.splitContainer上下.SplitterDistance = s.SplitterSubVerticalDistance;
+                    this.splitContainer計画と実績.SplitterDistance = s.SplitterSubHorizontalDistance;
+                }
             }
 
             this.Text = $"[生産計画]  {Common.UserId}:{Common.UserName}";
@@ -102,8 +105,9 @@ namespace PlanProduction
             checkBoxPlan早昼.Checked = paramPlan.早昼;
             textBoxPlanStartTime.Text = paramPlan.開始時刻;
             textBoxPlanEndTime.Text = paramPlan.終了時刻;
-            textBoxPlanQty.Text = (paramPlan.合計本数 != 0) ? paramPlan.合計本数.ToString("N0") : "";
-            textBoxPlan可動率.Text = (paramPlan.可動率 != 0) ? paramPlan.可動率.ToString("F0") : "";
+            textBoxPlanQty.Text = (paramPlan.合計本数 == 0) ? "" : paramPlan.合計本数.ToString("N0");
+            textBoxPlan可動率.Text = (paramPlan.明細可動率 == 0) ? "" : paramPlan.明細可動率.ToString();
+            textBoxPlan稼働率.Text = (paramPlan.設備稼働率 == 0) ? "" : paramPlan.設備稼働率.ToString();
             planDt.Rows.Clear(); // ここから明細
             if (!DBAccessor.GetKD8030(ref planDt, paramPlan)) return;
             dataGridViewPlan.DataSource = planDt;
@@ -123,7 +127,8 @@ namespace PlanProduction
             textBoxAchieveStartTime.Text = paramA.開始時刻;
             textBoxAchieveEndTime.Text = paramA.終了時刻;
             textBoxAchieveQty.Text = (paramA.合計本数 != 0) ? paramA.合計本数.ToString("N0") : "";
-            textBoxAchieve可動率.Text = (paramA.可動率 != 0) ? paramA.可動率.ToString("F0") : "";
+            textBoxAchieve可動率.Text = (paramA.明細可動率 == 0) ? "" : paramA.明細可動率.ToString();
+            textBoxAchieve稼働率.Text = (paramA.設備稼働率 == 0) ? "" : paramA.設備稼働率.ToString();
             achieveDt.Rows.Clear(); // ここから明細
             if (!DBAccessor.GetKD8030(ref achieveDt, paramA)) return;
             dataGridViewAchieve.DataSource = achieveDt;
@@ -215,6 +220,18 @@ namespace PlanProduction
 
             chart1.ChartAreas["MainArea"].AxisY.MajorGrid.Enabled = false;      // グリッド線なし
 
+            // ▼ 左軸（本数）
+            area.AxisY.Title = "本数";
+            area.AxisY.MajorGrid.Enabled = false;
+
+            // ▼ 右軸（可動率・稼働率）
+            area.AxisY2.Title = "率(%)";
+            area.AxisY2.Enabled = AxisEnabled.True;
+            area.AxisY2.MajorGrid.Enabled = false;
+            area.AxisY2.LabelStyle.Format = "0'%'";
+            area.AxisY2.Minimum = 0;
+            area.AxisY2.Maximum = 100;
+
             // ▼ 縦棒グラフ（本数）
             var bar = new Series("本数")
             {
@@ -228,34 +245,50 @@ namespace PlanProduction
             bar["BarLabelStyle"] = "Center";
             bar.SmartLabelStyle.Enabled = false;
 
-            // ▼ 折れ線グラフ（可動率）
-            var line = new Series("可動率")
+            // ▼ 折れ線グラフ（可動率・稼働率）
+            var line1 = new Series("可動率")
             {
                 ChartType = SeriesChartType.Line,
                 BorderWidth = 3,
                 XValueType = ChartValueType.String,
                 YValueType = ChartValueType.Double,
-                YAxisType = AxisType.Secondary   // ← 右側の軸を使う
+                ChartArea = "MainArea",
+                YAxisType = AxisType.Secondary,   // ← 右側の軸を使う
+                Color = Color.YellowGreen,
+                MarkerStyle = MarkerStyle.Circle,
+                MarkerSize = 7
             };
 
+            // ▼ 折れ線グラフ（設備稼働率）
+            var line2 = new Series("設備稼働率")
+            {
+                ChartType = SeriesChartType.Line,
+                BorderWidth = 3,
+                XValueType = ChartValueType.String,
+                YValueType = ChartValueType.Double,
+                ChartArea = "MainArea",
+                YAxisType = AxisType.Secondary,
+                Color = Color.LightSkyBlue,
+                MarkerStyle = MarkerStyle.Diamond,
+                MarkerSize = 7
+            };
+            
             // ▼ データ
             foreach (DataRow row in dt.Rows)
             {
                 string plandt = ((DateTime)row["PLANDT"]).ToString("MM/dd");
                 int count = Convert.ToInt32(row["TTLQTY"]);
-                double rate = Convert.ToDouble(row["AVA"]);
+                double rate1 = Convert.ToDouble(row["AVA"]); // 可動率
+                double rate2 = Convert.ToDouble(row["EQU"]); // 稼働率
 
                 bar.Points.AddXY(plandt, count);
-                line.Points.AddXY(plandt, rate);
+                line1.Points.AddXY(plandt, rate1);
+                line2.Points.AddXY(plandt, rate2);
             }
 
             chart1.Series.Add(bar);
-            chart1.Series.Add(line);
-
-            // ▼ 軸の設定（見やすくする）
-            area.AxisY.Title = "本数";
-            area.AxisY2.Title = "可動率(%)";
-            area.AxisY2.Enabled = AxisEnabled.True;
+            chart1.Series.Add(line1);
+            chart1.Series.Add(line2);
         }
 
         // チャート縦棒クリックイベント

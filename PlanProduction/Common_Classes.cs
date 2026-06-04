@@ -166,8 +166,11 @@ namespace PlanProduction
 
         public int 合計本数 { get; set; } = 0;
         public double CT合計時間 { get; set; } = 0.0;
-        public double 合計稼働時間 { get; set; } = 0.0;
-        public double 可動率 { get; set; } = 0.0;
+        public double 就業時間 { get; set; } = 0.0;
+        public double 稼働時間 { get; set; } = 0.0;
+        public int 休憩時間 { get; set; } = 0;
+        public int 設備稼働率 { get; set; } = 0;
+        public int 明細可動率 { get; set; } = 0;
     }
 
 }

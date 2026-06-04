@@ -357,6 +357,25 @@ namespace PlanProduction
             throw new FormatException($"列名 '{headertext}' を日付として解釈できませんでした。");
         }
 
+        public static DateTime ToDateTimeFromHHmm(string hhmm)
+        {
+            if (string.IsNullOrWhiteSpace(hhmm))
+                return DateTime.MinValue;
+
+            if (DateTime.TryParseExact(
+                    hhmm,
+                    "HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out DateTime time))
+            {
+                // 今日の日付に時刻を合成
+                DateTime today = DateTime.Today;
+                return new DateTime(today.Year, today.Month, today.Day, time.Hour, time.Minute, 0);
+            }
+
+            return DateTime.MinValue;
+        }
 
 
         // 文字列を検索し行番号を返却
