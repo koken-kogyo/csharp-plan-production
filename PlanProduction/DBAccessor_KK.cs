@@ -321,6 +321,50 @@ namespace PlanProduction
                 return false;
             }
         }
+        // 実績データ取得（実績リストで使用）
+        public static bool GetKD8020List(ref DataTable dt, string odcd, DateTime s, DateTime e)
+        {
+            if (!IsConnectMySqlSchema()) return false;
+            try
+            {
+                string sql = @"
+                    SELECT
+                        ODCD as 手配先コード
+                        , date_format(PLANDT, '%m/%d') as 実績日付
+                        , time_format(STARTTIME, '%H:%i') as 開始時刻
+                        , time_format(ENDTIME, '%H:%i') as 終了時刻
+                        , case when PIKAPIKA='1' then '1' else '' end as PIKAPIKA
+                        , TTLQTY as 本数
+                        , CTHOUR as CT時間
+                        , WORKHOUR as 就業時間
+                        , OPEHOUR as 稼働時間
+                        , BREAKTIME as 休憩時間
+                        , EQURATE as 設備稼働率
+                        , AVA as 可動率
+                    FROM
+                        KD8020
+                    WHERE
+                        ODCD = @手配先コード and
+                        PLANDT between @開始日 and @終了日 and
+                        TYPE = 'J'
+                ";
+                using (var cmd = new MySqlCommand(sql, kkCnn))
+                {
+                    cmd.Parameters.AddWithValue("@手配先コード", odcd);
+                    cmd.Parameters.AddWithValue("@開始日", s);
+                    cmd.Parameters.AddWithValue("@終了日", e);
+                    using MySqlDataAdapter adapter = new(cmd);
+                    adapter.Fill(dt);
+                }
+                CloseMySqlSchema();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("異常が発生しました\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
         // チャート用データを過去20日分取得
         public static bool GetKD8020Chart(ref DataTable dt, string odcd)
         {

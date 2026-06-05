@@ -78,7 +78,7 @@ namespace PlanProduction
             RefreshPlanProduction();
 
             // チャートイベント登録
-            chart1.MouseClick += chart1_MouseClick;
+            chart1.MouseClick += Chart1_MouseClick;
         }
 
         // 初期表示
@@ -272,7 +272,7 @@ namespace PlanProduction
                 MarkerStyle = MarkerStyle.Diamond,
                 MarkerSize = 7
             };
-            
+
             // ▼ データ
             foreach (DataRow row in dt.Rows)
             {
@@ -292,7 +292,7 @@ namespace PlanProduction
         }
 
         // チャート縦棒クリックイベント
-        private void chart1_MouseClick(object sender, MouseEventArgs e)
+        private void Chart1_MouseClick(object sender, MouseEventArgs e)
         {
             HitTestResult result = chart1.HitTest(e.X, e.Y);
 
@@ -308,7 +308,7 @@ namespace PlanProduction
                 RefreshPlanProduction();
             }
         }
-        
+
         // フォームの状態を保存
         private void FormPlanProduction_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -479,7 +479,7 @@ namespace PlanProduction
             return true;
         }
 
-        // 「手配一覧」だけをモードレスで呼び出す
+        // 「手配一覧の参照」ボタン（モードレスで呼び出す）
         private async void ButtonOrderList_Click(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
@@ -490,7 +490,7 @@ namespace PlanProduction
             this.UseWaitCursor = false;
         }
 
-        // 「計画入力」と「手配一覧（コールバック付き）」をモードレスで呼び出す
+        // 「計画入力」ボタン（計画入力画面と手配一覧画面（コールバック付き）をモードレスで呼び出す）
         private async void ButtonPlanEntry_Click(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
@@ -500,6 +500,12 @@ namespace PlanProduction
             frm.IsUpdated += CallBackPlanEntry; // コールバックイベント登録
             frm.Show();
             this.UseWaitCursor = false;
+        }
+        // 「実績データの参照」ボタン
+        private void ButtonAchieveList_Click(object sender, EventArgs e)
+        {
+            var frm = new FormAchieveList(OdCdSetting);
+            frm.Show();
         }
         // コールバック関数（サブフォームからの戻り値を受け取る）
         private void CallBackPlanEntry(bool isupdated)
@@ -512,8 +518,6 @@ namespace PlanProduction
             PlanDate = monthCalendar1.SelectionStart;
             RefreshPlanProduction();
         }
-
-
     }// FormPlanProduction
 
 }

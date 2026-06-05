@@ -62,6 +62,7 @@
             ColumnExcel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ColumnFullPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ColumnButton = new System.Windows.Forms.DataGridViewButtonColumn();
+            buttonOpenExploler = new System.Windows.Forms.Button();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel1.SuspendLayout();
@@ -147,6 +148,7 @@
             // 
             // panel3
             // 
+            panel3.Controls.Add(buttonOpenExploler);
             panel3.Controls.Add(buttonInitialValue);
             panel3.Controls.Add(label5);
             panel3.Controls.Add(buttonClear);
@@ -407,6 +409,18 @@
             ColumnButton.UseColumnTextForButtonValue = true;
             ColumnButton.Width = 80;
             // 
+            // buttonOpenExploler
+            // 
+            buttonOpenExploler.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            buttonOpenExploler.Location = new System.Drawing.Point(859, 66);
+            buttonOpenExploler.Margin = new System.Windows.Forms.Padding(4);
+            buttonOpenExploler.Name = "buttonOpenExploler";
+            buttonOpenExploler.Size = new System.Drawing.Size(218, 22);
+            buttonOpenExploler.TabIndex = 39;
+            buttonOpenExploler.Text = "設定ファイルの保存先フォルダを開く";
+            buttonOpenExploler.UseVisualStyleBackColor = true;
+            buttonOpenExploler.Click += buttonOpenExploler_Click;
+            // 
             // FormSrttings
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
@@ -464,5 +478,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnExcel;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFullPath;
         private System.Windows.Forms.DataGridViewButtonColumn ColumnButton;
+        private System.Windows.Forms.Button buttonOpenExploler;
     }
 }

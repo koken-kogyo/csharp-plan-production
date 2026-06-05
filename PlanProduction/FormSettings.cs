@@ -151,13 +151,13 @@ namespace PlanProduction
             dataGridView1.ClearSelection();
         }
 
-        // 検索条件クリア
+        // 「検索条件クリア」ボタンクリック
         private void ButtonClear_Click(object sender, EventArgs e)
         {
             textBoxSearchOdCd.Text = string.Empty;
         }
 
-        // 初期値で埋める
+        // 「選択行の空をサンプル値で埋める」ボタンクリック
         private void ButtonInitialValue_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count <= 0) return;
@@ -167,7 +167,7 @@ namespace PlanProduction
                 {
                     string exeDir = Application.StartupPath;
 
-                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString())) 
+                    if (string.IsNullOrEmpty(row.Cells["ColumnListOrder1"].Value.ToString()))
                         row.Cells["ColumnListOrder1"].Value = Common.sortOrderMap[2];
                     if (string.IsNullOrEmpty(row.Cells["ColumnTanName"].Value.ToString()))
                         row.Cells["ColumnTanName"].Value = "鈴木";
@@ -180,12 +180,19 @@ namespace PlanProduction
                     if (string.IsNullOrEmpty(row.Cells["ColumnExcel"].Value?.ToString()))
                         row.Cells["ColumnExcel"].Value = "雛形_Default.xlsx";
                     if (string.IsNullOrEmpty(row.Cells["ColumnFullPath"].Value?.ToString()))
-                        row.Cells["ColumnFullPath"].Value = exeDir + @"\雛形_Default.xlsx";
+                        row.Cells["ColumnFullPath"].Value = Path.Join(exeDir, "雛形_Default.xlsx");
                 }
             }
         }
 
-        // 保存して閉じる
+        // 「設定ファイルの保存先フォルダを開く」クリック
+        private void buttonOpenExploler_Click(object sender, EventArgs e)
+        {
+            var folder = Path.Join(Common.FsConfig[0].ShareName, "Applications", "設定ファイル");
+            System.Diagnostics.Process.Start("explorer.exe", @folder);
+        }
+
+        // 「保存して閉じる」ボタンクリック
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
             string errmsg = string.Empty;
@@ -375,7 +382,7 @@ namespace PlanProduction
                         string fullPath = dlg.FileName;
                         string fileName = Path.GetFileName(fullPath);
                         dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = fileName;
-                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex + 1].Value =fullPath;
+                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex + 1].Value = fullPath;
                     }
                 }
             }

@@ -410,7 +410,7 @@ namespace PlanProduction
         {
             Dictionary<string, int> map = [];
 
-            int lastColumnIndex = sheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
+            int lastColumnIndex = sheet.Cells[baserow, 99].End(Excel.XlDirection.xlToLeft).Column;
 
             foreach (DataGridViewColumn column in dgv.Columns)
             {
@@ -433,7 +433,7 @@ namespace PlanProduction
         {
             List<int> ary = [];
 
-            int lastColumnIndex = sheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
+            int lastColumnIndex = sheet.Cells[baserow, 99].End(Excel.XlDirection.xlToLeft).Column;
 
             for (int col = 1; col <= lastColumnIndex; col++)
             {
@@ -462,7 +462,7 @@ namespace PlanProduction
         /// <param name="odcd">手配先コード</param>
         /// <param name="plandt">計画日</param>
         /// <param name="hinapath">雛形ExcelのFullPath</param>
-        /// <param name="hinapath">出力ファイルのFullPath</param>
+        /// <param name="savefullpath">出力ファイルのFullPath</param>
         public static bool PrintPlan(ref DataGridView dgv, string odcd, DateTime plandt, string タイトル可動率
             , string hinapath, string savefullpath)
         {
@@ -497,7 +497,7 @@ namespace PlanProduction
 
                 // タイトルの行番号とタイトルの最終列番号を取得
                 int baserow = GetRowNo(ref worksheet, "No", 1);
-                int endCol = worksheet.Cells[baserow, 1].End(Excel.XlDirection.xlToRight).Column;
+                int endCol = worksheet.Cells[baserow, 99].End(Excel.XlDirection.xlToLeft).Column;
                 int startRow = baserow + 1;
 
                 // dgv行ヘッダーとExcelのマッピングを作成
@@ -615,6 +615,87 @@ namespace PlanProduction
         }
 
 
+        /// <summary>
+        /// 実績一覧を印刷
+        /// 　デスクトップに名前を付けて保存し終了
+        /// </summary>
+        /// <param name="dgv">(参照型)DataGridView</param>
+        /// <param name="savefullpath">出力ファイルのFullPath</param>
+        public static bool PrintAchieve(ref DataGridView dgv, string savefullpath)
+        {
+            bool ret = false;
+            Excel.Application excelApp = null;
+            Excel.Workbook book = null;
+            Excel.Worksheet sheet = null;
+            try
+            {
+                // Excel本体と雛形ファイルを開く
+                excelApp = new()
+                {
+                    Visible = true
+                };
+                book = excelApp.Workbooks.Add();
+                sheet = (Excel.Worksheet)book.ActiveSheet;
+
+                // ヘッダー行
+                for (int c = 0; c < dgv.Columns.Count; c++)
+                {
+                    sheet.Cells[1, c + 1].Value = dgv.Columns[c].HeaderText;
+                }
+
+                // データ行
+                for (int r = 0; r < dgv.Rows.Count; r++)
+                {
+                    for (int c = 0; c < dgv.Columns.Count; c++)
+                    {
+                        sheet.Cells[r + 2, c + 1].Value = dgv.Rows[r].Cells[c].Value;
+                    }
+                }
+                // 別名で保存（Desktopに作成）
+                book.SaveAs(savefullpath);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("エラー: " + ex.Message, "計画印刷", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // ブックを閉じる
+                if (book != null)
+                {
+                    book.Close(false);
+                    Marshal.ReleaseComObject(book);
+                    book = null;
+                }
+
+                // Excelアプリケーション終了
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                // ガベージコレクションを2回強制実行してCOM参照を完全解放
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                // 関連付けられたアプリでExcelを開く
+                if (File.Exists(@savefullpath))
+                {
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = @savefullpath,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+            }
+            return ret;
+        }
 
 
 
