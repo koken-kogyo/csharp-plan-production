@@ -340,7 +340,7 @@ namespace PlanProduction
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5020 b on "
                     + "a.ODCD=b.ODCD and a.WKGRCD=b.WKGRCD and a.HMCD=b.HMCD and a.VALDTF=b.VALDTF and a.WKSEQ=b.WKSEQ "
                     + $"WHERE a.ODCD = '{odcd}' and a.WKGRCD like '{wkgrcd}' "
-                    + "ORDER BY a.HMCD,a.VALDTF";
+                    + "ORDER BY a.HMCD,a.VALDTF,a.WKSEQ";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
                 myDa.Fill(dt);

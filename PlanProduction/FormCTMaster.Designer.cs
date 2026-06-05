@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             panel1 = new System.Windows.Forms.Panel();
+            label2 = new System.Windows.Forms.Label();
+            buttonFilterClear2 = new System.Windows.Forms.Button();
+            textBoxHmCd2 = new System.Windows.Forms.TextBox();
+            buttonCT = new System.Windows.Forms.Button();
             buttonAddWKSEQ = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             buttonFilterClear = new System.Windows.Forms.Button();
@@ -63,6 +67,10 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(buttonFilterClear2);
+            panel1.Controls.Add(textBoxHmCd2);
+            panel1.Controls.Add(buttonCT);
             panel1.Controls.Add(buttonAddWKSEQ);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(buttonFilterClear);
@@ -76,6 +84,50 @@
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(131, 511);
             panel1.TabIndex = 0;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            label2.Location = new System.Drawing.Point(13, 131);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(110, 15);
+            label2.TabIndex = 12;
+            label2.Text = "手配品番絞り込み：";
+            // 
+            // buttonFilterClear2
+            // 
+            buttonFilterClear2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            buttonFilterClear2.Location = new System.Drawing.Point(46, 179);
+            buttonFilterClear2.Name = "buttonFilterClear2";
+            buttonFilterClear2.Size = new System.Drawing.Size(75, 23);
+            buttonFilterClear2.TabIndex = 11;
+            buttonFilterClear2.Text = "条件クリア";
+            buttonFilterClear2.UseVisualStyleBackColor = true;
+            buttonFilterClear2.Click += ButtonFilterClear2_Click;
+            // 
+            // textBoxHmCd2
+            // 
+            textBoxHmCd2.BackColor = System.Drawing.SystemColors.Window;
+            textBoxHmCd2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            textBoxHmCd2.Location = new System.Drawing.Point(10, 149);
+            textBoxHmCd2.Name = "textBoxHmCd2";
+            textBoxHmCd2.Size = new System.Drawing.Size(111, 29);
+            textBoxHmCd2.TabIndex = 10;
+            textBoxHmCd2.UseWaitCursor = true;
+            textBoxHmCd2.TextChanged += textBoxHmCd2_TextChanged;
+            // 
+            // buttonCT
+            // 
+            buttonCT.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            buttonCT.BackColor = System.Drawing.Color.LightGreen;
+            buttonCT.Location = new System.Drawing.Point(7, 209);
+            buttonCT.Name = "buttonCT";
+            buttonCT.Size = new System.Drawing.Size(116, 54);
+            buttonCT.TabIndex = 9;
+            buttonCT.Text = "CTに追加";
+            buttonCT.UseVisualStyleBackColor = false;
+            buttonCT.Click += buttonCT_Click;
             // 
             // buttonAddWKSEQ
             // 
@@ -93,16 +145,16 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            label1.Location = new System.Drawing.Point(11, 156);
+            label1.Location = new System.Drawing.Point(11, 44);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(86, 15);
+            label1.Size = new System.Drawing.Size(113, 15);
             label1.TabIndex = 8;
-            label1.Text = "品番絞り込み：";
+            label1.Text = "マスタ品番絞り込み：";
             // 
             // buttonFilterClear
             // 
             buttonFilterClear.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonFilterClear.Location = new System.Drawing.Point(44, 204);
+            buttonFilterClear.Location = new System.Drawing.Point(44, 92);
             buttonFilterClear.Name = "buttonFilterClear";
             buttonFilterClear.Size = new System.Drawing.Size(75, 23);
             buttonFilterClear.TabIndex = 4;
@@ -152,7 +204,7 @@
             // 
             textBoxHmCd.BackColor = System.Drawing.SystemColors.Window;
             textBoxHmCd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            textBoxHmCd.Location = new System.Drawing.Point(8, 174);
+            textBoxHmCd.Location = new System.Drawing.Point(8, 62);
             textBoxHmCd.Name = "textBoxHmCd";
             textBoxHmCd.Size = new System.Drawing.Size(111, 29);
             textBoxHmCd.TabIndex = 3;
@@ -335,5 +387,9 @@
         private System.Windows.Forms.Button buttonFilterClear;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonAddWKSEQ;
+        private System.Windows.Forms.Button buttonCT;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonFilterClear2;
+        private System.Windows.Forms.TextBox textBoxHmCd2;
     }
 }

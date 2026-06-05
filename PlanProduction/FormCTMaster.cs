@@ -72,7 +72,8 @@ namespace PlanProduction
             {
                 // 手配品番マスタ取得
                 DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
-            } else
+            }
+            else
             {
                 // 手配品番マスタ取得
                 DBAccessor.ReadD0440ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
@@ -213,6 +214,7 @@ namespace PlanProduction
         // （おまけ処理）同期スクロール
         private void DataGridView1_Scroll(object sender, ScrollEventArgs e)
         {
+            if (dataGridView1.FirstDisplayedScrollingRowIndex > dataGridView3.Rows.Count - 1) return;
             if (_syncing) return;
             _syncing = true;
 
@@ -280,6 +282,16 @@ namespace PlanProduction
             textBoxHmCd.Text = "";
         }
 
+        // （おまけ処理）品番フィルタリング
+        private void textBoxHmCd2_TextChanged(object sender, EventArgs e)
+        {
+            dtD0410.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd2.Text}%'";
+        }
+        private void ButtonFilterClear2_Click(object sender, EventArgs e)
+        {
+            textBoxHmCd2.Text = "";
+        }
+
         // （おまけ処理）変更されたセルに対し ①行番号の保存、②背景色ハイライトを行い、ステータスへの変更件数表示を行う
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -294,6 +306,47 @@ namespace PlanProduction
             changedDTRows.Add(e.RowIndex); // 行番号を記録（HashSetで重複なし）
             dataGridView3.CurrentCell.Style.BackColor = Color.LightYellow; // 変更があったことを視覚的に示す
             toolStripStatusLabel1.Text = $"変更された行 KM5030:{changedCTRows.Count}件 / KM5020:{changedDTRows.Count}件";
+        }
+
+        // 「CTに追加」ボタン
+        private void buttonCT_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.SelectedCells.Count <= 0)
+            {
+                MessageBox.Show("追加対象の品番を選択してください．");
+                return;
+            }
+            int insertCnt = 0;
+            foreach (DataGridViewCell cel in dataGridView2.SelectedCells)
+            {
+                // 標準作業時間マスタに登録
+                var newct = dtKM5030.NewRow();
+                newct["ODCD"] = OdCdSetting.OdCd;
+                newct["WKGRCD"] = OdCdSetting.KtCd;
+                newct["HMCD"] = cel.Value;
+                newct["VALDTF"] = DateTime.Today;
+                newct["WKSEQ"] = Common.DEFAULT_WKSEQ;
+                newct["CT"] = 0;
+                newct["INSTID"] = Common.UserId;
+                newct["INSTDT"] = DateTime.Now;
+                newct["UPDTID"] = Common.UserId;
+                newct["UPDTDT"] = DateTime.Now;
+                dtKM5030.Rows.Add(newct);
+                changedCTRows.Add(dtKM5030.Rows.Count - 1);
+                // 未登録品番一覧から削除
+                DataRow[] rows = dtD0410.Select($"HMCD='{cel.Value}'");
+                if (rows.Length > 0) rows[0].Delete();
+                insertCnt++;
+            }
+
+            // 追加した行の最後のセルにフォーカス
+            dataGridView1.CurrentCell = dataGridView1.Rows[^1].Cells["CT"];
+            dataGridView1.Rows[^1].Cells["CT"].Selected = true;
+            // そのセルを編集状態にする
+            dataGridView1.BeginEdit(true);
+            // 列幅自動調整
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            toolStripStatusLabel1.Text = $"{insertCnt} 件を追加しました（まだ保存はされていません）";
         }
 
         // 「品番追加」ボタン（未登録品番一覧から標準作業時間マスタに品番を移動）
@@ -379,16 +432,23 @@ namespace PlanProduction
             dtKM5030.Rows.Add(newRow5030);
             changedCTRows.Add(dtKM5030.Rows.Count - 1);
             // 段取りマスタに追加
-            var src5020 = dtKM5020.Rows[rowIndex];
-            var newRow5020 = dtKM5020.NewRow();
-            newRow5020.ItemArray = src5020.ItemArray.Clone() as object[];
-            newRow5020["WKSEQ"] = seq;
-            newRow5020["INSTID"] = Common.UserId;
-            newRow5020["INSTDT"] = DateTime.Now;
-            newRow5020["UPDTID"] = Common.UserId;
-            newRow5020["UPDTDT"] = DateTime.Now;
-            dtKM5020.Rows.Add(newRow5020);
-            changedDTRows.Add(dtKM5020.Rows.Count - 1);
+            string findOdCd = src5030["ODCD"].ToString();
+            string findWkGrCd = src5030["WKGRCD"].ToString();
+            string findHmcd = src5030["HMCD"].ToString();
+            int findSeq = src5030["WKSEQ"].ToIntOrDefault();
+            DataRow[] src5020 = dtKM5020.Select($"ODCD='{findOdCd}' and WKGRCD='{findWkGrCd}' and HMCD='{findHmcd}' and WKSEQ={findSeq}");
+            if (src5020.Length > 0)
+            {
+                var newRow5020 = dtKM5020.NewRow();
+                newRow5020.ItemArray = src5020[0].ItemArray.Clone() as object[];
+                newRow5020["WKSEQ"] = seq;
+                newRow5020["INSTID"] = Common.UserId;
+                newRow5020["INSTDT"] = DateTime.Now;
+                newRow5020["UPDTID"] = Common.UserId;
+                newRow5020["UPDTDT"] = DateTime.Now;
+                dtKM5020.Rows.Add(newRow5020);
+                changedDTRows.Add(dtKM5020.Rows.Count - 1);
+            }
             // 追加した行の最後のセルにフォーカス
             int last = dataGridView1.Rows.Count - 1;
             dataGridView1.FirstDisplayedScrollingRowIndex = last;
@@ -425,7 +485,6 @@ namespace PlanProduction
         {
             this.Close();
         }
-
 
     }
 }
