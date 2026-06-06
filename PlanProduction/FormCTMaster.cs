@@ -31,16 +31,19 @@ namespace PlanProduction
             this.OdCdSetting = OdCdSetting;
 
             // イベント登録
+                // 標準作業時間マスタ
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
-            dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete;
+            dataGridView1.DataBindingComplete += DataGridView1_DataBindingComplete;
             dataGridView1.RowPostPaint += DataGridView_RowPostPaint;
             dataGridView1.Scroll += DataGridView1_Scroll;
             dataGridView1.CurrentCellChanged += DataGridView1_CurrentCellChanged;
+                // 段取りマスタ
             dataGridView3.CellValueChanged += DataGridView3_CellValueChanged;
-            dataGridView3.DataBindingComplete += dataGridView3_DataBindingComplete;
+            dataGridView3.DataBindingComplete += DataGridView3_DataBindingComplete;
             dataGridView3.RowPostPaint += DataGridView_RowPostPaint;
             dataGridView3.Scroll += DataGridView3_Scroll;
             dataGridView3.CurrentCellChanged += DataGridView3_CurrentCellChanged;
+            dataGridView3.EditingControlShowing += DataGridView3_EditingControlShowing;
         }
 
         private void FormCTMasterMainte_Load(object sender, EventArgs e)
@@ -68,15 +71,20 @@ namespace PlanProduction
             DBAccessor.ReadKM5030(ref dtKM5030, OdCdSetting.OdCd, OdCdSetting.KtCd);
             // 段取りマスタ取得
             DBAccessor.ReadKM5020(ref dtKM5020, OdCdSetting.OdCd, OdCdSetting.KtCd);
-            if (OdCdSetting.OdCd.Substring(0, 3) != "603")
+            if (OdCdSetting.OdCd.Substring(0, 3) == "603")
             {
                 // 手配品番マスタ取得
-                DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+                DBAccessor.ReadD0440ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+            }
+            else if (OdCdSetting.OdCd == "60460")
+            {
+                // 手配品番マスタ取得
+                DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd, "EWUBEND");
             }
             else
             {
                 // 手配品番マスタ取得
-                DBAccessor.ReadD0440ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
+                DBAccessor.ReadD0410ConvertToMaster(ref dtD0410, OdCdSetting.OdCd, OdCdSetting.KtCd);
             }
 
             dataGridView1.AllowUserToAddRows = false;
@@ -116,7 +124,7 @@ namespace PlanProduction
             Common.FormSettingsSave(settings);
         }
 
-        private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             if (dtKM5030.Rows.Count > 0)
             {
@@ -151,7 +159,7 @@ namespace PlanProduction
                 }
             }
         }
-        private void dataGridView3_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void DataGridView3_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             if (dtKM5020.Rows.Count > 0)
             {
@@ -260,6 +268,29 @@ namespace PlanProduction
                 dataGridView1.CurrentCell = dataGridView1.Rows[row].Cells["HMCD"];
             }
             _changing = false;
+
+            // 日本語制御
+            if (dataGridView3.CurrentCell != null)
+            {
+                if (dataGridView3.CurrentCell.ColumnIndex >= 5)
+                {
+                    dataGridView3.BeginEdit(true);  // セルの編集開始を強制 → EditingControlShowing を発生させIMEを変更
+                    dataGridView3.EndEdit();        // セルを通常の状態に戻す
+                }
+            }
+        }
+
+        // （おまけ処理）日本語制御
+        private void DataGridView3_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is TextBox tb)
+            {
+                int col = dataGridView3.CurrentCell.ColumnIndex;
+                if (col == 5 || col == 8)
+                    tb.ImeMode = ImeMode.Hiragana;   // ← 日本語入力ON
+                else
+                    tb.ImeMode = ImeMode.Disable;    // ← 日本語入力OFF
+            }
         }
 
         // （おまけ処理）キーボードショートカット
@@ -269,6 +300,10 @@ namespace PlanProduction
             {
                 Close();
             }
+            if (e.KeyCode == Keys.F9)
+            {
+                ButtonSaveClose_Click(null, null);
+            }
         }
 
         // （おまけ処理）品番フィルタリング
@@ -276,10 +311,12 @@ namespace PlanProduction
         {
             dtKM5030.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd.Text}%'";
             dtKM5020.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd.Text}%'";
+            dtD0410.DefaultView.RowFilter = $"HMCD LIKE '{textBoxHmCd.Text}%'";
         }
         private void ButtonFilterClear_Click(object sender, EventArgs e)
         {
             textBoxHmCd.Text = "";
+            textBoxHmCd.Focus();
         }
 
         // （おまけ処理）品番フィルタリング
@@ -290,6 +327,7 @@ namespace PlanProduction
         private void ButtonFilterClear2_Click(object sender, EventArgs e)
         {
             textBoxHmCd2.Text = "";
+            textBoxHmCd2.Focus();
         }
 
         // （おまけ処理）変更されたセルに対し ①行番号の保存、②背景色ハイライトを行い、ステータスへの変更件数表示を行う
@@ -413,9 +451,8 @@ namespace PlanProduction
                 MessageBox.Show("追加対象の品番を選択してください．");
                 return;
             }
-            int rowIndex = dataGridView1.CurrentCell.RowIndex;
             // 標準作業時間マスタに追加
-            var src5030 = dtKM5030.Rows[rowIndex];
+            DataRow src5030 = ((DataRowView)dataGridView1.CurrentRow.DataBoundItem).Row; // フィルター後でも正しく取得
             var newRow5030 = dtKM5030.NewRow();
             newRow5030.ItemArray = src5030.ItemArray.Clone() as object[];
             string hmcd = newRow5030["HMCD"].ToString();
@@ -478,6 +515,9 @@ namespace PlanProduction
                 dataGridView3.DataSource = dtKM5020;
                 toolStripStatusLabel1.Text = "マスタを更新しました．";
             }
+            textBoxHmCd.SelectionStart = 0;
+            textBoxHmCd.SelectionLength = textBoxHmCd.Text.Length;
+            textBoxHmCd.Focus();
         }
 
         // 「閉じる」ボタン

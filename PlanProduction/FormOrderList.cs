@@ -117,6 +117,11 @@ namespace PlanProduction
                 // ベンダーは手配日程データから＋５営業日分を取得
                 ret = DBAccessor.ReadD0440Pivot(ref dtDataSource, OdCdSetting);
             }
+            else if (OdCdSetting.OdCd == "60460")
+            {
+                // EWUベンダーの手配データ取得 (60420, 60430)
+                ret = DBAccessor.ReadD0410Pivot(ref dtDataSource, OdCdSetting, "EWUBEND");
+            }
             else
             {
                 // 手配データ取得
@@ -628,6 +633,7 @@ namespace PlanProduction
             // 「計画リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Plan", list);
+            if (処理モード != 1) this.Focus();
         }
         // 「実績に追加」ボタン
         private void ButtonAddAchieve_Click(object sender, EventArgs e)
@@ -635,6 +641,7 @@ namespace PlanProduction
             // 「実績リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Achieve", list);
+            if (処理モード != 1) this.Focus();
         }
         // DTO（データ転送オブジェクト）の生成
         private List<SelectedItem> MakeSelectedItemList()

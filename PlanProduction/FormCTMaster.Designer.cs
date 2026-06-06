@@ -91,9 +91,9 @@
             label2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             label2.Location = new System.Drawing.Point(13, 131);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(110, 15);
+            label2.Size = new System.Drawing.Size(98, 15);
             label2.TabIndex = 12;
-            label2.Text = "手配品番絞り込み：";
+            label2.Text = "未登録絞り込み：";
             // 
             // buttonFilterClear2
             // 
@@ -110,11 +110,11 @@
             // 
             textBoxHmCd2.BackColor = System.Drawing.SystemColors.Window;
             textBoxHmCd2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            textBoxHmCd2.ImeMode = System.Windows.Forms.ImeMode.Disable;
             textBoxHmCd2.Location = new System.Drawing.Point(10, 149);
             textBoxHmCd2.Name = "textBoxHmCd2";
             textBoxHmCd2.Size = new System.Drawing.Size(111, 29);
             textBoxHmCd2.TabIndex = 10;
-            textBoxHmCd2.UseWaitCursor = true;
             textBoxHmCd2.TextChanged += textBoxHmCd2_TextChanged;
             // 
             // buttonCT
@@ -147,9 +147,9 @@
             label1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
             label1.Location = new System.Drawing.Point(11, 44);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(113, 15);
+            label1.Size = new System.Drawing.Size(86, 15);
             label1.TabIndex = 8;
-            label1.Text = "マスタ品番絞り込み：";
+            label1.Text = "品番絞り込み：";
             // 
             // buttonFilterClear
             // 
@@ -196,7 +196,7 @@
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new System.Drawing.Size(116, 54);
             buttonSave.TabIndex = 7;
-            buttonSave.Text = "保存";
+            buttonSave.Text = "保存 (F9)";
             buttonSave.UseVisualStyleBackColor = false;
             buttonSave.Click += ButtonSaveClose_Click;
             // 
@@ -204,11 +204,11 @@
             // 
             textBoxHmCd.BackColor = System.Drawing.SystemColors.Window;
             textBoxHmCd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            textBoxHmCd.ImeMode = System.Windows.Forms.ImeMode.Disable;
             textBoxHmCd.Location = new System.Drawing.Point(8, 62);
             textBoxHmCd.Name = "textBoxHmCd";
             textBoxHmCd.Size = new System.Drawing.Size(111, 29);
             textBoxHmCd.TabIndex = 3;
-            textBoxHmCd.UseWaitCursor = true;
             textBoxHmCd.TextChanged += textBoxHmCd_TextChanged;
             // 
             // splitContainer1

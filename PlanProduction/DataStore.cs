@@ -18,7 +18,7 @@ namespace PlanProduction
         // DataTable.Copy() を実行すると、主キー（PrimaryKey）もコピーされます。
         public static DataTable originalKM5010kai;
 
-        // 手配先マスタ
+        // 手配先略称辞書<odcd, odrnm(nullの場合はWKGRNMをLISTAGGで連結)>
         public static Dictionary<string, string> M0300Map;
 
         // アプリケーション設定ファイルのデフォルト手配先コード

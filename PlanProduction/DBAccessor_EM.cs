@@ -144,14 +144,15 @@ namespace PlanProduction
             {
                 if (oraCnn is null) OpenOraSchema();
                 string sql= "SELECT "
-                    + "a.ODCD"
-                    + ", a.WKGRCD"
-                    + ", a.WKGRNM"
-                    + ", m.ODRNM"
-                    + " FROM "
-                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 a, "
+                    + "a.ODCD "
+                    + ", a.WKGRCD "
+                    + ", a.WKGRNM "
+                    + ", nvl(m.ODRNM, a.WKGRNM) as ODRNM " // ボタン名称に使用している
+                    + "FROM "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 a "
+                    + "LEFT OUTER JOIN "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 m "
-                    + "WHERE a.ODCD=m.ODCD "
+                    + "on a.ODCD=m.ODCD "
                     + "ORDER BY a.ODCD, a.WKGRCD"
                     ;
                 using OracleCommand myCmd = new(sql, oraCnn);
@@ -430,11 +431,13 @@ namespace PlanProduction
             try
             {
                 if (oraCnn is null) OpenOraSchema();
-                string sql = "SELECT ODCD, ODRNM FROM "
-                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 a "
-                    + "WHERE exists (select * from "
-                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 b "
-                        + "where a.ODCD=b.ODCD) "
+                string sql = "select a.ODCD, nvl(m.ODRNM, a.WKGRNM) as ODRNM "
+                    + "from ("
+                        + "select ODCD, listagg(WKGRNM, ',') as WKGRNM from "
+                        + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".KM5010 group by ODCD "
+                    + ") a left outer join "
+                    + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".M0300 m "
+                    + "on m.ODCD=a.ODCD "
                     + "ORDER BY a.ODCD";
                 using OracleCommand myCmd = new(sql, oraCnn);
                 using OracleDataAdapter myDa = new(myCmd);
@@ -458,16 +461,17 @@ namespace PlanProduction
         /// EM 手配ファイルを読み込み作業標準マスタにない品番を返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410ConvertToMaster(ref DataTable dt, string odcd, string ktcd)
+        public static bool ReadD0410ConvertToMaster(ref DataTable dt, string odcd, string ktcd, string opt = "")
         {
             bool ret = false;
             string sql = string.Empty;
             try
             {
+                string odcdin = (opt == "EWUBEND") ? "('60420','60430')" : $"'{odcd}'"; // EWUBEND:60460 の場合は 60420 と 60430 の両方を対象とする
                 string s = DateTime.Now.AddMonths(-3).ToString("yyMM");
                 sql = "select HMCD from "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a "
-                    + $"WHERE ODRNO > '{s}000000' and ODCD = '{odcd}' and KTCD like '{ktcd}' "
+                    + $"WHERE ODRNO > '{s}000000' and ODCD in {odcdin} and KTCD like '{ktcd}' "
                     + $"and not exists(select 1 from KM5030 m where ODCD='{odcd}' and KTCD like '{ktcd}' and m.HMCD=a.HMCD) "
                     + "group by HMCD order by HMCD";
                 using (OracleCommand myCmd = new(sql, oraCnn))
@@ -517,13 +521,16 @@ namespace PlanProduction
         /// EM 手配ファイルを読み込みPivotテーブルを作成し返却
         /// </summary>
         /// <returns>DataTable</returns>
-        public static bool ReadD0410Pivot(ref DataTable dt, OdCdSetting s)
+        public static bool ReadD0410Pivot(ref DataTable dt, OdCdSetting s, string opt = "")
         {
             bool ret = false;
             string sql = string.Empty;
             try
             {
                 if (oraCnn is null) OpenOraSchema();
+                // 特別処理
+                string odcdin = (opt == "EWUBEND") ? "('60420','60430')" : $"'{s.OdCd}'";
+
                 // trunc(sysdate)前後の7営業日を取得して FROM ～ TO を決める
                 DataTable fromtoDt = new();
                 sql = "with plusrec as ( "
@@ -558,7 +565,7 @@ namespace PlanProduction
                         + "select EDDT from "
                         + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 "
                         + $"where EDDT between '{from}' and '{to}' "
-                        + $"and ODCD = '{s.OdCd}' and KTCD like '{s.KtCd}' and ODRSTS in ('2', '3') "
+                        + $"and ODCD in {odcdin} and KTCD like '{s.KtCd}' and ODRSTS in ('2', '3') "
                         + "and ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                     + "group by EDDT)";
                 using (OracleCommand myCmd = new(sql, oraCnn))
@@ -609,7 +616,7 @@ namespace PlanProduction
                                 + "and m51.ODCD = a.ODCD and m51.KTCD = a.KTCD and m51.VALDTF = "
                                     + "(select max(VALDTF) from M0510 where HMCD=a.HMCD and ODCD=a.ODCD and KTCD=a.KTCD) "
                                 + "and a.EDDT between sysdate - 30 and sysdate + 30 "
-                                + $"and a.ODCD = '{s.OdCd}' and a.KTCD like '{s.KtCd}' and a.ODRSTS in ('2', '3') "
+                                + $"and a.ODCD in {odcdin} and a.KTCD like '{s.KtCd}' and a.ODRSTS in ('2', '3') "
                                 + "and a.ODRNO > to_char(sysdate - 90, 'YYMM') || '000000' "
                         + ") src "
                         + "PIVOT ( "
