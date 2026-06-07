@@ -32,7 +32,7 @@
             label2 = new System.Windows.Forms.Label();
             buttonFilterClear2 = new System.Windows.Forms.Button();
             textBoxHmCd2 = new System.Windows.Forms.TextBox();
-            buttonCT = new System.Windows.Forms.Button();
+            buttonAddCT = new System.Windows.Forms.Button();
             buttonAddWKSEQ = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             buttonFilterClear = new System.Windows.Forms.Button();
@@ -70,7 +70,7 @@
             panel1.Controls.Add(label2);
             panel1.Controls.Add(buttonFilterClear2);
             panel1.Controls.Add(textBoxHmCd2);
-            panel1.Controls.Add(buttonCT);
+            panel1.Controls.Add(buttonAddCT);
             panel1.Controls.Add(buttonAddWKSEQ);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(buttonFilterClear);
@@ -117,17 +117,17 @@
             textBoxHmCd2.TabIndex = 10;
             textBoxHmCd2.TextChanged += textBoxHmCd2_TextChanged;
             // 
-            // buttonCT
+            // buttonAddCT
             // 
-            buttonCT.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            buttonCT.BackColor = System.Drawing.Color.LightGreen;
-            buttonCT.Location = new System.Drawing.Point(7, 209);
-            buttonCT.Name = "buttonCT";
-            buttonCT.Size = new System.Drawing.Size(116, 54);
-            buttonCT.TabIndex = 9;
-            buttonCT.Text = "CTに追加";
-            buttonCT.UseVisualStyleBackColor = false;
-            buttonCT.Click += buttonCT_Click;
+            buttonAddCT.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            buttonAddCT.BackColor = System.Drawing.Color.LightGreen;
+            buttonAddCT.Location = new System.Drawing.Point(7, 209);
+            buttonAddCT.Name = "buttonAddCT";
+            buttonAddCT.Size = new System.Drawing.Size(116, 54);
+            buttonAddCT.TabIndex = 9;
+            buttonAddCT.Text = "CTに追加(Alt+C)";
+            buttonAddCT.UseVisualStyleBackColor = false;
+            buttonAddCT.Click += ButtonAddCT_Click;
             // 
             // buttonAddWKSEQ
             // 
@@ -137,7 +137,7 @@
             buttonAddWKSEQ.Name = "buttonAddWKSEQ";
             buttonAddWKSEQ.Size = new System.Drawing.Size(116, 54);
             buttonAddWKSEQ.TabIndex = 6;
-            buttonAddWKSEQ.Text = "順序追加";
+            buttonAddWKSEQ.Text = "順序追加 (Alt+S)";
             buttonAddWKSEQ.UseVisualStyleBackColor = false;
             buttonAddWKSEQ.Click += buttonAddWKSEQ_Click;
             // 
@@ -170,7 +170,7 @@
             buttonAddHMCD.Name = "buttonAddHMCD";
             buttonAddHMCD.Size = new System.Drawing.Size(116, 54);
             buttonAddHMCD.TabIndex = 5;
-            buttonAddHMCD.Text = "品番追加";
+            buttonAddHMCD.Text = "品番追加 (Alt+A)";
             buttonAddHMCD.UseVisualStyleBackColor = false;
             buttonAddHMCD.Click += ButtonAddHMCD_Click;
             // 
@@ -254,7 +254,6 @@
             // 
             // dataGridView1
             // 
-            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridView1.Location = new System.Drawing.Point(0, 38);
@@ -276,7 +275,6 @@
             // 
             // dataGridView3
             // 
-            dataGridView3.AllowUserToAddRows = false;
             dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView3.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridView3.Location = new System.Drawing.Point(0, 38);
@@ -387,7 +385,7 @@
         private System.Windows.Forms.Button buttonFilterClear;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonAddWKSEQ;
-        private System.Windows.Forms.Button buttonCT;
+        private System.Windows.Forms.Button buttonAddCT;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonFilterClear2;
         private System.Windows.Forms.TextBox textBoxHmCd2;

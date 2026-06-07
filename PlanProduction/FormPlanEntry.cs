@@ -465,7 +465,8 @@ namespace PlanProduction
                 // 行ヘッダー（データ範囲外） → 「行削除」
                 // ----------------------------------------
                 ButtonDelete_Click(sender, e);
-                isPlanChanged = true;
+                if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
+                if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
             }
             else if (isRowHeaderDrag)
             {
@@ -497,7 +498,9 @@ namespace PlanProduction
 
                 dgv.ClearSelection();
                 dgv.Rows[targetRow].Selected = true;
-                isPlanChanged = true;
+
+                if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
+                if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
             }
             else
             {
@@ -602,10 +605,10 @@ namespace PlanProduction
                 OldValue = beforeEditValue,
                 NewValue = afterValue
             };
-
             undoStack.Push(action);
-            isPlanChanged = true;
-            
+
+            if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
+            if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
         }
         // 「列2:CT」または「列3:本数」の変更時、終了時刻再計算
         private void DataGridViewPlan_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -674,9 +677,10 @@ namespace PlanProduction
                 Type = UndoType.RowInsert,
                 InsertRowIndex = idx
             };
-
             undoStack.Push(action);
-            isPlanChanged = true;
+            
+            if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
+            if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
         }
         // 「行削除」ボタン
         private void ButtonDelete_Click(object sender, EventArgs e)
@@ -703,7 +707,9 @@ namespace PlanProduction
 
             // 実際に削除
             dgv.Rows.RemoveAt(rowIndex);
-            isPlanChanged = true;
+            
+            if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
+            if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
         }
         // 「元に戻す」ボタン
         private void ButtonUndo_Click(object sender, EventArgs e)
@@ -863,6 +869,7 @@ namespace PlanProduction
             bool ret = Common.PrintPlan(ref dataGridViewPlan, odcd, PlanDate, textBoxPlan可動率.Text, OdCdSetting.FullPath, SaveFullPath);
             // 「計画保存」
             if (ret) ButtonPlanSave_Click(sender, e);
+            isPlanChanged = false;
         }
         // 「計画クリア」
         private void ButtonPlanClear_Click(object sender, EventArgs e)
@@ -908,6 +915,7 @@ namespace PlanProduction
                 }
                 dataGridViewAchieve.Rows.Add(values);
             }
+            isAchieveChanged = true;
         }
         // 「実績クリア」
         private void ButtonAchieveClear_Click(object sender, EventArgs e)
@@ -1011,6 +1019,7 @@ namespace PlanProduction
                     IsUpdated?.Invoke(true);
 
                     Common.MessageBox2.Show("実績登録しました．", "計画と実績", 1000, MessageBoxIcon.Information);
+                    isAchieveChanged = false;
                 }
             }
         }

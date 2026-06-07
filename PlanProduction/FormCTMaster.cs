@@ -298,11 +298,30 @@ namespace PlanProduction
         {
             if (e.KeyCode == Keys.Escape)
             {
-                Close();
+                if (textBoxHmCd.Text.Length > 0)
+                {
+                    ButtonFilterClear_Click(null, null);
+                }
+                else
+                {
+                    Close();
+                }
             }
-            if (e.KeyCode == Keys.F9)
+            else if (e.KeyCode == Keys.F9)
             {
                 ButtonSaveClose_Click(null, null);
+            }
+            else if (e.Alt && e.KeyCode == Keys.C)
+            {
+                ButtonAddCT_Click(null, null);
+            }
+            else if (e.Alt && e.KeyCode == Keys.A)
+            {
+                ButtonAddHMCD_Click(null, null);
+            }
+            else if (e.Alt && e.KeyCode == Keys.S)
+            {
+                buttonAddWKSEQ_Click(null, null);
             }
         }
 
@@ -347,7 +366,7 @@ namespace PlanProduction
         }
 
         // 「CTに追加」ボタン
-        private void buttonCT_Click(object sender, EventArgs e)
+        private void ButtonAddCT_Click(object sender, EventArgs e)
         {
             if (dataGridView2.SelectedCells.Count <= 0)
             {
