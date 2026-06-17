@@ -377,7 +377,7 @@
             labelTitleOdCd.Name = "labelTitleOdCd";
             labelTitleOdCd.Size = new System.Drawing.Size(568, 39);
             labelTitleOdCd.TabIndex = 6;
-            labelTitleOdCd.Text = "【6031A】 ＢＥ１曲げ";
+            labelTitleOdCd.Text = "【6031A】 横ﾌﾟﾚｽ1(HWP503)";
             labelTitleOdCd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelPlanOptions

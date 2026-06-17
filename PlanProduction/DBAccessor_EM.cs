@@ -468,7 +468,7 @@ namespace PlanProduction
             try
             {
                 string odcdin = (opt == "EWUBEND") ? "('60420','60430')" : $"'{odcd}'"; // EWUBEND:60460 の場合は 60420 と 60430 の両方を対象とする
-                string s = DateTime.Now.AddMonths(-3).ToString("yyMM");
+                string s = DateTime.Now.AddYears(-2).ToString("yyMM");
                 sql = "select HMCD from "
                     + Common.DbConfig[Common.DB_CONFIG_EM].Schema + ".D0410 a "
                     + $"WHERE ODRNO > '{s}000000' and ODCD in {odcdin} and KTCD like '{ktcd}' "

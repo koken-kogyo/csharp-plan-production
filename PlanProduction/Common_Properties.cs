@@ -39,7 +39,8 @@ namespace PlanProduction
         {
             { 1, "品番優先" },
             { 2, "手配日優先" },
-            { 3, "段取り優先" }
+            { 3, "段取り優先" },
+            { 4, "品目略称" }
         };
 
         public static readonly int DEFAULT_WKSEQ = 10;

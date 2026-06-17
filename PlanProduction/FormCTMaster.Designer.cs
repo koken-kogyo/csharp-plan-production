@@ -29,13 +29,15 @@
         private void InitializeComponent()
         {
             panel1 = new System.Windows.Forms.Panel();
+            buttonPasteFilter = new System.Windows.Forms.Button();
+            buttonAddDT = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
             buttonFilterClear2 = new System.Windows.Forms.Button();
             textBoxHmCd2 = new System.Windows.Forms.TextBox();
             buttonAddCT = new System.Windows.Forms.Button();
             buttonAddWKSEQ = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
-            buttonFilterClear = new System.Windows.Forms.Button();
+            buttonClearFilter = new System.Windows.Forms.Button();
             buttonAddHMCD = new System.Windows.Forms.Button();
             buttonClose = new System.Windows.Forms.Button();
             buttonSave = new System.Windows.Forms.Button();
@@ -67,13 +69,15 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(buttonPasteFilter);
+            panel1.Controls.Add(buttonAddDT);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(buttonFilterClear2);
             panel1.Controls.Add(textBoxHmCd2);
             panel1.Controls.Add(buttonAddCT);
             panel1.Controls.Add(buttonAddWKSEQ);
             panel1.Controls.Add(label1);
-            panel1.Controls.Add(buttonFilterClear);
+            panel1.Controls.Add(buttonClearFilter);
             panel1.Controls.Add(buttonAddHMCD);
             panel1.Controls.Add(buttonClose);
             panel1.Controls.Add(buttonSave);
@@ -82,8 +86,31 @@
             panel1.Location = new System.Drawing.Point(748, 0);
             panel1.Margin = new System.Windows.Forms.Padding(4);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(131, 511);
+            panel1.Size = new System.Drawing.Size(131, 631);
             panel1.TabIndex = 0;
+            // 
+            // buttonPasteFilter
+            // 
+            buttonPasteFilter.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            buttonPasteFilter.Location = new System.Drawing.Point(7, 92);
+            buttonPasteFilter.Name = "buttonPasteFilter";
+            buttonPasteFilter.Size = new System.Drawing.Size(39, 23);
+            buttonPasteFilter.TabIndex = 14;
+            buttonPasteFilter.Text = "貼付";
+            buttonPasteFilter.UseVisualStyleBackColor = true;
+            buttonPasteFilter.Click += ButtonPasteFilter_Click;
+            // 
+            // buttonAddDT
+            // 
+            buttonAddDT.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            buttonAddDT.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+            buttonAddDT.Location = new System.Drawing.Point(8, 329);
+            buttonAddDT.Name = "buttonAddDT";
+            buttonAddDT.Size = new System.Drawing.Size(116, 54);
+            buttonAddDT.TabIndex = 13;
+            buttonAddDT.Text = "段取に追加(Alt+D)";
+            buttonAddDT.UseVisualStyleBackColor = false;
+            buttonAddDT.Click += ButtonAddDT_Click;
             // 
             // label2
             // 
@@ -115,13 +142,13 @@
             textBoxHmCd2.Name = "textBoxHmCd2";
             textBoxHmCd2.Size = new System.Drawing.Size(111, 29);
             textBoxHmCd2.TabIndex = 10;
-            textBoxHmCd2.TextChanged += textBoxHmCd2_TextChanged;
+            textBoxHmCd2.TextChanged += TextBoxHmCd2_TextChanged;
             // 
             // buttonAddCT
             // 
             buttonAddCT.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            buttonAddCT.BackColor = System.Drawing.Color.LightGreen;
-            buttonAddCT.Location = new System.Drawing.Point(7, 209);
+            buttonAddCT.BackColor = System.Drawing.Color.LightCyan;
+            buttonAddCT.Location = new System.Drawing.Point(8, 269);
             buttonAddCT.Name = "buttonAddCT";
             buttonAddCT.Size = new System.Drawing.Size(116, 54);
             buttonAddCT.TabIndex = 9;
@@ -133,7 +160,7 @@
             // 
             buttonAddWKSEQ.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonAddWKSEQ.BackColor = System.Drawing.Color.LightGreen;
-            buttonAddWKSEQ.Location = new System.Drawing.Point(7, 329);
+            buttonAddWKSEQ.Location = new System.Drawing.Point(7, 449);
             buttonAddWKSEQ.Name = "buttonAddWKSEQ";
             buttonAddWKSEQ.Size = new System.Drawing.Size(116, 54);
             buttonAddWKSEQ.TabIndex = 6;
@@ -151,26 +178,26 @@
             label1.TabIndex = 8;
             label1.Text = "品番絞り込み：";
             // 
-            // buttonFilterClear
+            // buttonClearFilter
             // 
-            buttonFilterClear.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
-            buttonFilterClear.Location = new System.Drawing.Point(44, 92);
-            buttonFilterClear.Name = "buttonFilterClear";
-            buttonFilterClear.Size = new System.Drawing.Size(75, 23);
-            buttonFilterClear.TabIndex = 4;
-            buttonFilterClear.Text = "条件クリア";
-            buttonFilterClear.UseVisualStyleBackColor = true;
-            buttonFilterClear.Click += ButtonFilterClear_Click;
+            buttonClearFilter.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 128);
+            buttonClearFilter.Location = new System.Drawing.Point(52, 92);
+            buttonClearFilter.Name = "buttonClearFilter";
+            buttonClearFilter.Size = new System.Drawing.Size(67, 23);
+            buttonClearFilter.TabIndex = 4;
+            buttonClearFilter.Text = "条件クリア";
+            buttonClearFilter.UseVisualStyleBackColor = true;
+            buttonClearFilter.Click += ButtonClearFilter_Click;
             // 
             // buttonAddHMCD
             // 
             buttonAddHMCD.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonAddHMCD.BackColor = System.Drawing.Color.LightGreen;
-            buttonAddHMCD.Location = new System.Drawing.Point(8, 269);
+            buttonAddHMCD.Location = new System.Drawing.Point(8, 389);
             buttonAddHMCD.Name = "buttonAddHMCD";
             buttonAddHMCD.Size = new System.Drawing.Size(116, 54);
             buttonAddHMCD.TabIndex = 5;
-            buttonAddHMCD.Text = "品番追加 (Alt+A)";
+            buttonAddHMCD.Text = "CT段取に追加 (Alt+A)";
             buttonAddHMCD.UseVisualStyleBackColor = false;
             buttonAddHMCD.Click += ButtonAddHMCD_Click;
             // 
@@ -179,7 +206,7 @@
             buttonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonClose.BackColor = System.Drawing.SystemColors.ActiveBorder;
             buttonClose.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            buttonClose.Location = new System.Drawing.Point(8, 452);
+            buttonClose.Location = new System.Drawing.Point(8, 572);
             buttonClose.Margin = new System.Windows.Forms.Padding(4);
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new System.Drawing.Size(116, 54);
@@ -192,7 +219,7 @@
             // 
             buttonSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             buttonSave.BackColor = System.Drawing.Color.LightCoral;
-            buttonSave.Location = new System.Drawing.Point(8, 391);
+            buttonSave.Location = new System.Drawing.Point(8, 511);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new System.Drawing.Size(116, 54);
             buttonSave.TabIndex = 7;
@@ -209,7 +236,7 @@
             textBoxHmCd.Name = "textBoxHmCd";
             textBoxHmCd.Size = new System.Drawing.Size(111, 29);
             textBoxHmCd.TabIndex = 3;
-            textBoxHmCd.TextChanged += textBoxHmCd_TextChanged;
+            textBoxHmCd.TextChanged += TextBoxHmCd_TextChanged;
             // 
             // splitContainer1
             // 
@@ -228,7 +255,7 @@
             splitContainer1.Panel2.Controls.Add(dataGridView2);
             splitContainer1.Panel2.Controls.Add(labelReadTitle);
             splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            splitContainer1.Size = new System.Drawing.Size(748, 511);
+            splitContainer1.Size = new System.Drawing.Size(748, 631);
             splitContainer1.SplitterDistance = 511;
             splitContainer1.SplitterWidth = 5;
             splitContainer1.TabIndex = 3;
@@ -248,7 +275,7 @@
             // 
             splitContainer2.Panel2.Controls.Add(dataGridView3);
             splitContainer2.Panel2.Controls.Add(labelDTMasterTitle);
-            splitContainer2.Size = new System.Drawing.Size(496, 501);
+            splitContainer2.Size = new System.Drawing.Size(496, 621);
             splitContainer2.SplitterDistance = 251;
             splitContainer2.TabIndex = 5;
             // 
@@ -259,11 +286,12 @@
             dataGridView1.Location = new System.Drawing.Point(0, 38);
             dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new System.Drawing.Size(251, 463);
+            dataGridView1.Size = new System.Drawing.Size(251, 583);
             dataGridView1.TabIndex = 0;
             // 
             // labelCTMasterTitle
             // 
+            labelCTMasterTitle.BackColor = System.Drawing.Color.LightCyan;
             labelCTMasterTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             labelCTMasterTitle.Dock = System.Windows.Forms.DockStyle.Top;
             labelCTMasterTitle.Location = new System.Drawing.Point(0, 0);
@@ -280,11 +308,12 @@
             dataGridView3.Location = new System.Drawing.Point(0, 38);
             dataGridView3.Margin = new System.Windows.Forms.Padding(4);
             dataGridView3.Name = "dataGridView3";
-            dataGridView3.Size = new System.Drawing.Size(241, 463);
+            dataGridView3.Size = new System.Drawing.Size(241, 583);
             dataGridView3.TabIndex = 1;
             // 
             // labelDTMasterTitle
             // 
+            labelDTMasterTitle.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             labelDTMasterTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             labelDTMasterTitle.Dock = System.Windows.Forms.DockStyle.Top;
             labelDTMasterTitle.Location = new System.Drawing.Point(0, 0);
@@ -302,7 +331,7 @@
             dataGridView2.Location = new System.Drawing.Point(5, 43);
             dataGridView2.Margin = new System.Windows.Forms.Padding(4);
             dataGridView2.Name = "dataGridView2";
-            dataGridView2.Size = new System.Drawing.Size(222, 463);
+            dataGridView2.Size = new System.Drawing.Size(222, 583);
             dataGridView2.TabIndex = 2;
             // 
             // labelReadTitle
@@ -319,7 +348,7 @@
             // statusStrip1
             // 
             statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripStatusLabel1 });
-            statusStrip1.Location = new System.Drawing.Point(0, 511);
+            statusStrip1.Location = new System.Drawing.Point(0, 631);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new System.Drawing.Size(879, 22);
             statusStrip1.TabIndex = 4;
@@ -335,7 +364,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(879, 533);
+            ClientSize = new System.Drawing.Size(879, 653);
             Controls.Add(splitContainer1);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
@@ -382,12 +411,14 @@
         private System.Windows.Forms.Label labelDTMasterTitle;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.TextBox textBoxHmCd;
-        private System.Windows.Forms.Button buttonFilterClear;
+        private System.Windows.Forms.Button buttonClearFilter;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonAddWKSEQ;
         private System.Windows.Forms.Button buttonAddCT;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonFilterClear2;
         private System.Windows.Forms.TextBox textBoxHmCd2;
+        private System.Windows.Forms.Button buttonAddDT;
+        private System.Windows.Forms.Button buttonPasteFilter;
     }
 }

@@ -350,10 +350,11 @@ namespace PlanProduction
             splitContainerMain.Panel1.Controls.Clear();
             // ボタンの作成
             int buttonCount = grouped.Count;
-            int buttonHeight = (this.Height > buttonCount * 80) ? 80 : 40;
+            int buttonHeight = (this.Height > buttonCount * 80) ? 80 : 50;
+            float buttonFontSize = (buttonCount > 8) ? 10 : this.Font.Size;
             for (int i = 0; i < buttonCount; i++)
             {
-                var btn = CreateTileButton(grouped[i].ODCD, grouped[i].ODRNM, buttonHeight);
+                var btn = CreateTileButton(grouped[i].ODCD, grouped[i].ODRNM, buttonHeight, buttonFontSize);
                 splitContainerMain.Panel1.Controls.Add(btn);
                 // スペーサーを挟む
                 var spacer = new Panel
@@ -365,7 +366,7 @@ namespace PlanProduction
             }
         }
         // ボタンの形状作成とイベント登録
-        private Button CreateTileButton(string odcd, string odrnm, int buttonHeight)
+        private Button CreateTileButton(string odcd, string odrnm, int buttonHeight, float buttonFontSize)
         {
             var btn = new Button
             {
@@ -376,6 +377,7 @@ namespace PlanProduction
                 BackColor = (odcd == selectedOdCd) ? Color.LightGreen : Color.LightGray,
                 ForeColor = Color.Black
             };
+            btn.Font = new Font(btn.Font.FontFamily, buttonFontSize);
             btn.FlatAppearance.BorderSize = 0;
             btn.Margin = new Padding(5);
             btn.Click += (s, e) =>

@@ -112,7 +112,7 @@ namespace PlanProduction
             var s = OdCdSetting;
 
             bool ret;
-            if (s.OdCd.Substring(0, 3) == "603")
+            if (s.OdCd.Substring(0, 4) == "6031")
             {
                 // ベンダーは手配日程データから＋５営業日分を取得
                 ret = DBAccessor.ReadD0440Pivot(ref dtDataSource, OdCdSetting);
@@ -138,10 +138,14 @@ namespace PlanProduction
                 // 手配リスト順番がSQLでは難しかったので、バインディング後に並び替える
                 int key1 = (s.SortOrder1 == 1) ? dataGridView1.Columns["品番"].Index :
                            (s.SortOrder1 == 2) ? dataGridView1.Columns["優先度"].Index :
-                           (s.SortOrder1 == 3) ? dataGridView1.Columns["段取内容"].Index : dataGridView1.Columns["品番"].Index;
+                           (s.SortOrder1 == 3) ? dataGridView1.Columns["段取内容"].Index :
+                           (s.SortOrder1 == 4) ? dataGridView1.Columns["品目略称"].Index :
+                           dataGridView1.Columns["品番"].Index;
                 int key2 = (s.SortOrder2 == 1) ? dataGridView1.Columns["品番"].Index :
                            (s.SortOrder2 == 2) ? dataGridView1.Columns["優先度"].Index :
-                           (s.SortOrder2 == 3) ? dataGridView1.Columns["段取内容"].Index : -1;
+                           (s.SortOrder2 == 3) ? dataGridView1.Columns["段取内容"].Index :
+                           (s.SortOrder2 == 4) ? dataGridView1.Columns["品目略称"].Index :
+                           -1;
                 string col1 = dataGridView1.Columns[key1].DataPropertyName;
                 string sortExpression;
                 if (key2 >= 0 && key2 < dataGridView1.Columns.Count)
@@ -633,7 +637,7 @@ namespace PlanProduction
             // 「計画リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Plan", list);
-            if (処理モード != 1) this.Focus();
+            if (処理モード != 1 || list.Count == 1) this.Focus();
         }
         // 「実績に追加」ボタン
         private void ButtonAddAchieve_Click(object sender, EventArgs e)
@@ -641,7 +645,7 @@ namespace PlanProduction
             // 「実績リスト」にDTO（データ転送オブジェクト）を渡す
             var list = MakeSelectedItemList();
             callback("Achieve", list);
-            if (処理モード != 1) this.Focus();
+            if (処理モード != 1 || list.Count == 1) this.Focus();
         }
         // DTO（データ転送オブジェクト）の生成
         private List<SelectedItem> MakeSelectedItemList()
@@ -663,7 +667,7 @@ namespace PlanProduction
                 {
                     if (c.Visible == false) continue;                                               // 非表示列
                     if (c.Value == null || string.IsNullOrEmpty(c.Value.ToString())) continue;      // データなし
-                    if (c.ColumnIndex <= dataGridView1.Columns["前在"].Index ||
+                    if (c.ColumnIndex < dataGridView1.Columns["前在"].Index ||
                         c.ColumnIndex >= dataGridView1.Columns["CT"].Index) continue;               // 手配日以外を無視
 
                     int qty = 0;
