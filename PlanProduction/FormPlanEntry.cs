@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -866,7 +867,23 @@ namespace PlanProduction
                     return;
                 }
             }
-            bool ret = Common.PrintPlan(ref dataGridViewPlan, odcd, PlanDate, textBoxPlan可動率.Text, OdCdSetting.FullPath, SaveFullPath);
+            DataTable dtM0510 = new DataTable();
+            if (odcd == "6031D" || odcd == "6031F") // 6031D:自プレス１、6031F:自プレス３専用処理（雛形Excelとセットで変更する事）
+            {
+                // DataGridView から品番を重複なしで抽出
+                var hinbanList = dataGridViewPlan.Rows
+                    .Cast<DataGridViewRow>()
+                    .Where(r => r.Cells["Plan品番"].Value != null)
+                    .Select(r => r.Cells["Plan品番"].Value.ToString())
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToList();
+                // Oracle IN 句形式に変換
+                string hinbanIn = string.Join(",", hinbanList.Select(x => $"'{x}'"));
+                // 対象品番の品目手順マスタを取得
+                DBAccessor.GetM0510ToMaster(ref dtM0510, odcd, hinbanIn);
+            }
+            bool ret = Common.PrintPlan(ref dataGridViewPlan, odcd, PlanDate, textBoxPlan可動率.Text, OdCdSetting.FullPath, SaveFullPath, dtM0510);
             // 「計画保存」
             if (ret) ButtonPlanSave_Click(sender, e);
             isPlanChanged = false;

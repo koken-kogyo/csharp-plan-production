@@ -868,6 +868,34 @@ namespace PlanProduction
             return ret;
         }
 
+        /// <summary>
+        /// EM 品目手順マスタを読み込み返却
+        /// </summary>
+        /// <returns>DataTable</returns>
+        public static bool GetM0510ToMaster(ref DataTable dt, string odcd, string hinbanIn)
+        {
+            bool ret = false;
+            string sql = string.Empty;
+            try
+            {
+                sql = "select a.HMCD, a.WKNOTE, a.WKCOMMENT "
+                    + "from M0510 a "
+                    + "where a.VALDTF = (select max(tmp.VALDTF) from M0510 tmp where tmp.HMCD = a.HMCD) "
+                    + $"and a.ODCD = '{odcd}' and a.HMCD in ({hinbanIn})";
+                using (OracleCommand myCmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter myDa = new(myCmd);
+                    myDa.Fill(dt);
+                }
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(sql + "\n" + ex.Message);
+            }
+            return ret;
+        }
+
 
 
 

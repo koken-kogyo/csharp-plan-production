@@ -99,11 +99,11 @@ namespace PlanProduction
     public class SelectedItem
     {
         public string HmCd { get; set; }
-        public int WkSeq { get; set; }
-        public int SumQty { get; set; }
+        public int WkSeq { get; set; }      // CTマスターの順序
+        public int SumQty { get; set; }     // 選択セルの合計数量
         public double CT { get; set; }
         public double DT { get; set; }
-        public string Work { get; set; }
+        public string Work { get; set; }    // 段取り内容
     }
 
     // 元に戻すアクション種類

@@ -464,7 +464,7 @@ namespace PlanProduction
         /// <param name="hinapath">雛形ExcelのFullPath</param>
         /// <param name="savefullpath">出力ファイルのFullPath</param>
         public static bool PrintPlan(ref DataGridView dgv, string odcd, DateTime plandt, string タイトル可動率
-            , string hinapath, string savefullpath)
+            , string hinapath, string savefullpath, DataTable dtM0510)
         {
             bool ret = false;
             Excel.Application excelApp = null;
@@ -554,6 +554,30 @@ namespace PlanProduction
                             }
                         }
                     }
+                    // Excel「C4=作業内容」であれば 6031D:自プレス１、6031F:自プレス３専用処理（雛形Excelとセットで変更する事）
+                    if (worksheet.Cells[baserow, 3].Value == "作業内容")
+                    {
+                        // C,Dセルの結合
+                        Excel.Range rng = worksheet.Range[
+                            worksheet.Cells[excelRow, 3],
+                            worksheet.Cells[excelRow, 4]
+                        ];
+                        rng.Merge();
+                        // 縮小して全体を表示
+                        rng.ShrinkToFit = true;
+                        rng.WrapText = false;
+                        // 品目手順マスタの作業内容を取得しExcelにセット
+                        string hmcd = worksheet.Cells[excelRow, 2].Value;
+                        var rows = dtM0510.AsEnumerable()
+                            .Where(r => r.Field<string>("HMCD") == hmcd)
+                            .Select(r => r.Field<string>("WKNOTE"))
+                            .Where(x => !string.IsNullOrWhiteSpace(x));
+                        if (rows.Any())
+                        {
+                            worksheet.Cells[excelRow, 3].Value = rows.First();
+                        }
+                    }
+
                 }
 
                 // 式のコピー
@@ -568,6 +592,7 @@ namespace PlanProduction
                 {
                     worksheet.Cells[i, 1].Value = "";
                 }
+
                 // 別名で保存（Desktopに作成）
                 workbook.SaveAs(savefullpath);
                 ret = true;
