@@ -39,7 +39,7 @@ namespace PlanProduction
         private Point dragStartPoint;
         private DataGridViewCell dragSourceCell;
         private bool isRowHeaderDrag = false;
-        private bool isCancelAddEvent = false;
+        private bool isCancelAddEvent = true;                   // 初期ロード時はイベントキャンセル
 
         // コンストラクタ
         public FormPlanEntry(DateTime plandate, OdCdSetting odcdsetting)
@@ -223,6 +223,9 @@ namespace PlanProduction
 
             // データベースデータの初期表示
             InitialPlanProduction();
+
+            // Undoイベントスタート
+            isCancelAddEvent = false;
 
             // 対象日付のデータ有無によって先に開く画面を決める
             if (dataGridViewPlan.Rows.Count > 1 || dataGridViewAchieve.Rows.Count > 1)
@@ -460,7 +463,10 @@ namespace PlanProduction
             Point clientPoint = dgv.PointToClient(new Point(e.X, e.Y));
             var hit = dgv.HitTest(clientPoint.X, clientPoint.Y);
 
-            if (isRowHeaderDrag && (hit.RowIndex < 0 || hit.RowIndex == dgv.NewRowIndex))
+            if (isRowHeaderDrag
+                && (hit.RowIndex < 0 || hit.RowIndex == dgv.NewRowIndex)
+                && (dragSourceCell.DataGridView.Name == dgv.Name)
+            )
             {
                 // ----------------------------------------
                 // 行ヘッダー（データ範囲外） → 「行削除」
@@ -469,7 +475,9 @@ namespace PlanProduction
                 if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
                 if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
             }
-            else if (isRowHeaderDrag)
+            else if (isRowHeaderDrag
+                && (dragSourceCell.DataGridView.Name == dgv.Name)
+            )
             {
                 // ----------------------------------------
                 // 行ヘッダー（データ範囲内） → 「行移動」
@@ -502,6 +510,30 @@ namespace PlanProduction
 
                 if (dgv.Name == "dataGridViewPlan") isPlanChanged = true;
                 if (dgv.Name == "dataGridViewAchieve") isAchieveChanged = true;
+            }
+            else if (isRowHeaderDrag
+                && dragSourceCell.DataGridView.Name != dgv.Name
+                && dragSourceCell.DataGridView.Name == "dataGridViewPlan" 
+                && dgv.Name == "dataGridViewAchieve"
+            )
+            {
+                // ----------------------------------------
+                // 計画から実績への「行コピー」
+                // ----------------------------------------
+                int colCount = dataGridViewPlan.Columns.Count;
+                object[] values = new object[colCount];
+                for (int i = 0; i < colCount; i++)
+                {
+                    if (i < 3 || i > 6)
+                        values[i] = dataGridViewPlan[i, dragSourceCell.RowIndex].Value;
+                }
+                // 挿入する行を決定
+                int insertIndex = hit.RowIndex;
+                if (insertIndex < 0) insertIndex = dgv.Rows.Count - 1; // 行外にドロップ → 最後に追加
+                // ドロップ行の上に挿入
+                dgv.Rows.Insert(insertIndex, 1);
+                dgv.Rows[insertIndex].SetValues(values);
+                isAchieveChanged = true;
             }
             else
             {
