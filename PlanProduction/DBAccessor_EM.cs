@@ -778,7 +778,7 @@ namespace PlanProduction
 
         /// <summary>
         /// EM 在庫情報取得
-        /// dtD0410のデータから次工程の在庫情報と前工程の在庫情報を取得
+        /// dtD0410のデータから自工程の在庫情報と前工程の在庫情報を取得
         /// </summary>
         public static bool ReadD0520FromPrevious(ref DataTable dtD0410, ref DataTable dtD0520)
         {
@@ -797,6 +797,111 @@ namespace PlanProduction
                 List<string> s10 = [];
                 List<string> s20 = [];
                 foreach (DataRow dr in dtD0410.Rows)
+                {
+                    if (dr["KTSEQ"].ToIntOrDefault() == 10)
+                    {
+                        s10.Add(string.Concat("'", dr["品番"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                    }
+                    else
+                    {
+                        s20.Add(string.Concat("'", dr["品番"].ToString(), dr["KTCD"].ToString(), dr["ODCD"].ToString(), "'"));
+                    }
+                }
+                string conditions10 = string.Concat("(", string.Join(",", s10), ")");
+                string conditions20 = string.Concat("(", string.Join(",", s20), ")");
+                // 初工程(SEQ=10)の場合は、M0520子品番の在庫(KTCD is null)を取得
+                if (s10.Count > 0)
+                {
+                    string sql10 =
+                        "select target.HMCD, min(mz.ZAIQTY) as MZAIQTY, min(z.ZAIQTY) as ZAIQTY from " +
+                        "(" +
+                            $"select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from m0510 a where a.HMCD || a.KTCD || a.ODCD in {conditions10} " +
+                            "and a.valdtf = (select max(valdtf) from m0510 where hmcd = a.hmcd) " +
+                        ") target " +
+                        "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD, " +
+                        "m0520 maekt " +
+                        "left outer join D0520 mz on mz.HMCD = maekt.KOHMCD and mz.KTCD is null " +
+                        "where maekt.OYAHMCD = target.HMCD " +
+                        "group by target.HMCD";
+                    sql = sql10;
+                    using (OracleCommand cmd = new(sql10, oraCnn))
+                    {
+                        using OracleDataAdapter da = new(cmd);
+                        da.Fill(dtD0520);
+                    }
+                }
+                // 2工程目以降の場合は、M0510前工程の在庫(KTCD = 前工程コード)を取得
+                if (s20.Count > 0)
+                {
+                    string sql20 =
+                        "with VIRTUALTBL as (" +
+                        "select target.HMCD, maekt.KTSEQ, mz.ZAIQTY as MZAIQTY, z.ZAIQTY from " +
+                        "(" +
+                            "select a.HMCD, a.VALDTF, a.KTSEQ, a.KTCD from M0510 a where " +
+                            $"a.HMCD || a.KTCD || a.ODCD in {conditions20}" +
+                            "and a.VALDTF = (select max(b.valdtf) from m0510 b where b.hmcd=a.hmcd) " +
+                        ") target " +
+                        "left outer join D0520 z on z.HMCD = target.HMCD and z.KTCD = target.KTCD " +
+                        "left outer join M0510 maekt on " +
+                            "maekt.HMCD = target.HMCD and " +
+                            "maekt.VALDTF = target.VALDTF and " +
+                            "maekt.KTSEQ < target.KTSEQ and " +
+                            "maekt.JIKBN = '1' " +
+                        "left outer join D0520 mz on mz.HMCD = maekt.HMCD and mz.KTCD = maekt.KTCD" +
+                        ") select * from VIRTUALTBL c where c.KTSEQ=" +
+                        "(select max(KTSEQ) from VIRTUALTBL d where d.hmcd=c.HMCD)";
+                    sql = sql20;
+                    using (OracleCommand cmd = new(sql20, oraCnn))
+                    {
+                        using OracleDataAdapter da = new(cmd);
+                        DataTable dt2 = new();
+                        da.Fill(dt2);
+                        dtD0520.Merge(dt2);
+                    }
+                }
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(sql + "\n" + ex.Message);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// BE工程の EM 在庫情報取得
+        /// DataGridViewPlanから自工程の在庫情報と前工程の在庫情報を取得
+        /// </summary>
+        public static bool ReadD0520FromPrevious2(ref DataTable dtD0520, string hinbanIn)
+        {
+            bool ret = false;
+            string sql = string.Empty;
+            try
+            {
+                // 空のデータテーブルを作成
+                dtD0520.Columns.Add("HMCD", typeof(string));
+                dtD0520.Columns.Add("MZAIQTY", typeof(int));
+                dtD0520.Columns.Add("ZAIQTY", typeof(int));
+
+                // 入力データを作成
+                DataTable dt = new();
+                sql = "select a.HMCD as 品番, a.KTSEQ, a.KTCD, a.ODCD "
+                    + "from M0510 a "
+                    + "where a.HMCD || a.ODCD in (" + hinbanIn + ") "
+                    + "and a.KTCD like 'BE%' "
+                    + "and a.VALDTF = (select max(tmp.VALDTF) from M0510 tmp where tmp.HMCD=a.HMCD)";
+                using (OracleCommand cmd = new(sql, oraCnn))
+                {
+                    using OracleDataAdapter da = new(cmd);
+                    da.Fill(dt);
+                }
+
+                // 条件作成
+                // ①工程SEQが初工程(10)の場合
+                // ②工程SEQが初工程(10)以外の場合
+                List<string> s10 = [];
+                List<string> s20 = [];
+                foreach (DataRow dr in dt.Rows)
                 {
                     if (dr["KTSEQ"].ToIntOrDefault() == 10)
                     {

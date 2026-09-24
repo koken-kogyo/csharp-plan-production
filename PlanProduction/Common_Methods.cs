@@ -464,7 +464,8 @@ namespace PlanProduction
         /// <param name="hinapath">雛形ExcelのFullPath</param>
         /// <param name="savefullpath">出力ファイルのFullPath</param>
         public static bool PrintPlan(ref DataGridView dgv, string odcd, DateTime plandt, string タイトル可動率
-            , string hinapath, string savefullpath, DataTable dtM0510)
+            , string hinapath, string savefullpath
+            , DataTable dtM0510, DataTable dtD520)
         {
             bool ret = false;
             Excel.Application excelApp = null;
@@ -577,7 +578,21 @@ namespace PlanProduction
                             worksheet.Cells[excelRow, 3].Value = rows.First();
                         }
                     }
-
+                    // Excel「E4=在庫」であれば 6032A:BE1A曲げ、6032B:BE1B曲げ専用処理（雛形Excelとセットで変更する事）
+                    if (worksheet.Cells[baserow, 5].Value == "在庫" &&
+                        dtD520.Rows.Count > 0)
+                    {
+                        // 在庫ファイルの在庫情報を取得しExcelにセット
+                        string hmcd = worksheet.Cells[excelRow, 2].Value;
+                        var rows = dtD520.AsEnumerable()
+                            .Where(r => r.Field<string>("HMCD") == hmcd)
+                            .Select(r => r.Field<int>("MZAIQTY"));
+                        if (rows.Any())
+                        {
+                            int mzaiqty = rows.First();
+                            worksheet.Cells[excelRow, 5].Value = rows.First();
+                        }
+                    }
                 }
 
                 // 式のコピー

@@ -900,7 +900,9 @@ namespace PlanProduction
                 }
             }
             DataTable dtM0510 = new DataTable();
-            if (odcd == "6031D" || odcd == "6031F") // 6031D:自プレス１、6031F:自プレス３専用処理（雛形Excelとセットで変更する事）
+            DataTable dtD0520 = new DataTable();
+            // 6031D:自プレス１、6031F:自プレス３専用処理（雛形Excelとセットで変更する事）
+            if (odcd == "6031D" || odcd == "6031F")
             {
                 // DataGridView から品番を重複なしで抽出
                 var hinbanList = dataGridViewPlan.Rows
@@ -915,7 +917,23 @@ namespace PlanProduction
                 // 対象品番の品目手順マスタを取得
                 DBAccessor.GetM0510ToMaster(ref dtM0510, odcd, hinbanIn);
             }
-            bool ret = Common.PrintPlan(ref dataGridViewPlan, odcd, PlanDate, textBoxPlan可動率.Text, OdCdSetting.FullPath, SaveFullPath, dtM0510);
+            // 6032x:BE1x曲げ専用処理（雛形_6032曲げ.xlsxとセットで変更する事）
+            if (odcd.Substring(0, 4) == "6032")
+            {
+                // DataGridView から品番＋手配先コードを重複なしで抽出
+                var hinbanList = dataGridViewPlan.Rows
+                    .Cast<DataGridViewRow>()
+                    .Where(r => r.Cells["Plan品番"].Value != null)
+                    .Select(r => r.Cells["Plan品番"].Value.ToString() + odcd)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToList();
+                // Oracle IN 句形式に変換
+                string hinbanIn = string.Join(",", hinbanList.Select(x => $"'{x}'"));
+                // 対象品番の在庫情報を取得
+                DBAccessor.ReadD0520FromPrevious2(ref dtD0520, hinbanIn);
+            }
+            bool ret = Common.PrintPlan(ref dataGridViewPlan, odcd, PlanDate, textBoxPlan可動率.Text, OdCdSetting.FullPath, SaveFullPath, dtM0510, dtD0520);
             // 「計画保存」
             if (ret) ButtonPlanSave_Click(sender, e);
             isPlanChanged = false;
