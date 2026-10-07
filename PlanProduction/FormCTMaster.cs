@@ -118,17 +118,20 @@ namespace PlanProduction
 
         private void FormCTMaster_FormClosing(object sender, FormClosingEventArgs e)
         {
-            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
-            string key = this.Name;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
-            var s = settings.Forms[key];
-            s.X = this.Location.X;
-            s.Y = this.Location.Y;
-            s.Width = this.Width;
-            s.Height = this.Height;
-            s.SplitterMainDistance = this.splitContainer1.SplitterDistance;
-            s.SplitterSubVerticalDistance = this.splitContainer2.SplitterDistance;
-            Common.FormSettingsSave(settings);
+            if (this.WindowState != FormWindowState.Minimized)
+            {
+                settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+                string key = this.Name;
+                if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
+                var s = settings.Forms[key];
+                s.X = this.Location.X;
+                s.Y = this.Location.Y;
+                s.Width = this.Width;
+                s.Height = this.Height;
+                s.SplitterMainDistance = this.splitContainer1.SplitterDistance;
+                s.SplitterSubVerticalDistance = this.splitContainer2.SplitterDistance;
+                Common.FormSettingsSave(settings);
+            }
         }
 
         private void DataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

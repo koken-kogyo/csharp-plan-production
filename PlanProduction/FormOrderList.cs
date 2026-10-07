@@ -349,22 +349,25 @@ namespace PlanProduction
         private void FormOrderList_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (処理モード != 1) return;
-            settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
-            string key = this.Name + OdCdSetting.OdCd;
-            if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
-            var s = settings.Forms[key];
-            s.X = this.Location.X;
-            s.Y = this.Location.Y;
-            var f = (FormOrderList)sender;
-            s.Width = f.Width;
-            s.Height = f.Height;
-            s.Flg1 = (checkBoxPKey.Checked) ? 1 : 0;
-            s.Flg2 = (checkBoxHMRNM.Checked) ? 1 : 0;
-            s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
-            s.Flg4 = (checkBoxKTSEQ.Checked) ? 1 : 0;
-            s.Flg5 = (checkBoxDANDORI.Checked) ? 1 : 0;
-            s.Flg6 = (checkBoxWKCOMMENT.Checked) ? 1 : 0;
-            Common.FormSettingsSave(settings);
+            if (this.WindowState != FormWindowState.Minimized)
+            {
+                settings = Common.FormSettingsLoad(); // 他のフォームで変更された可能性があるので、最新の状態を読み込む
+                string key = this.Name + OdCdSetting.OdCd;
+                if (!settings.Forms.ContainsKey(key)) settings.Forms[key] = new FormSettings();
+                var s = settings.Forms[key];
+                s.X = this.Location.X;
+                s.Y = this.Location.Y;
+                var f = (FormOrderList)sender;
+                s.Width = f.Width;
+                s.Height = f.Height;
+                s.Flg1 = (checkBoxPKey.Checked) ? 1 : 0;
+                s.Flg2 = (checkBoxHMRNM.Checked) ? 1 : 0;
+                s.Flg3 = (checkBoxWKNOTE.Checked) ? 1 : 0;
+                s.Flg4 = (checkBoxKTSEQ.Checked) ? 1 : 0;
+                s.Flg5 = (checkBoxDANDORI.Checked) ? 1 : 0;
+                s.Flg6 = (checkBoxWKCOMMENT.Checked) ? 1 : 0;
+                Common.FormSettingsSave(settings);
+            }
         }
         // キーボードショートカット
         private void FormOrderList_KeyDown(object sender, KeyEventArgs e)

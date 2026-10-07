@@ -74,13 +74,16 @@ namespace PlanProduction
         // 画面閉じる前
         private void FormSrttings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string key = this.Name;
-            var s = settings.Forms[key];
-            s.X = this.Location.X;
-            s.Y = this.Location.Y;
-            s.Width = this.Width;
-            s.Height = this.Height;
-            Common.FormSettingsSave(settings);
+            if (this.WindowState != FormWindowState.Minimized)
+            {
+                string key = this.Name;
+                var s = settings.Forms[key];
+                s.X = this.Location.X;
+                s.Y = this.Location.Y;
+                s.Width = this.Width;
+                s.Height = this.Height;
+                Common.FormSettingsSave(settings);
+            }
         }
         // ショートカットキー
         private void FormSrttings_KeyDown(object sender, KeyEventArgs e)

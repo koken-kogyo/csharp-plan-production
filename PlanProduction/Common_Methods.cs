@@ -468,6 +468,7 @@ namespace PlanProduction
             , DataTable dtM0510, DataTable dtD520)
         {
             bool ret = false;
+            int debugRow = 0;
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
             Excel.Worksheet worksheet = null;
@@ -541,6 +542,7 @@ namespace PlanProduction
                 for (int r = 0; r < dgv.Rows.Count - 1; r++)
                 {
                     int excelRow = r + startRow;
+                    debugRow = r;
 
                     foreach (DataGridViewColumn col in dgv.Columns)
                     {
@@ -586,14 +588,16 @@ namespace PlanProduction
                         string hmcd = worksheet.Cells[excelRow, 2].Value;
                         var rows = dtD520.AsEnumerable()
                             .Where(r => r.Field<string>("HMCD") == hmcd)
-                            .Select(r => r.Field<int>("MZAIQTY"));
+                            .Select(r => r.Field<int?>("MZAIQTY"));
                         if (rows.Any())
                         {
-                            int mzaiqty = rows.First();
-                            worksheet.Cells[excelRow, 5].Value = rows.First();
+                            int? mzaiqty = rows.First();
+                            worksheet.Cells[excelRow, 5].Value =
+                                mzaiqty.HasValue ? mzaiqty.Value : 0;
                         }
                     }
                 }
+                debugRow = 0;
 
                 // 式のコピー
                 int endDataRow = worksheet.Cells[baserow, 2].End(Excel.XlDirection.xlDown).Row;
@@ -614,7 +618,10 @@ namespace PlanProduction
             }
             catch (Exception ex)
             {
-                MessageBox.Show("エラー: " + ex.Message, "計画印刷", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string msg = (debugRow != 0)
+                    ? $"{debugRow}行目 - {dgv.Rows[debugRow].Cells[0].Value.ToString()}"
+                    : "";
+                MessageBox.Show($"エラー: \n{msg}\n" + ex.Message, "計画印刷", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
